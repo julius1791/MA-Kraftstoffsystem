@@ -3,11 +3,76 @@ import numpy as np
 import pandas as pd
 import pathlib
 import os
+from h2_stoffmodell import calculate_H2_cp as H2_cp
+from h2_stoffmodell import calculate_H2_enthalpy as H2_h
+import matplotlib.pyplot as plt
+import math
+import json
 
 
-        
+
+def H2_antoine():
+    """
+    Generate antoine equation constants for hydrogen
+
+    Returns
+    -------
+    A, B, C : float
+        Antoine equation parameters
+    """
+    A = 3.54314
+    B = 99.395
+    C = 7.726
+    return A, B, C
+
+def H2_sat_p(t: float):
+    """
+    Find saturation pressure of hydrogen for a given Temperature
+
+    Parameters
+    ----------
+    t : float
+        Temperature (K)
+
+    Returns
+    -------
+    p : float
+        Saturation pressure (Pa)
+
+    """
+    # define antoine equation constants for hydrogen
+    A, B, C = H2_antoine()
+    # apply antoine equation
+    p = 10**(A-(B/(t + C)))*1e5
+    return p
+
+
+def H2_sat_t(p: float):
+    """
+    Calculate saturation temperature for hydrogen for given pressure
+
+    Parameters
+    ----------
+    p : float
+        pressure (Pa)
+
+    Returns
+    -------
+    t : float
+        temperature (K)
+
+    """
+    # define antoine equation constants for hydrogen
+    A, B, C = H2_antoine()
+    # apply antoine equation
+    t = B/(A-math.log(p/1e5, 10))-C
+    return t
+
+
 def interpolate(X, Y, x: float):
     """
+    Linear interpolation along axis X
+    
     Parameters
     ----------
     X : array_like 
@@ -23,48 +88,412 @@ def interpolate(X, Y, x: float):
         Point of interest on the ordinate
 
     """
-    "find the nearest point above point of interest"
-    x1 = X[X > x].min()     
-    "find the nearest point below point of interest"
+    # find the nearest point above point of interest
+    x1 = X[X > x].min()
+    # find the nearest point below point of interest
     x0 = X[X < x].max()
-    "get indeces of the known points"
+    # get indeces of the known points
     id_1 = np.where(X == x1)
     id_0 = np.where(X == x0)
-    "get ordinates of the known points"
+    # get ordinates of the known points
     y1 = Y[id_1]
     y0 = Y[id_0]
-    "apply linear interpolation"
+    # apply linear interpolation
     y = y0 + (y1-y0)/(x1-x0)*(x-x0)
     return y
 
-def import_tpp():
-    files = [f for f in os.listdir(os.path.join(pathlib.Path().resolve(), "stoffdaten")) if os.path.isfile(os.path.join(pathlib.Path().resolve(), "stoffdaten", f))]
-    tpp = dict()
-    for file in files:
-        name = file.split(".")[0]
-        content = import_chemdata(file)
-        print(content)
-        tpp.update({name: content})
-    return tpp
 
-def import_chemdata(filename: str):
+def import_tpp():
     """
-    Parameters
-    ----------
-    filename : str
-        filename of physical property data file (must be placed in MA Kraftstoffsystem\stoffdaten)
+    Import all thermophysical property data stored on .csv files in "stoffdaten" directory 
 
     Returns
     -------
-    df : pandas DataFrame
-        DataFrame containing the physical property data read from the text file
+    tpp : dict
+        dictionary indexed by filename with thermo-physical properties
 
     """
-    path = os.path.join(pathlib.Path().resolve(), "stoffdaten", filename)
-    df = pd.read_csv(path, delimiter=",")
-    return df
+    # find files in target directory
+    files = [f for f in os.listdir(os.path.join(pathlib.Path().resolve(), "stoffdaten")) if os.path.isfile(
+        os.path.join(pathlib.Path().resolve(), "stoffdaten", f))]
+    # init dictionary for tpp
+    tpp = dict()
+    # iterate list of files
+    for file in files:
+        # only import .csv files
+        if file.split(".")[1] == "csv":
+            # use filename as index (without extension)
+            name = file.split(".")[0]
+            # feed file contents into pandas dataframe
+            content = pd.read_csv(os.path.join(pathlib.Path().resolve(), "stoffdaten", file), delimiter=",")
+            tpp.update({name: content})
+    return tpp
 
+
+
+def H2_find_t_for_h(h_t: float, p: float):
+    """
+    Find the temperature corresponding to an enthalpy and pressure of jet fuel
+
+    Parameters
+    ----------
+    h_t : float
+        target enthalpy (kJ/kg)
+    p : float
+        pressure (Pa)
+
+    Returns
+    -------
+    t : float
+        Temperature
+
+    """
+    # find saturation temperature
+    t_sat = H2_sat_t(p)
+
+    # determine bounds and initial temperature depending on the physical state
+    # determine if the hydrogen is an overheated gas
+    if h_t > H2_h(t_sat + 0.1, p):
+        tmin = t_sat + 0.1
+        t = tmin + 10
+        tmax = 2000
+
+    # determine if the hydrogen is in the saturation regime
+    elif h_t > H2_h(t_sat - 0.1, p):
+        t = t_sat
+        return t
+
+    # else it is a supercooled liquid
+    else:
+        tmax = t_sat - 0.1
+        t = tmax - 5
+        tmin = 1
+
+    # loop until target enthalpy is achieved
+    while abs(H2_h(t, p)-h_t) > 1e-9:
+        # calculate temperature step asssuming constant heat capacity
+        dt = (h_t-H2_h(t, p))/H2_cp(t, p)
+
+        t = t + dt
+
+        # ensure that the new calculated temperature is within the bounds
+        # for the current state
+        if t > tmax:
+            t = tmax
+        if t < tmin:
+            t = tmin
+    return t
+
+
+def jeta_properties(t: float):
+    """
+    Calculate Heat capacity and enthalpy of jet fuel for a given temperature
+
+    Parameters
+    ----------
+    t : float
+        Temperature (K)
+
+    Returns
+    -------
+    cp : float
+        specific heat capacity of jet fuel (kJ/kgK)
+    h : float
+        enthalpy of jet fuel (kJ/kg)
+
+    """
+    # define universal gas constant
+    R = 8.3145      # Jmol-1K
+    # import data from json
+    with open(os.path.join(pathlib.Path().resolve(), "stoffdaten", "jet_a.json")) as f:
+        jeta = json.load(f)
+    M_jeta = float(jeta["molecular_weight"])        # gmol-1
+    R_jeta = R/M_jeta                               # kJ/kgK
+    
+    # init variables for loop
+    a_list = list()
+    i = 0
+    cp = 0
+    exponent = -2
+    
+    # iterate over polynomial coefficients from json data
+    for a in jeta["a_coefficients"].split(" "):
+        # remove bracket curls, convert to float and append to list
+        a = a.replace("]", "")
+        a_list.append(float(a.replace("[", "")))
+        
+        # sum up polynomial for specific heat capacity
+        cp = cp + a_list[i]*pow(t, exponent)
+        
+        # prepare next iteration
+        exponent += 1
+        i += 1
+        
+    # multipy with specific gas constant
+    cp = cp * R_jeta
+    
+    # sum up enthalpy components
+    h = -a_list[0]/t
+    h += a_list[1]*math.log(t)
+    h += a_list[2]*t
+    h += a_list[3]*pow(t, 2)/2
+    h += a_list[4]*pow(t, 3)/3
+    h += a_list[5]*pow(t, 4)/4
+    h += a_list[6]*pow(t, 5)/5
+    h = h*R_jeta
+
+    return cp, h
+
+def find_temp(t: float, temp):
+    """
+    Return neighbouring temperature values from list or two largest/smallest values when extrapolating
+
+    Parameters
+    ----------
+    t : float
+        Temperature (K)
+    temp : numpy array
+        Temperatures for which data is available (K)
+
+    Returns
+    -------
+    t0 : float
+        smaller temperature value  (K)
+    t1 : float
+        larger temperature value (K)
+    """
+    # when extrapolating an exception is triggered. Then, use two smallest or largest temperature values for extrapolation
+    # otherwise when interpolating use the closest temperature values to the point of interest 
+    try:
+        # when interpolating set the upper temperature to the smallest value larger than the point of interest
+        t1 = temp[temp > t].min()
+    # when no temperature larger than the point of interest exists, extrapolation occurs and an exception is triggered
+    except:
+        # set the upper temperature to the largest temperature value
+        t1 = temp.max()
+        # set the lower temperature to the next largest temperature value
+        t0 = temp[temp < t1].max()
+        return t0, t1
+    try:
+        t0 = temp[temp < t].max()
+    except:
+        t0 = temp.min()
+        t1 = temp[temp > t0].min()
+        return t0, t1
+    return t0, t1
+
+
+def find_p(p: float, press):
+    """
+    Return neighbouring pressure values from list or two largest/smallest values when extrapolating
+
+    Parameters
+    ----------
+    p : float
+        pressure (MPa)
+    press : numpy array
+        pressures for which data is available (MPa)
+
+    Returns
+    -------
+    p0 : float
+        smaller pressure value (MPa)
+    p1 : float
+        larger pressure value (MPa)
+    """
+    # when extrapolating an exception is triggered. Then, use two smallest or largest pressure values for extrapolation
+    # otherwise when interpolating use the closest pressure values to the point of interest 
+    try:
+        # when interpolating set the upper pressure to the smallest value larger than the point of interest
+        p1 = press[press > p].min()
+    # when no pressure larger than the point of interest exists, extrapolation occurs and an exception is triggered
+    except:
+        # set the upper pressure to the largest temperature value
+        p1 = press.max()
+        # set the lower pressure to the next largest temperature value
+        p0 = press[press < p1].max()
+        return p0, p1
+    try:
+        p0 = press[press < p].max()
+    except:
+        p0 = press.min()
+        p1 = press[press > p0].min()
+        return p0, p1
+    return p0, p1
+
+
+def jeta_density(t: float, p: float):
+    """
+    Calculate the density of jet fuel given temperature and pressure
+    
+    Parameters
+    ----------
+    t : float 
+        Temperature (K)
+    p : float 
+        Pressure (Pa)
+
+    Returns
+    -------
+    rho : float
+        density of jet fuel (kg/m3)
+
+    """
+    # import thermo-physical properties of jet fuel from .csv 
+    jeta = import_tpp()["jeta"]
+    # feed the relevant data into numpy arrays
+    temp = jeta[["Temperature (K)"]].to_numpy()
+    press = jeta[["Pressure (Mpa)"]].to_numpy()
+    rho_arr = jeta[["Density (kg/m3)"]].to_numpy()
+    # pressure unit conversion (Pa to MPa)
+    p = p/10e6
+    # find closest Temperature values
+    t0, t1 = find_temp(t, temp)
+    # select the pressure and density values corresponding to the selected temperature values
+    press_t1 = press[temp == t1]
+    press_t0 = press[temp == t0]
+    rho_t1 = rho_arr[temp == t1]
+    rho_t0 = rho_arr[temp == t0]
+    # find closest pressure values
+    t0p0, t0p1 = find_p(p, press_t0)
+    t1p0, t1p1 = find_p(p, press_t1)
+    # find the density at the previously defined temperature and pressure
+    rho_t0p1 = rho_t0[press_t0 == t0p1]
+    rho_t0p0 = rho_t0[press_t0 == t0p0]
+    rho_t1p1 = rho_t1[press_t1 == t1p1]
+    rho_t1p0 = rho_t1[press_t1 == t1p0]
+    # interpolate along the pressure axis for the two temperature values
+    rhot1 = rho_t1p1 + (rho_t1p1-rho_t1p0)/(t1p1-t1p0)*(p-t1p1)
+    rhot0 = rho_t0p1 + (rho_t0p1-rho_t0p0)/(t0p1-t0p0)*(p-t0p1)
+    # interpolate along the temperature axis
+    rho = rhot1 + (rhot1-rhot0)/(t1-t0)*(t-t1)
+    return rho
+
+
+
+jeta_props = jeta_properties(300)
+dh = jeta_properties(400)[1]-jeta_properties(300)[1]
+print(jeta_props)
+print(dh)
+jeta_props = jeta_properties(400)
+print(jeta_props)
 tpp = import_tpp()
-print(list(tpp["h2sat"]))
-print(tpp["h2sat"][["Temperature (K)", "Pressure (MPa)"]])
 
+# h2_2_cp = tpp['h2_2bar']["Cp (J/g*K)"].to_numpy()
+# h2_2_t = tpp['h2_2bar']["Temperature (K)"].to_numpy()
+# h2_30_cp = tpp['h2_30bar']["Cp (J/g*K)"].to_numpy()
+# h2_30_t = tpp['h2_30bar']["Temperature (K)"].to_numpy()
+
+# diff_2 = list()
+# diff_30 = list()
+# cp_2 = list()
+# cp_30 = list()
+# for i in range(np.prod(h2_2_cp.shape)):
+#     cp_2.append(H2_cp(h2_2_t[i], 2*10**5)/1000)
+#     diff_2.append(abs(1 - 1/(h2_2_cp[i]/cp_2[i])))
+# for i in range(np.prod(h2_30_cp.shape)):
+#     cp_30.append(H2_cp(h2_30_t[i], 30*10**5)/1000)
+#     diff_30.append(abs(1 - 1/(h2_30_cp[i]/cp_30[i])))
+# fig, axs = plt.subplots(2)
+
+
+# axs[0].plot(h2_2_t, h2_2_cp)
+# axs[0].plot(h2_2_t, cp_2)
+# axs[1].plot(h2_30_t, h2_30_cp)
+# axs[1].plot(h2_30_t, cp_30)
+
+# axs[0].set(ylim=(10, 14))
+# axs[1].set(ylim=(10, 36))
+# axs[0].title.set_text("2 bar")
+# axs[1].title.set_text("30 bar")
+# for i in range(2):
+#     axs[i].set(xlim=(0, 200), xlabel="Temperature [K]", ylabel=r"$\ c_p [\frac{kJ}{kgK}]$ ")
+#     axs[i].legend(["nist.gov", "stoffmodell"])
+# fig.tight_layout()
+# plt.savefig("h2stoffmodell_abweichungen.png", dpi=600)
+
+# min_p = 10**5
+# max_p = 2*10**6
+# p_increment = 10**4
+# cp_t30 = list()
+# cp_t40 = list()
+# cp_t300 = list()
+# cp_t600 = list()
+# p_list = list()
+
+# for i in range(min_p, max_p, p_increment):
+#     p_list.append(i)
+#     cp_t30.append(H2_cp(30, i)/1000)
+#     cp_t40.append(H2_cp(40, i)/1000)
+#     cp_t300.append(H2_cp(300, i)/1000)
+#     cp_t600.append(H2_cp(600, i)/1000)
+
+# fig, ax = plt.subplots()
+# ax.plot(p_list, cp_t30)
+# ax.plot(p_list, cp_t40)
+# ax.plot(p_list, cp_t300)
+# ax.plot(p_list, cp_t600)
+
+# ax.legend(["T = 30K", "T = 40K", "T = 300K", "T = 600K"])
+# ax.set(xlabel="Pressure [Pa]", ylabel=r"$\ c_p [\frac{kJ}{kgK}]$ ")
+# ax.set_xlim(xmin=min_p, xmax=max_p)
+# plt.savefig("isothermen_cp", dpi=600)
+
+# min_t = 10
+# max_t = 200
+# t_increment = 1
+# cp_p1 = list()
+# cp_p10 = list()
+# cp_p15 = list()
+# cp_p20 = list()
+# cp_p30 = list()
+# h_p1 = list()
+# h_p10 = list()
+# h_p15 = list()
+# h_p20 = list()
+# h_p30 = list()
+# t_list = list()
+
+# for i in range(min_t, max_t, t_increment):
+#     i = i/2
+#     t_list.append(i)
+#     cp_p1.append(H2_cp(i, 10**5)/1000)
+#     cp_p10.append(H2_cp(i, 10**6)/1000)
+#     cp_p15.append(H2_cp(i, 1.5*10**6)/1000)
+#     cp_p20.append(H2_cp(i, 2*10**6)/1000)
+#     cp_p30.append(H2_cp(i, 3*10**6)/1000)
+#     h_p1.append(H2_h(i, 10**5)/1000)
+#     h_p10.append(H2_h(i, 10**6)/1000)
+#     h_p15.append(H2_h(i, 1.5*10**6)/1000)
+#     h_p20.append(H2_h(i, 2*10**6)/1000)
+#     h_p30.append(H2_h(i, 3*10**6)/1000)
+
+# fig, ax = plt.subplots()
+# ax.plot(t_list, cp_p1)
+# ax.plot(t_list, cp_p10)
+# ax.plot(t_list, cp_p15)
+# ax.plot(t_list, cp_p20)
+# ax.plot(t_list, cp_p30)
+
+# ax.legend(["p = 1 bar", "p = 10 bar", "p = 15 bar",  "p = 20 bar", "p = 30 bar"])
+# ax.set(xlabel="Temperature [K]", ylabel=r"$\ c_p [\frac{kJ}{kgK}]$ ")
+# ax.set_xlim(xmin=min_t, xmax=max_t/2)
+# plt.savefig("isobaren_cp", dpi=600)
+
+# fig, ax = plt.subplots()
+# ax.plot(t_list, h_p1)
+# ax.plot(t_list, h_p10)
+# ax.plot(t_list, h_p15)
+# ax.plot(t_list, h_p20)
+# ax.plot(t_list, h_p30)
+
+# ax.legend(["p = 1 bar", "p = 10 bar", "p = 15 bar",  "p = 20 bar", "p = 30 bar"])
+# ax.set(xlabel="Temperature [K]", ylabel=r"$\ h [\frac{kJ}{kg}]$ ")
+# ax.set_xlim(xmin=min_t, xmax=max_t/2)
+# plt.savefig("isobaren_h", dpi=600)
+
+t_hot = H2_find_t_for_h(H2_h(80, 1e5), 1e5)
+print(t_hot)
+
+rho = jeta_density(100, 10e5)
+print(rho)

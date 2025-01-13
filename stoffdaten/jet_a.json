@@ -1,0 +1,9 @@
+{
+  "species": "Jet-A(L)",
+  "chemical_formula": "C12H23",
+  "molecular_weight": "167.3110200",
+  "molar_heat_of_formation": "-303403.000",
+  "temperature_range": "[220 550]",
+  "a_coefficients": "[-4.218262130e5 -5.576600450e3 1.522120958e2 -8.610197550e-1 3.071662234e-3 -4.702789540e-6 2.743019833e-9]",
+  "b_coefficients": "[-3.238369150e4 -6.781094910e2]"
+}
