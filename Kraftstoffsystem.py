@@ -205,7 +205,7 @@ def jeta_properties(t: float):
     # define universal gas constant
     R = 8.3145      # Jmol-1K
     # import data from json
-    with open(os.path.join(pathlib.Path().resolve(), "stoffdaten", "jet_a.json")) as f:
+    with open(os.path.join(pathlib.Path().resolve(), "stoffdaten", "jeta.json")) as f:
         jeta = json.load(f)
     M_jeta = float(jeta["molecular_weight"])        # gmol-1
     R_jeta = R/M_jeta                               # kJ/kgK
