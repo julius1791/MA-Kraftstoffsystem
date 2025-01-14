@@ -10,6 +10,155 @@ import math
 import json
 
 
+class Jeta_Flow:
+    def __init__(self, mass_flow: float, temperature: float, pressure: float):
+        """
+        Init method for jeta
+
+        Parameters
+        ----------
+        mass_flow : float
+            mass flow of jet a (kg/s)
+        temperature : float
+            temperature (K)
+        pressure : float
+            pressure (Pa)
+        """
+        self.qm = mass_flow
+        self.t = temperature
+        self.p = pressure
+        
+    def heating(self, Q_dot: float):
+        """
+        Method for heat added to jet fuel in heat exchanger
+
+        Parameters
+        ----------
+        Q_dot : float
+            Absolute thermal power added (W)
+
+        Returns
+        -------
+        t1 : float
+            final temperature (K)
+
+        """
+        # specific heat
+        q = Q_dot/self.qm
+        # initial specific enthalpy
+        _, h0 = jeta_properties(self.t, self.p)
+        # final enthalpy
+        h1 = h0 + q/1000
+        # final temperature
+        t1 = jeta_find_t_for_h(h1, self.p)
+        self.t = t1
+        return t1
+    
+    def pump(self, p1: float, eta: float):
+        """
+        Method for raising pressure of jet fuel
+
+        Parameters
+        ----------
+        p1 : float
+            final pressure (Pa)
+        eta : float
+            pump efficiency (N/A)
+
+        Returns
+        -------
+        P : float
+            pump power (W)
+        t1 : float
+            final temperature (K)
+
+        """
+        # initial density and specific enthalpy
+        rho = jeta_density(self.t, self.p)
+        _, h0 = jeta_properties(self.t, self.p)
+        # reversible pump work
+        a_rev = (p1-self.p)/rho/1000
+        # pump work
+        a = a_rev/eta
+        # final enthalpy and temperature
+        h1 = a + h0
+        t1 = jeta_find_t_for_h(h1, p1)
+        self.p = p1
+        self.t = t1
+        # pump power
+        P = a*self.qm
+        return P, t1
+    
+    def mix(self, secondary_flow):
+        """
+        Method for mixing two jeta flows into one
+
+        Parameters
+        ----------
+        secondary_flow : Jeta_Flow
+            secondary jeta flow 
+
+        Returns
+        -------
+        t1 : float
+            final temperature (K)
+
+        """
+        # find initial enthalpy 
+        H0_1 = jeta_properties(self.t, self.p)*self.qm
+        H0_2 = jeta_properties(secondary_flow.t, secondary_flow.p)*secondary_flow.qm
+        
+        # calculate final enthalpy
+        H1 = H0_1 + H0_2
+        # final mass flow
+        qm1 = (self.qm+secondary_flow.qm)
+        # final specific enthalpy
+        h1 = H1/qm1
+        # final pressure
+        p1 = min(self.p, secondary_flow.p)
+        # final temperature
+        t1 = jeta_find_t_for_h(h1, p1)
+        self.t = t1
+        self.p = p1
+        self.qm = qm1
+        return t1
+    def split(self, ratio: float):
+        """
+        Method for splitting one flow instance into two separate flows
+
+        Parameters
+        ----------
+        ratio : float
+            ratio between mass flow of initial flow and secondary outflow
+
+        Returns
+        -------
+        secondary_flow : Jeta_Flow
+            secondary flow split off from main jet a flow
+
+        """
+        qm0 = self.qm
+        # mass flow of the split flows
+        qm1 = qm0*(1-ratio)
+        qm2 = qm0*ratio
+        self.qm = qm1
+        # secondary flow inherits pressure and temperature from primary flow
+        secondary_flow = Jeta_Flow(qm2, self.t, self.p)
+        return secondary_flow
+
+def jeta_antoine():
+    """
+    Generate antoine equation constants for jet-a
+
+    Returns
+    -------
+    A, B, C : float
+        Antoine equation parameters
+    """
+    A = 8.81923182000836
+    B = 1374.12563
+    C = -43.53988
+    return A, B, C
 
 def H2_antoine():
     """
@@ -133,7 +282,7 @@ def import_tpp():
 
 def H2_find_t_for_h(h_t: float, p: float):
     """
-    Find the temperature corresponding to an enthalpy and pressure of jet fuel
+    Find the temperature corresponding to an enthalpy and pressure of hydrogen
 
     Parameters
     ----------
@@ -185,7 +334,36 @@ def H2_find_t_for_h(h_t: float, p: float):
     return t
 
 
-def jeta_properties(t: float):
+def jeta_find_t_for_h(h_t: float, p: float):
+    """
+    Find the temperature corresponding to an enthalpy and pressure of jet fuel
+
+    Parameters
+    ----------
+    h_t : float
+        target enthalpy (kJ/kg)
+    p : float
+        pressure (Pa)
+
+    Returns
+    -------
+    t : float
+        Temperature
+
+    """
+    t = 300
+    cp, h = jeta_properties(t, p)
+    # loop until target enthalpy is achieved
+    while abs(h-h_t) > 1e-9:
+        cp, h = jeta_properties(t, p)
+        # calculate temperature step asssuming constant heat capacity
+        dt = (h_t-h)/cp
+
+        t = t + dt
+    return t
+
+
+def jeta_properties(t: float, p: float):
     """
     Calculate Heat capacity and enthalpy of jet fuel for a given temperature
 
@@ -193,6 +371,8 @@ def jeta_properties(t: float):
     ----------
     t : float
         Temperature (K)
+    p : float
+        Pressure (Pa)
 
     Returns
     -------
@@ -232,6 +412,9 @@ def jeta_properties(t: float):
     # multipy with specific gas constant
     cp = cp * R_jeta
     
+    
+    rho = jeta_density(t, p)
+    
     # sum up enthalpy components
     h = -a_list[0]/t
     h += a_list[1]*math.log(t)
@@ -241,6 +424,7 @@ def jeta_properties(t: float):
     h += a_list[5]*pow(t, 4)/4
     h += a_list[6]*pow(t, 5)/5
     h = h*R_jeta
+    h += p/rho/1000
 
     return cp, h
 
@@ -367,15 +551,15 @@ def jeta_density(t: float, p: float):
     rhot0 = rho_t0p1 + (rho_t0p1-rho_t0p0)/(t0p1-t0p0)*(p-t0p1)
     # interpolate along the temperature axis
     rho = rhot1 + (rhot1-rhot0)/(t1-t0)*(t-t1)
-    return rho
+    return rho[0]
 
 
 
-jeta_props = jeta_properties(300)
-dh = jeta_properties(400)[1]-jeta_properties(300)[1]
+jeta_props = jeta_properties(300, 1e5)
+dh = jeta_properties(400, 1e5)[1]-jeta_properties(300, 1e5)[1]
 print(jeta_props)
 print(dh)
-jeta_props = jeta_properties(400)
+jeta_props = jeta_properties(400, 1e5)
 print(jeta_props)
 tpp = import_tpp()
 
@@ -495,5 +679,16 @@ tpp = import_tpp()
 t_hot = H2_find_t_for_h(H2_h(80, 1e5), 1e5)
 print(t_hot)
 
-rho = jeta_density(100, 10e5)
-print(rho)
+
+
+ff1 = Jeta_Flow(1, 300, 1e5)
+ff1.heating(50000)
+print(ff1.t)
+ff1.heating(-50000)
+print(ff1.t)
+
+print(jeta_properties(300, 1e5)[0])
+print(jeta_properties(300, 3*1e6)[1]-jeta_properties(300, 1e6)[1])
+work = ff1.pump(3e6, 0.8)
+print(ff1.p, ff1.t)
+print(work)
