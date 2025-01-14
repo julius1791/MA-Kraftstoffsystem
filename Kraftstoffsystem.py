@@ -28,7 +28,7 @@ class Jeta_Flow:
         self.t = temperature
         self.p = pressure
         
-    def heating(self, Q_dot: float):
+    def heat(self, Q_dot: float):
         """
         Method for heat added to jet fuel in heat exchanger
 
@@ -46,7 +46,7 @@ class Jeta_Flow:
         # specific heat
         q = Q_dot/self.qm
         # initial specific enthalpy
-        _, h0 = jeta_properties(self.t, self.p)
+        h0 = jeta_properties(self.t, self.p)
         # final enthalpy
         h1 = h0 + q/1000
         # final temperature
@@ -75,7 +75,7 @@ class Jeta_Flow:
         """
         # initial density and specific enthalpy
         rho = jeta_density(self.t, self.p)
-        _, h0 = jeta_properties(self.t, self.p)
+        h0 = jeta_properties(self.t, self.p)[1]
         # reversible pump work
         a_rev = (p1-self.p)/rho/1000
         # pump work
@@ -105,8 +105,8 @@ class Jeta_Flow:
 
         """
         # find initial enthalpy 
-        H0_1 = jeta_properties(self.t, self.p)*self.qm
-        H0_2 = jeta_properties(secondary_flow.t, secondary_flow.p)*secondary_flow.qm
+        H0_1 = jeta_properties(self.t, self.p)[1]*self.qm
+        H0_2 = jeta_properties(secondary_flow.t, secondary_flow.p)[1]*secondary_flow.qm
         
         # calculate final enthalpy
         H1 = H0_1 + H0_2
@@ -122,6 +122,167 @@ class Jeta_Flow:
         self.p = p1
         self.qm = qm1
         return t1
+    
+    def split(self, qm_split: float):
+        """
+        Method for splitting one flow instance into two separate flows
+
+        Parameters
+        ----------
+        qm_split : float
+            mass flow of secondary flow
+
+        Returns
+        -------
+        secondary_flow : Jeta_Flow
+            secondary flow split off from main jet a flow
+
+        """
+        qm0 = self.qm
+        self.qm = qm0 - qm_split
+        # secondary flow inherits pressure and temperature from primary flow
+        secondary_flow = Jeta_Flow(qm_split, self.t, self.p)
+        return secondary_flow
+    
+class H2_Flow:
+    def __init__(self, mass_flow: float, temperature: float, pressure: float, saturation: float):
+        """
+        Init method for hydrogen
+
+        Parameters
+        ----------
+        mass_flow : float
+            mass flow of h2 (kg/s)
+        temperature : float
+            temperature (K)
+        pressure : float
+            pressure (Pa)
+        saturation : float
+            physical state of hydrogen 0 -> super cooled liquid, 1 -> overheated gas, 0~1 -> saturation state
+        """
+        self.qm = mass_flow
+        self.t = temperature
+        self.p = pressure
+        self.sat = saturation
+        
+    def heat(self, Q_dot: float):
+        """
+        Method for heat added to hydrogen in heat exchanger
+
+        Parameters
+        ----------
+        Q_dot : float
+            Absolute thermal power added (W)
+
+        Returns
+        -------
+        t1 : float
+            final temperature (K)
+
+        """
+        # specific heat
+        q = Q_dot/self.qm
+        # initial specific enthalpy
+        h0 = H2_h(self.t, self.p)
+        # final enthalpy
+        h1 = h0 + q
+        # final temperature
+        t1 = H2_find_t_for_h(h1, self.p)
+        self.t = t1
+        return t1
+    
+    def compressor(self, p1: float, eta: float):
+        """
+        
+
+        Parameters
+        ----------
+        p1 : float
+            DESCRIPTION.
+        eta : float
+            DESCRIPTION.
+
+        Returns
+        -------
+        P : TYPE
+            DESCRIPTION.
+        t1 : TYPE
+            DESCRIPTION.
+
+        """
+        P = 0
+        t1 = 0
+        return P, t1
+    
+    def pump(self, p1: float, eta: float):
+        """
+        Method for raising pressure of hydrogen
+
+        Parameters
+        ----------
+        p1 : float
+            final pressure (Pa)
+        eta : float
+            pump efficiency (N/A)
+
+        Returns
+        -------
+        P : float
+            pump power (W)
+        t1 : float
+            final temperature (K)
+
+        """
+        # initial density and specific enthalpy
+        rho = jeta_density(self.t, self.p)
+        h0 = jeta_properties(self.t, self.p)[1]
+        # reversible pump work
+        a_rev = (p1-self.p)/rho/1000
+        # pump work
+        a = a_rev/eta
+        # final enthalpy and temperature
+        h1 = a + h0
+        t1 = jeta_find_t_for_h(h1, p1)
+        self.p = p1
+        self.t = t1
+        # pump power
+        P = a*self.qm
+        return P, t1
+    
+    def mix(self, secondary_flow):
+        """
+        Method for mixing two hydrogen flows into one
+
+        Parameters
+        ----------
+        secondary_flow : H2_Flow
+            secondary hydrogen flow 
+
+        Returns
+        -------
+        t1 : float
+            final temperature (K)
+
+        """
+        # find initial enthalpy 
+        H0_1 = H2_h(self.t, self.p)*self.qm
+        H0_2 = H2_h(secondary_flow.t, secondary_flow.p)*secondary_flow.qm
+        
+        # calculate final enthalpy
+        H1 = H0_1 + H0_2
+        # final mass flow
+        qm1 = (self.qm+secondary_flow.qm)
+        # final specific enthalpy
+        h1 = H1/qm1
+        # final pressure
+        p1 = min(self.p, secondary_flow.p)
+        # final temperature
+        t1 = H2_find_t_for_h(h1, p1)
+        self.t = t1
+        self.p = p1
+        self.qm = qm1
+        return t1
+    
     def split(self, ratio: float):
         """
         Method for splitting one flow instance into two separate flows
@@ -133,8 +294,8 @@ class Jeta_Flow:
 
         Returns
         -------
-        secondary_flow : Jeta_Flow
-            secondary flow split off from main jet a flow
+        secondary_flow : H2_Flow
+            secondary flow split off from main hydrogen flow
 
         """
         qm0 = self.qm
@@ -143,7 +304,7 @@ class Jeta_Flow:
         qm2 = qm0*ratio
         self.qm = qm1
         # secondary flow inherits pressure and temperature from primary flow
-        secondary_flow = Jeta_Flow(qm2, self.t, self.p)
+        secondary_flow = H2_Flow(qm2, self.t, self.p)
         return secondary_flow
 
 def jeta_antoine():
@@ -555,13 +716,13 @@ def jeta_density(t: float, p: float):
 
 
 
-jeta_props = jeta_properties(300, 1e5)
-dh = jeta_properties(400, 1e5)[1]-jeta_properties(300, 1e5)[1]
-print(jeta_props)
-print(dh)
-jeta_props = jeta_properties(400, 1e5)
-print(jeta_props)
-tpp = import_tpp()
+# jeta_props = jeta_properties(300, 1e5)
+# dh = jeta_properties(400, 1e5)[1]-jeta_properties(300, 1e5)[1]
+# print(jeta_props)
+# print(dh)
+# jeta_props = jeta_properties(400, 1e5)
+# print(jeta_props)
+# tpp = import_tpp()
 
 # h2_2_cp = tpp['h2_2bar']["Cp (J/g*K)"].to_numpy()
 # h2_2_t = tpp['h2_2bar']["Temperature (K)"].to_numpy()
@@ -676,19 +837,53 @@ tpp = import_tpp()
 # ax.set_xlim(xmin=min_t, xmax=max_t/2)
 # plt.savefig("isobaren_h", dpi=600)
 
-t_hot = H2_find_t_for_h(H2_h(80, 1e5), 1e5)
-print(t_hot)
+# t_hot = H2_find_t_for_h(H2_h(80, 1e5), 1e5)
+# print(t_hot)
 
 
 
-ff1 = Jeta_Flow(1, 300, 1e5)
-ff1.heating(50000)
-print(ff1.t)
-ff1.heating(-50000)
-print(ff1.t)
+# ff1 = Jeta_Flow(1, 300, 1e5)
+# ff1.heat(50000)
+# print(ff1.t)
+# ff1.heat(-50000)
+# print(ff1.t)
 
-print(jeta_properties(300, 1e5)[0])
-print(jeta_properties(300, 3*1e6)[1]-jeta_properties(300, 1e6)[1])
-work = ff1.pump(3e6, 0.8)
-print(ff1.p, ff1.t)
-print(work)
+# print(jeta_properties(300, 1e5)[0])
+# print(jeta_properties(300, 3*1e6)[1]-jeta_properties(300, 1e6)[1])
+# work = ff1.pump(3e6, 0.8)
+# print(ff1.p, ff1.t)
+# print(work)
+
+
+
+
+t_r1 = 420
+qm_cb = 0.3
+qm_r = 0.4
+qm_t = 0.3
+t0 = 250
+p0 = 0.4e5
+p_lpfp = 3e5
+eta_lpfp = 0.83
+Q_fohe = 200000
+p_hpfp = 3e6
+eta_hpfp = 0.88
+Q_idg = 5500
+
+t_r0 = 1000
+i = 0
+while (t_r0 - t_r1) > 1e-6:
+    jetaflow = Jeta_Flow(qm_cb+qm_t, t0, p0)
+    i+=1
+    print(i)
+    t_r0 = t_r1
+    t_lpfp = jetaflow.pump(p_lpfp, eta_lpfp)
+    print(t_r0)
+    t_mix = jetaflow.mix(Jeta_Flow(qm_r, t_r0, jetaflow.p))
+    t_fohe = jetaflow.heat(Q_fohe)
+    t_hpfp = jetaflow.pump(p_hpfp, eta_hpfp)
+    cb_ff = jetaflow.split(qm_cb)
+    t_idg = jetaflow.heat(Q_idg)
+    to_tank_ff = jetaflow.split(qm_t)
+    t_r1 = jetaflow.t
+    print(t_r1)
