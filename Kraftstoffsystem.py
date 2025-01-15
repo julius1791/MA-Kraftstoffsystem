@@ -5,6 +5,7 @@ import pathlib
 import os
 from h2_stoffmodell import calculate_H2_cp as H2_cp
 from h2_stoffmodell import calculate_H2_enthalpy as H2_enth
+from h2_stoffmodell import calculate_H2_entropy as H2_s
 from h2_stoffmodell import calculate_H2_rho as H2_rho
 import matplotlib.pyplot as plt
 import math
@@ -942,3 +943,27 @@ while abs(t_r0 - t_r1) > 1e-6:
     t_idg = jetaflow.heat(Q_idg)
     to_tank_ff = jetaflow.split(qm_t)
     t_r1 = jetaflow.t
+    
+    
+    
+    
+# p_list = np.linspace(1e5, 3e6, 11)
+# t_list = np.linspace(100, 600, 100)
+# rho = np.zeros([len(p_list), len(t_list)])
+# i = 0
+# for p in p_list:
+#     j = 0
+#     for t in t_list:
+#         rho[i, j] = H2_rho(t.item(), p.item())
+#         j += 1
+#     i += 1
+
+# print(type(rho))
+# print(rho)
+# i = 0
+# fig, ax = plt.subplots()
+# for p in p_list:
+#     ax.plot(t_list, rho[i])
+#     i += 1
+    
+print(H2_s(20, 1e5))

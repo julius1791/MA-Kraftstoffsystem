@@ -636,6 +636,35 @@ def calculate_H2_enthalpy(T_ZP, p_ZP):
 
     return h
 
+
+#############################################
+# ########## Enttropy s [J/kgK] ########### #
+#############################################
+
+def calculate_H2_entropy(T_ZP, p_ZP):
+    
+    rho_i = initialize_rho(T_ZP, p_ZP, p_c, T_c, normal_hydrogen)
+
+    differenz = 1e-9  # Konvergenzkriterium: (rho_i+1 - rho_i) < 10^-9
+    max_iteration = 50
+    # Max_Iterationen: Konvergenzkriterium
+    # (Begrenzung falls keine Konvergenz erreicht wird)
+
+    rho = berechne_dichte(rho_i, T_ZP, p_ZP, rho_c, T_c, R, normal_hydrogen,
+                      max_iteration, differenz)
+    
+    tau = T_c / T_ZP
+    delta_neu = rho / rho_c
+
+    a_0_t = alpha_0_tau_calc(delta_neu, tau, normal_hydrogen)
+    a_r_t = alpha_r_tau_calc(delta_neu, tau, normal_hydrogen)
+    a_0 = alpha_0(delta_neu, tau, normal_hydrogen)
+    a_r = alpha_r(delta_neu, tau, normal_hydrogen)
+
+    s = R * (tau * (a_0_t + a_r_t) - a_0 - a_r)
+
+    return s
+
 #############################################
 # ########## Dichte rho [kg/m3] ########### #
 #############################################
