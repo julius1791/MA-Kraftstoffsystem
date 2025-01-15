@@ -647,7 +647,7 @@ def jeta_properties(t: float, p: float):
 
     return cp, h
 
-def find_temp(t: float, temp):
+def find_t(t: float, temp):
     """
     Return neighbouring temperature values from list or two largest/smallest values when extrapolating
 
@@ -751,7 +751,7 @@ def jeta_density(t: float, p: float):
     # pressure unit conversion (Pa to MPa)
     p = p/10e6
     # find closest Temperature values
-    t0, t1 = find_temp(t, temp)
+    t0, t1 = find_t(t, temp)
     # select the pressure and density values corresponding to the selected temperature values
     press_t1 = press[temp == t1]
     press_t0 = press[temp == t0]
