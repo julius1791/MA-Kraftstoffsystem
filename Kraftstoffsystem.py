@@ -19,8 +19,8 @@ def H2_h(t, p, sat):
         h = H2_enth(t, p)
     else:
         t_sat = sat_t(p, True)
-        h_v = H2_h(t_sat + 0.1, p)
-        h_l = H2_h(t_sat - 0.1, p)
+        h_v = H2_enth(t_sat + 0.1, p)
+        h_l = H2_enth(t_sat - 0.1, p)
         h = sat*h_v + (1-sat)*h_l
     return h
 
@@ -197,7 +197,7 @@ class H2_Flow:
         # specific heat
         q = Q_dot/self.qm
         # initial specific enthalpy
-        h0 = H2_h(self.t, self.p)
+        h0 = H2_h(self.t, self.p, self.sat)
         # final enthalpy
         h1 = h0 + q
         # final temperature
@@ -216,9 +216,12 @@ class H2_Flow:
             Thermal power required for vaporisation
 
         """
-        h0 = H2_h(self.t, self.p)
+        if self.sat == 1:
+            raise Exception("Unexpected Saturation. Saturation is ", self.sat, ", expected <1")
+        
+        h0 = H2_h(self.t, self.p, self.sat)
         t1 = sat_t(self.p, True) + 0.1
-        h1 = H2_h(t1, self.p)
+        h1 = H2_h(t1, self.p, 1)
         Q_dot = h1 - h0
         self.t = t1
         self.sat = 1
@@ -244,19 +247,21 @@ class H2_Flow:
             final temperature (K)
 
         """
+        if self.sat != 1:
+            raise Exception("Unexpected Saturation. Saturation is ", self.sat, ", expected 1")
         # calculate initial specific entropy and enthalpy
         s0 = H2_s(self.t, self.p)
-        h0 = H2_h(self.t, self.p)
+        h0 = H2_h(self.t, self.p, 1)
         # find temperature that yields the same entropy at higher pressure (isentropic compression)
         ts1 = H2_find_t_for_s(s0, p1)
         # find the specific enthalpy of the isentropic point and the reversible compression work
-        hs1 = H2_h(ts1, p1)
+        hs1 = H2_h(ts1, p1, 1)
         a_rev = hs1 - h0 
         # calculate actual compression work and final enthalpy
         a = a_rev/eta
         h1 = h0 + a
         # find final temperature
-        t1 = H2_find_t_for_h(h1, p1)
+        t1 = H2_find_t_for_h(h1, p1)[0]
         # calculate compressor power
         P = a*self.qm
         self.t = t1
@@ -282,16 +287,18 @@ class H2_Flow:
             final temperature (K)
 
         """
+        if self.sat != 0:
+            raise Exception("Unexpected Saturation. Saturation is ", self.sat, ", expected 0")
         # initial density and specific enthalpy
-        rho = jeta_density(self.t, self.p)
-        h0 = jeta_properties(self.t, self.p)[1]
+        rho = H2_rho(self.t, self.p)
+        h0 = H2_h(self.t, self.p, self.sat)
         # reversible pump work
-        a_rev = (p1-self.p)/rho/1000
+        a_rev = (p1-self.p)/rho
         # pump work
         a = a_rev/eta
         # final enthalpy and temperature
         h1 = a + h0
-        t1 = jeta_find_t_for_h(h1, p1)
+        t1 = H2_find_t_for_h(h1, p1)[0]
         self.p = p1
         self.t = t1
         # pump power
@@ -314,8 +321,8 @@ class H2_Flow:
 
         """
         # find initial enthalpy 
-        H0_1 = H2_h(self.t, self.p)*self.qm
-        H0_2 = H2_h(secondary_flow.t, secondary_flow.p)*secondary_flow.qm
+        H0_1 = H2_h(self.t, self.p, self.sat)*self.qm
+        H0_2 = H2_h(secondary_flow.t, secondary_flow.p, secondary_flow.sat)*secondary_flow.qm
         
         # calculate final enthalpy
         H1 = H0_1 + H0_2
@@ -326,7 +333,8 @@ class H2_Flow:
         # final pressure
         p1 = min(self.p, secondary_flow.p)
         # final temperature
-        t1 = H2_find_t_for_h(h1, p1)
+        t1, sat = H2_find_t_for_h(h1, p1)
+        self.sat = sat
         self.t = t1
         self.p = p1
         self.qm = qm1
@@ -353,7 +361,7 @@ class H2_Flow:
         qm2 = qm0*ratio
         self.qm = qm1
         # secondary flow inherits pressure and temperature from primary flow
-        secondary_flow = H2_Flow(qm2, self.t, self.p)
+        secondary_flow = H2_Flow(qm2, self.t, self.p, self.sat)
         return secondary_flow
 
 def jeta_antoine():
@@ -522,6 +530,7 @@ def H2_find_t_for_s(s_t: float, p: float):
     while abs(H2_s(t, p)-s_t) > 1e-9:
         # calculate temperature step asssuming constant heat capacity
         t = t/math.exp((H2_s(t,p)-s_t)/H2_cp(t,p))
+        print(t)
 
     return t
 
@@ -551,19 +560,20 @@ def H2_find_t_for_h(h_t: float, p: float):
         t = 300
         tmax = 2000
         tmin = 20
+        saturation = 1
     else:
         # determine bounds and initial temperature depending on the physical state
         # determine if the hydrogen is an overheated gas
-        if h_t > H2_h(t_sat + 0.1, p):
+        if h_t > H2_h(t_sat + 0.1, p, 1):
             tmin = t_sat + 0.1
             t = tmin + 10
             tmax = 2000
             saturation = 1
     
         # determine if the hydrogen is in the saturation regime
-        elif h_t > H2_h(t_sat - 0.1, p):
-            h_v = H2_h(t_sat + 0.1, p)
-            h_l = H2_h(t_sat - 0.1, p)
+        elif h_t > H2_h(t_sat - 0.1, p, 0):
+            h_v = H2_h(t_sat + 0.1, p, 1)
+            h_l = H2_h(t_sat - 0.1, p, 0)
             saturation = (h_t - h_l)/(h_v-h_l)
             t = t_sat
             
@@ -577,9 +587,9 @@ def H2_find_t_for_h(h_t: float, p: float):
             tmin = 1
     
     # loop until target enthalpy is achieved
-    while abs(H2_h(t, p)-h_t) > 1e-9:
+    while abs(H2_h(t, p, saturation)-h_t) > 1e-6:
         # calculate temperature step asssuming constant heat capacity
-        dt = (h_t-H2_h(t, p))/H2_cp(t, p)
+        dt = (h_t-H2_h(t, p, saturation))/H2_cp(t, p)
 
         t = t + dt
 
@@ -954,33 +964,33 @@ def jeta_density(t: float, p: float):
 
 
 
-t_r1 = 420
-qm_cb = 0.3
-qm_r = 0.3
-qm_t = 0.1
-t0 = 250
-p0 = 0.4e5
-p_lpfp = 3e5
-eta_lpfp = 0.83
-Q_fohe = 200000
-p_hpfp = 3e6
-eta_hpfp = 0.88
-Q_idg = 5500
+# t_r1 = 420
+# qm_cb = 0.3
+# qm_r = 0.3
+# qm_t = 0.1
+# t0 = 250
+# p0 = 0.4e5
+# p_lpfp = 3e5
+# eta_lpfp = 0.83
+# Q_fohe = 200000
+# p_hpfp = 3e6
+# eta_hpfp = 0.88
+# Q_idg = 5500
 
-t_r0 = 1000
-i = 0
-while abs(t_r0 - t_r1) > 1e-6:
-    jetaflow = Jeta_Flow(qm_cb+qm_t, t0, p0)
-    i+=1
-    t_r0 = t_r1
-    t_lpfp = jetaflow.pump(p_lpfp, eta_lpfp)
-    t_mix = jetaflow.mix(Jeta_Flow(qm_r, t_r0, jetaflow.p))
-    t_fohe = jetaflow.heat(Q_fohe)
-    t_hpfp = jetaflow.pump(p_hpfp, eta_hpfp)
-    cb_ff = jetaflow.split(qm_cb)
-    t_idg = jetaflow.heat(Q_idg)
-    to_tank_ff = jetaflow.split(qm_t)
-    t_r1 = jetaflow.t
+# t_r0 = 1000
+# i = 0
+# while abs(t_r0 - t_r1) > 1e-6:
+#     jetaflow = Jeta_Flow(qm_cb+qm_t, t0, p0)
+#     i+=1
+#     t_r0 = t_r1
+#     t_lpfp = jetaflow.pump(p_lpfp, eta_lpfp)
+#     t_mix = jetaflow.mix(Jeta_Flow(qm_r, t_r0, jetaflow.p))
+#     t_fohe = jetaflow.heat(Q_fohe)
+#     t_hpfp = jetaflow.pump(p_hpfp, eta_hpfp)
+#     cb_ff = jetaflow.split(qm_cb)
+#     t_idg = jetaflow.heat(Q_idg)
+#     to_tank_ff = jetaflow.split(qm_t)
+#     t_r1 = jetaflow.t
     
     
     
@@ -1004,3 +1014,63 @@ while abs(t_r0 - t_r1) > 1e-6:
 #     ax.plot(t_list, rho[i])
 #     i += 1
 
+
+t_r1 = 220
+qm_cb = 0.1
+qm_r = 0.0225
+t0 = 20
+p0 = 2e5
+p_lpfp = 3e5
+eta_lpfp = 0.8
+Q_gsmt = 200000
+p_hpfp = 3e6
+eta_hpfp = 0.88
+
+t_r0 = 1000
+i = 0
+
+while abs(t_r0 - t_r1) > 1e-6:
+    i+=1
+    t_r0 = t_r1
+    h2flow = H2_Flow(qm_cb, t0, p0, 0)
+    t_mix = h2flow.mix(H2_Flow(qm_r, t_r0, h2flow.p, 1))
+    print("p_mix ", h2flow.p)
+    print("T_mix ", t_mix)
+    print("T_sat ", sat_t(h2flow.p, True))
+    t_hpfp = h2flow.compressor(p_hpfp, eta_hpfp)
+    print("T_HPFP ", t_hpfp)
+    t_fohe = h2flow.heat(Q_gsmt)
+    print("T_FOHE ", t_fohe, " iteration ", i)
+    
+    cb_ff = h2flow.split(qm_cb)
+    t_r1 = h2flow.t
+
+t_r1 = 300
+qm_cb = 0.1
+qm_r = 0.5
+t0 = 20
+p0 = 2e5
+p_lpfp = 3e5
+eta_lpfp = 0.8
+Q_gsmt = 420000
+p_hpfp = 3e6
+eta_hpfp = 0.8
+
+t_r0 = 1000
+i = 0
+
+while abs(t_r0 - t_r1) > 1e-6:
+    i+=1
+    t_r0 = t_r1
+    h2flow = H2_Flow(qm_cb, t0, p0, 0)
+    t_hpfp = h2flow.pump(p_hpfp, eta_hpfp)
+    print(t_hpfp)
+    t_mix = h2flow.mix(H2_Flow(qm_r, t_r0, h2flow.p, 1))
+    print("p_mix ", h2flow.p)
+    print("T_mix ", t_mix)
+    print("T_sat ", sat_t(h2flow.p, True))
+    t_fohe = h2flow.heat(Q_gsmt)
+    print("T_FOHE ", t_fohe, " iteration ", i)
+    
+    cb_ff = h2flow.split(qm_cb)
+    t_r1 = h2flow.t
