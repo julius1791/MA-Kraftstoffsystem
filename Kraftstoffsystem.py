@@ -244,14 +244,20 @@ class H2_Flow:
             final temperature (K)
 
         """
+        # calculate initial specific entropy and enthalpy
         s0 = H2_s(self.t, self.p)
         h0 = H2_h(self.t, self.p)
+        # find temperature that yields the same entropy at higher pressure (isentropic compression)
         ts1 = H2_find_t_for_s(s0, p1)
+        # find the specific enthalpy of the isentropic point and the reversible compression work
         hs1 = H2_h(ts1, p1)
-        a_rev = hs1 - h0
+        a_rev = hs1 - h0 
+        # calculate actual compression work and final enthalpy
         a = a_rev/eta
         h1 = h0 + a
+        # find final temperature
         t1 = H2_find_t_for_h(h1, p1)
+        # calculate compressor power
         P = a*self.qm
         self.t = t1
         self.p = p1
