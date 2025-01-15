@@ -1013,13 +1013,13 @@ def jeta_density(t: float, p: float):
 #     i += 1
 
 
-t_r1 = 220
+t_r1 = 320
 qm_cb = 0.1
-qm_r = 0.02
+qm_r = 0.017
 t0 = 20
 p0 = 2e5
 eta_lpfp = 0.8
-Q_gsmt = 270000
+Q_gsmt = 331000
 p_hpfp = 3e6
 eta_hpfp = 0.88
 
@@ -1039,18 +1039,60 @@ while abs(t_r0 - t_r1) > 1e-6:
     t_fohe = h2flow.heat(Q_gsmt) 
     cb_ff = h2flow.split(qm_cb)
     t_r1 = h2flow.t
+print("\nCompressor Pre-Mix \n")
 print("T_HX", t_hpfp[1])
 print("T_FOHE ", t_fohe, " iteration ", i)
 print("P_v ", t_hpfp[0])
+print("Q ", Q_gsmt)
 
 sumpq = t_hpfp[0] + Q_gsmt
 dh = qm_cb*(H2_h(t_fohe, p_hpfp, 1)-H2_h(t0, p0, 0))
-print(sumpq, dh)
+# print(sumpq, dh)
 
 
-t_r1 = 220
+t_r1 = 320
 qm_cb = 0.1
-qm_r = 0.5
+qm_r = 0.017
+qm_r2 = 0.45
+t0 = 20
+p0 = 2e5
+eta_lpfp = 0.8
+Q_gsmt = 331000
+p_hpfp = 3e6
+eta_hpfp = 0.88
+
+t_r0 = 1000
+i = 0
+
+while abs(t_r0 - t_r1) > 1e-6:
+    i+=1
+    t_r0 = t_r1
+    h2flow = H2_Flow(qm_cb, t0, p0, 0)
+    t_mix = h2flow.mix(H2_Flow(qm_r, t_r0, p_hpfp, 1))
+    # print("p_mix ", h2flow.p)
+    # print("T_mix ", t_mix)
+    # print("T_sat ", sat_t(h2flow.p, True))
+    t_hpfp = h2flow.compressor(p_hpfp, eta_hpfp)
+    t_mix2 = h2flow.mix(H2_Flow(qm_r2, t_r0, p_hpfp, 1))
+    # print("T_HPFP ", t_hpfp)
+    t_fohe = h2flow.heat(Q_gsmt) 
+    cb_ff = h2flow.split(qm_cb)
+    t_r1 = h2flow.t
+print("\nCompressor with Dual Mix \n")
+print("T_HX", t_mix2)
+print("T_FOHE ", t_fohe, " iteration ", i)
+print("P_v ", t_hpfp[0])
+print("Q ", Q_gsmt)
+
+sumpq = t_hpfp[0] + Q_gsmt
+dh = qm_cb*(H2_h(t_fohe, p_hpfp, 1)-H2_h(t0, p0, 0))
+# print(sumpq, dh)
+
+
+
+t_r1 = 320
+qm_cb = 0.1
+qm_r = 0.45
 t0 = 20
 p0 = 2e5
 eta_lpfp = 0.8
@@ -1071,21 +1113,23 @@ while abs(t_r0 - t_r1) > 1e-6:
     t_fohe = h2flow.heat(Q_gsmt- Q_vap) 
     cb_ff = h2flow.split(qm_cb)
     t_r1 = h2flow.t
+print("\nCompressor After-Mix \n")
 print("T_HX", t_mix)
 print("T_FOHE ", t_fohe, " iteration ", i)
 print("P_v ", t_hpfp[0])
+print("Q ", Q_gsmt)
 
 sumpq = t_hpfp[0] + Q_gsmt
 dh = qm_cb*(H2_h(t_fohe, p_hpfp, 1)-H2_h(t0, p0, 0))
-print(sumpq, dh)
+# print(sumpq, dh)
 
-t_r1 = 300
+t_r1 = 320
 qm_cb = 0.1
 qm_r = 0.5
 t0 = 20
 p0 = 2e5
 eta_lpfp = 0.8
-Q_gsmt = 420000
+Q_gsmt = 422000
 p_hpfp = 3e6
 eta_hpfp = 0.8
 
@@ -1105,10 +1149,12 @@ while abs(t_r0 - t_r1) > 1e-6:
     t_fohe = h2flow.heat(Q_gsmt)
     cb_ff = h2flow.split(qm_cb)
     t_r1 = h2flow.t
+print("\nPump \n")
 print("T_HX", t_mix)
 print("T_FOHE ", t_fohe, " iteration ", i)
 print("P_p ", t_hpfp[0])
+print("Q ", Q_gsmt)
 
 sumpq = t_hpfp[0] + Q_gsmt
 dh = qm_cb*(H2_h(t_fohe, p_hpfp, 1)-H2_h(t0, p0, 0))
-print(sumpq, dh)
+# print(sumpq, dh)
