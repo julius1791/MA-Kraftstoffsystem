@@ -636,6 +636,24 @@ def calculate_H2_enthalpy(T_ZP, p_ZP):
 
     return h
 
+#############################################
+# ########## Dichte rho [kg/m3] ########### #
+#############################################
+
+def calculate_H2_rho(T_ZP, p_ZP):
+    
+    rho_i = initialize_rho(T_ZP, p_ZP, p_c, T_c, normal_hydrogen)
+
+    differenz = 1e-9  # Konvergenzkriterium: (rho_i+1 - rho_i) < 10^-9
+    max_iteration = 50
+    # Max_Iterationen: Konvergenzkriterium
+    # (Begrenzung falls keine Konvergenz erreicht wird)
+
+    rho = berechne_dichte(rho_i, T_ZP, p_ZP, rho_c, T_c, R, normal_hydrogen,
+                      max_iteration, differenz)
+
+    return rho
+
 ###################################################
 # ## c_v  (isochore Wärmekapazität) [J/(kg*K)] ## #
 # #################################################
