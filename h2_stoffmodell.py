@@ -636,9 +636,8 @@ def calculate_H2_enthalpy(T_ZP, p_ZP):
 
     return h
 
-
 #############################################
-# ########## Enttropy s [J/kgK] ########### #
+# ########## Entropie s [J/kgK] ########### #
 #############################################
 
 def calculate_H2_entropy(T_ZP, p_ZP):
@@ -685,7 +684,7 @@ def calculate_H2_rho(T_ZP, p_ZP):
 
 ###################################################
 # ## c_v  (isochore Wärmekapazität) [J/(kg*K)] ## #
-# #################################################
+###################################################
 
 def calculate_H2_cv(T_ZP, p_ZP):
     rho_i = initialize_rho(T_ZP, p_ZP, p_c, T_c, normal_hydrogen)

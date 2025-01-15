@@ -226,7 +226,8 @@ class H2_Flow:
     
     def compressor(self, p1: float, eta: float):
         """
-        
+        Calculate the power needed to compress supercritical or gaseous hydrogen 
+        and the final temperature accounting for non ideal compression
 
         Parameters
         ----------
@@ -243,9 +244,17 @@ class H2_Flow:
             final temperature (K)
 
         """
-        
-        P = 0
-        t1 = 0
+        s0 = H2_s(self.t, self.p)
+        h0 = H2_h(self.t, self.p)
+        ts1 = H2_find_t_for_s(s0, p1)
+        hs1 = H2_h(ts1, p1)
+        a_rev = hs1 - h0
+        a = a_rev/eta
+        h1 = h0 + a
+        t1 = H2_find_t_for_h(h1, p1)
+        P = a*self.qm
+        self.t = t1
+        self.p = p1
         return P, t1
     
     def pump(self, p1: float, eta: float):
@@ -485,7 +494,30 @@ def import_tpp():
             tpp.update({name: content})
     return tpp
 
+def H2_find_t_for_s(s_t: float, p: float):
+    """
+    Find the temperature corresponding to an entropy and pressure of hydrogen
 
+    Parameters
+    ----------
+    s_t : float
+        target entropy (J/kgK)
+    p : float
+        pressure (Pa)
+
+    Returns
+    -------
+    t : float
+        Temperature
+    """
+    # arbitrary initial temperature value
+    t = 300
+    # loop until target entropy is achieved
+    while abs(H2_s(t, p)-s_t) > 1e-9:
+        # calculate temperature step asssuming constant heat capacity
+        t = t/math.exp((H2_s(t,p)-s_t)/H2_cp(t,p))
+
+    return t
 
 def H2_find_t_for_h(h_t: float, p: float):
     """
@@ -965,5 +997,4 @@ while abs(t_r0 - t_r1) > 1e-6:
 # for p in p_list:
 #     ax.plot(t_list, rho[i])
 #     i += 1
-    
-print(H2_s(20, 1e5))
+
