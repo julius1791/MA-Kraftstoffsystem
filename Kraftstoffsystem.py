@@ -46,7 +46,7 @@ class Jeta_Flow:
         # specific heat
         q = Q_dot/self.qm
         # initial specific enthalpy
-        h0 = jeta_properties(self.t, self.p)
+        h0 = jeta_properties(self.t, self.p)[1]
         # final enthalpy
         h1 = h0 + q/1000
         # final temperature
@@ -198,18 +198,19 @@ class H2_Flow:
         Parameters
         ----------
         p1 : float
-            DESCRIPTION.
+            pressure (Pa)
         eta : float
-            DESCRIPTION.
+            isentropic compressor efficiency
 
         Returns
         -------
-        P : TYPE
-            DESCRIPTION.
-        t1 : TYPE
-            DESCRIPTION.
+        P : float
+            compressor power (W)
+        t1 : float
+            final temperature (K)
 
         """
+        
         P = 0
         t1 = 0
         return P, t1
@@ -318,7 +319,7 @@ def jeta_antoine():
     """
     A = 8.81923182000836
     B = 1374.12563
-    C = -43.53988
+    C = 502.76012
     return A, B, C
 
 def H2_antoine():
@@ -330,19 +331,22 @@ def H2_antoine():
     A, B, C : float
         Antoine equation parameters
     """
-    A = 3.54314
+    A = 8.54314
     B = 99.395
     C = 7.726
     return A, B, C
 
-def H2_sat_p(t: float):
+def sat_p(t: float, substance: bool):
     """
-    Find saturation pressure of hydrogen for a given Temperature
+    Find saturation pressure for a given Temperature
 
     Parameters
     ----------
     t : float
         Temperature (K)
+    substance : bool 
+        True -> H2
+        False -> jet a
 
     Returns
     -------
@@ -350,21 +354,27 @@ def H2_sat_p(t: float):
         Saturation pressure (Pa)
 
     """
-    # define antoine equation constants for hydrogen
-    A, B, C = H2_antoine()
+    # define antoine equation constants
+    if substance:
+        A, B, C = H2_antoine()
+    else:
+        A, B, C = jeta_antoine()
     # apply antoine equation
-    p = 10**(A-(B/(t + C)))*1e5
+    p = 10**(A-(B/(t + C)))
     return p
 
 
-def H2_sat_t(p: float):
+def sat_t(p: float, substance: bool):
     """
-    Calculate saturation temperature for hydrogen for given pressure
+    Calculate saturation temperature for given pressure
 
     Parameters
     ----------
     p : float
         pressure (Pa)
+    substance : bool 
+        True -> H2
+        False -> jet a
 
     Returns
     -------
@@ -372,10 +382,13 @@ def H2_sat_t(p: float):
         temperature (K)
 
     """
-    # define antoine equation constants for hydrogen
-    A, B, C = H2_antoine()
+    # define antoine equation constants
+    if substance:
+        A, B, C = H2_antoine()
+    else:
+        A, B, C = jeta_antoine()
     # apply antoine equation
-    t = B/(A-math.log(p/1e5, 10))-C
+    t = B/(A-math.log(p, 10))-C
     return t
 
 
@@ -459,7 +472,7 @@ def H2_find_t_for_h(h_t: float, p: float):
 
     """
     # find saturation temperature
-    t_sat = H2_sat_t(p)
+    t_sat = sat_t(p, True)
 
     # determine bounds and initial temperature depending on the physical state
     # determine if the hydrogen is an overheated gas
@@ -859,8 +872,8 @@ def jeta_density(t: float, p: float):
 
 t_r1 = 420
 qm_cb = 0.3
-qm_r = 0.4
-qm_t = 0.3
+qm_r = 0.3
+qm_t = 0.1
 t0 = 250
 p0 = 0.4e5
 p_lpfp = 3e5
@@ -872,7 +885,7 @@ Q_idg = 5500
 
 t_r0 = 1000
 i = 0
-while (t_r0 - t_r1) > 1e-6:
+while abs(t_r0 - t_r1) > 1e-6:
     jetaflow = Jeta_Flow(qm_cb+qm_t, t0, p0)
     i+=1
     print(i)
@@ -887,3 +900,4 @@ while (t_r0 - t_r1) > 1e-6:
     to_tank_ff = jetaflow.split(qm_t)
     t_r1 = jetaflow.t
     print(t_r1)
+print()
