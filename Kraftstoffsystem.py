@@ -3,10 +3,7 @@ import numpy as np
 import pandas as pd
 import pathlib
 import os
-from h2_stoffmodell import calculate_H2_cp as H2_cp
-from h2_stoffmodell import calculate_H2_enthalpy as H2_enth
-from h2_stoffmodell import calculate_H2_entropy as H2_s
-from h2_stoffmodell import calculate_H2_rho as H2_rho
+import h2_stoffmodell as h2
 import matplotlib.pyplot as plt
 import math
 import json
@@ -14,13 +11,13 @@ import json
 
 def H2_h(t, p, sat):
     if sat == 0:
-        h = H2_enth(t, p)
+        h = h2.calc_H2_enthalpy(t, p)
     elif sat == 1:
-        h = H2_enth(t, p)
+        h = h2.calc_H2_enthalpy(t, p)
     else:
         t_sat = sat_t(p, True)
-        h_v = H2_enth(t_sat + 0.1, p)
-        h_l = H2_enth(t_sat - 0.1, p)
+        h_v = h2.calc_H2_enthalpy(t_sat + 0.1, p)
+        h_l = h2.calc_H2_enthalpy(t_sat - 0.1, p)
         h = sat*h_v + (1-sat)*h_l
     return h
 
@@ -197,7 +194,7 @@ class H2_Flow:
         # specific heat
         q = Q_dot/self.qm
         # initial specific enthalpy
-        h0 = H2_h(self.t, self.p, self.sat)
+        h0 = h2.calc_H2_enthalpy(self.t, self.p, self.sat)
         # final enthalpy
         h1 = h0 + q
         # final temperature
@@ -250,12 +247,12 @@ class H2_Flow:
         if self.sat != 1:
             raise Exception("Unexpected Saturation. Saturation is ", self.sat, ", expected 1")
         # calculate initial specific entropy and enthalpy
-        s0 = H2_s(self.t, self.p)
-        h0 = H2_h(self.t, self.p, 1)
+        s0 = h2.calc_H2_entropy(self.t, self.p)
+        h0 = h2.calc_H2_enthalpy(self.t, self.p, 1)
         # find temperature that yields the same entropy at higher pressure (isentropic compression)
         ts1 = H2_find_t_for_s(s0, p1)
         # find the specific enthalpy of the isentropic point and the reversible compression work
-        hs1 = H2_h(ts1, p1, 1)
+        hs1 = h2.calc_H2_enthalpy(ts1, p1, 1)
         a_rev = hs1 - h0 
         # calculate actual compression work and final enthalpy
         a = a_rev/eta
@@ -290,8 +287,8 @@ class H2_Flow:
         if self.sat != 0:
             raise Exception("Unexpected Saturation. Saturation is ", self.sat, ", expected 0")
         # initial density and specific enthalpy
-        rho = H2_rho(self.t, self.p)
-        h0 = H2_h(self.t, self.p, self.sat)
+        rho = h2.calc_H2_density(self.t, self.p)
+        h0 = h2.calc_H2_enthalpy(self.t, self.p, self.sat)
         # reversible pump work
         a_rev = (p1-self.p)/rho
         # pump work
@@ -321,8 +318,8 @@ class H2_Flow:
 
         """
         # find initial enthalpy 
-        H0_1 = H2_h(self.t, self.p, self.sat)*self.qm
-        H0_2 = H2_h(secondary_flow.t, secondary_flow.p, secondary_flow.sat)*secondary_flow.qm
+        H0_1 = h2.calc_H2_enthalpy(self.t, self.p, self.sat)*self.qm
+        H0_2 = h2.calc_H2_enthalpy(secondary_flow.t, secondary_flow.p, secondary_flow.sat)*secondary_flow.qm
         
         # calculate final enthalpy
         H1 = H0_1 + H0_2
@@ -392,7 +389,7 @@ def H2_antoine():
     C = 7.726
     return A, B, C
 
-def sat_p(t: float, substance: bool):
+def sat_p(t: float, is_H2: bool):
     """
     Find saturation pressure for a given Temperature
 
@@ -400,7 +397,7 @@ def sat_p(t: float, substance: bool):
     ----------
     t : float
         Temperature (K)
-    substance : bool 
+    is_H2 : bool 
         True -> H2
         False -> jet a
 
@@ -411,7 +408,7 @@ def sat_p(t: float, substance: bool):
 
     """
     # define antoine equation constants
-    if substance:
+    if is_H2:
         A, B, C = H2_antoine()
     else:
         A, B, C = jeta_antoine()
@@ -420,7 +417,7 @@ def sat_p(t: float, substance: bool):
     return p
 
 
-def sat_t(p: float, substance: bool):
+def sat_t(p: float, is_H2: bool):
     """
     Calculate saturation temperature for given pressure
 
@@ -428,7 +425,7 @@ def sat_t(p: float, substance: bool):
     ----------
     p : float
         pressure (Pa)
-    substance : bool 
+    is_H2 : bool 
         True -> H2
         False -> jet a
 
@@ -439,7 +436,7 @@ def sat_t(p: float, substance: bool):
 
     """
     # define antoine equation constants
-    if substance:
+    if is_H2:
         A, B, C = H2_antoine()
     else:
         A, B, C = jeta_antoine()
@@ -527,9 +524,9 @@ def H2_find_t_for_s(s_t: float, p: float):
     # arbitrary initial temperature value
     t = 300
     # loop until target entropy is achieved
-    while abs(H2_s(t, p)-s_t) > 1e-9:
+    while abs(h2.calc_H2_entropy(t, p)-s_t) > 1e-9:
         # calculate temperature step asssuming constant heat capacity
-        t = t/math.exp((H2_s(t,p)-s_t)/H2_cp(t,p))
+        t = t/math.exp((h2.calc_H2_entropy(t,p)-s_t)/h2.calc_H2_cp(t,p))
     return t
 
 def H2_find_t_for_h(h_t: float, p: float):
@@ -562,16 +559,16 @@ def H2_find_t_for_h(h_t: float, p: float):
     else:
         # determine bounds and initial temperature depending on the physical state
         # determine if the hydrogen is an overheated gas
-        if h_t > H2_h(t_sat + 0.1, p, 1):
+        if h_t > h2.calc_H2_enthalpy(t_sat + 0.1, p, 1):
             tmin = t_sat + 0.1
             t = tmin + 10
             tmax = 2000
             saturation = 1
     
         # determine if the hydrogen is in the saturation regime
-        elif h_t > H2_h(t_sat - 0.1, p, 0):
-            h_v = H2_h(t_sat + 0.1, p, 1)
-            h_l = H2_h(t_sat - 0.1, p, 0)
+        elif h_t > h2.calc_H2_enthalpy(t_sat - 0.1, p, 0):
+            h_v = h2.calc_H2_enthalpy(t_sat + 0.1, p, 1)
+            h_l = h2.calc_H2_enthalpy(t_sat - 0.1, p, 0)
             saturation = (h_t - h_l)/(h_v-h_l)
             t = t_sat
             
@@ -587,7 +584,7 @@ def H2_find_t_for_h(h_t: float, p: float):
     # loop until target enthalpy is achieved
     while abs(H2_h(t, p, saturation)-h_t) > 1e-6:
         # calculate temperature step asssuming constant heat capacity
-        dt = (h_t-H2_h(t, p, saturation))/H2_cp(t, p)
+        dt = (h_t-h2.calc_H2_enthalpy(t, p, saturation))/h2.calc_H2_cp(t, p)
 
         t = t + dt
 
