@@ -4,31 +4,37 @@ import json
 import pandas as pd
 import math
 
+# global variables
 prop_dir = "material properties"
-R = 8.3145     
+R = 8.3145                                                          # Jmol-1K
 
-def import_jeta_properties():
-    # define universal gas constant
-                                             # Jmol-1K
+def import_jeta_properties():        
+    """calculate specific gas constant for jeta and extract coefficients for 
+    enthalpy, entropy and heat capacity calculation"""                                                             
     # import data from json
     with open(os.path.join(pathlib.Path().resolve(), prop_dir, "jeta.json")) as f:
         jeta_props = json.load(f)
-    M_jeta = float(jeta_props["molecular_weight"])          # gmol-1
-    R_jeta = R/M_jeta                                       # kJ/kgK  
+    M_jeta = float(jeta_props["molecular_weight"])                  # gmol-1
+    R_jeta = R/M_jeta                                               # kJ/kgK  
     
+    # iterate over split string, remove brackets and convert to float
     a_list = list()
     for a in jeta_props["a_coefficients"].split(" "):
-        # remove bracket curls, convert to float and append to list
         a = a.replace("]", "")
         a = a.replace("[", "")
         a_list.append(float(a))
-    
     return R_jeta, a_list
 
+###################################################
+# ## c_p  (isobare Wärmekapazität)  [J/(kg*K)] ## #
+###################################################
+
 def calc_jeta_cp(t: float, p: float):
+    """function for calculating specific heat capacity of jet a"""
+    # import specific gas constant and polynomial coefficients
     R_jeta, a_list = import_jeta_properties()
     
-    # init variables for loop
+    # init variables for calculation loop
     i = 0
     cp = 0
     exponent = -2
@@ -36,18 +42,22 @@ def calc_jeta_cp(t: float, p: float):
     # iterate over polynomial coefficients from json data
     for a in a_list:     
         # sum up polynomial for specific heat capacity
-        cp = cp + a*pow(t, exponent)
+        cp += a*pow(t, exponent)
         # prepare next iteration
         exponent += 1
         i += 1
         
-    # multipy with specific gas constant
-    cp = cp * R_jeta*1000
+    # multipy with specific gas constant + unit conversion
+    cp = cp * R_jeta*1000                                           # J/kgK
     return cp
+
+#############################################
+# ########## Enthalpie h [J/kg] ########### #
+#############################################
 
 def calc_jeta_enthalpy(t: float, p: float):
     R_jeta, a_list = import_jeta_properties()
-    
+
     rho = calc_jeta_density(t, p)
     
     # sum up enthalpy components
@@ -58,9 +68,14 @@ def calc_jeta_enthalpy(t: float, p: float):
     h += a_list[4]*pow(t, 3)/3
     h += a_list[5]*pow(t, 4)/4
     h += a_list[6]*pow(t, 5)/5
-    h =  h*R_jeta*1000
+    # unit conversion
+    h =  h*R_jeta*1000                                              # J/kg                    
     h += p/rho
     return h
+
+#############################################
+# ########## Entropie s [J/kgK] ########### #
+#############################################
     
 def calc_jeta_entropy(t: float, p: float):
     R_jeta, a_list = import_jeta_properties()
@@ -73,8 +88,13 @@ def calc_jeta_entropy(t: float, p: float):
     s += a_list[4]*pow(t, 2)/2
     s += a_list[5]*pow(t, 3)/3
     s += a_list[6]*pow(t, 4)/4
-    s =  s*R_jeta*1000
+    # unit conversion
+    s =  s*R_jeta*1000                                              # J/kgK
     return s
+
+#############################################
+# ########## Dichte rho [kg/m3] ########### #
+#############################################
 
 def calc_jeta_density(t: float, p: float):
     """
@@ -101,6 +121,10 @@ def calc_jeta_density(t: float, p: float):
     rho_arr = jeta_tpp[["Density (kg/m3)"]].to_numpy()
     # pressure unit conversion (Pa to MPa)
     p = p/10e6
+    
+    # use the 4 closest points to point of interest to 
+    # bilinearly inter-/extrapolate
+    
     # find closest Temperature values
     t0, t1 = find_t(t, temp)
     # select the pressure and density values corresponding to the selected temperature values

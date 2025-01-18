@@ -725,7 +725,7 @@ def calc_H2_cp(T_ZP, p_ZP):
     tau = T_c / T_ZP
     delta_neu = rho / rho_c
 
-    c_v = calculate_H2_cv(T_ZP, p_ZP)
+    c_v = calc_H2_cv(T_ZP, p_ZP)
     
     a_r_d_t = alpha_r_delta_tau_calc(delta_neu, tau, normal_hydrogen)
     a_r_d_d = alpha_r_delta_delta_calc(delta_neu, tau, normal_hydrogen)
