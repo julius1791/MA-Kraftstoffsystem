@@ -4,11 +4,13 @@ import json
 import pandas as pd
 import math
 
+prop_dir = "material properties"
+
 def import_jeta_properties():
     # define universal gas constant
     R = 8.3145                                              # Jmol-1K
     # import data from json
-    with open(os.path.join(pathlib.Path().resolve(), "stoffdaten", "jeta.json")) as f:
+    with open(os.path.join(pathlib.Path().resolve(), prop_dir, "jeta.json")) as f:
         jeta_props = json.load(f)
     M_jeta = float(jeta_props["molecular_weight"])          # gmol-1
     R_jeta = R/M_jeta                                       # kJ/kgK  
@@ -208,8 +210,8 @@ def import_tpp():
 
     """
     # find files in target directory
-    files = [f for f in os.listdir(os.path.join(pathlib.Path().resolve(), "stoffdaten")) if os.path.isfile(
-        os.path.join(pathlib.Path().resolve(), "stoffdaten", f))]
+    files = [f for f in os.listdir(os.path.join(pathlib.Path().resolve(), prop_dir)) if os.path.isfile(
+        os.path.join(pathlib.Path().resolve(), prop_dir, f))]
     # init dictionary for tpp
     tpp = dict()
     # iterate list of files
@@ -219,6 +221,6 @@ def import_tpp():
             # use filename as index (without extension)
             name = file.split(".")[0]
             # feed file contents into pandas dataframe
-            content = pd.read_csv(os.path.join(pathlib.Path().resolve(), "stoffdaten", file), delimiter=",")
+            content = pd.read_csv(os.path.join(pathlib.Path().resolve(), prop_dir, file), delimiter=",")
             tpp.update({name: content})
     return tpp
