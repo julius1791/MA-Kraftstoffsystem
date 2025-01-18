@@ -5,10 +5,11 @@ import pandas as pd
 import math
 
 prop_dir = "material properties"
+R = 8.3145     
 
 def import_jeta_properties():
     # define universal gas constant
-    R = 8.3145                                              # Jmol-1K
+                                             # Jmol-1K
     # import data from json
     with open(os.path.join(pathlib.Path().resolve(), prop_dir, "jeta.json")) as f:
         jeta_props = json.load(f)

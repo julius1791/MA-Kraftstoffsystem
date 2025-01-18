@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 import matplotlib.pyplot as plt
-import math
-import json
 import fuelflow
 
 # def interpolate(X, Y, x: float):
@@ -36,10 +34,6 @@ import fuelflow
 #     # apply linear interpolation
 #     y = y0 + (y1-y0)/(x1-x0)*(x-x0)
 #     return y
-
-
-
-
 
 
 
