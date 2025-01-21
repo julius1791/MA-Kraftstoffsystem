@@ -12,7 +12,8 @@ def import_jeta_properties():
     """calculate specific gas constant for jeta and extract coefficients for 
     enthalpy, entropy and heat capacity calculation"""                                                             
     # import data from json
-    with open(os.path.join(pathlib.Path().resolve(), prop_dir, "jeta.json")) as f:
+    with open(os.path.join(
+            pathlib.Path().resolve(), prop_dir, "jeta.json")) as f:
         jeta_props = json.load(f)
     M_jeta = float(jeta_props["molecular_weight"])                  # gmol-1
     R_jeta = R/M_jeta                                               # kJ/kgK  

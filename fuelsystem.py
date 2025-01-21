@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import fuelflow
+import timeit
 
 # def interpolate(X, Y, x: float):
 #     """
@@ -180,7 +181,7 @@ import fuelflow
 
 
 
-
+start = timeit.timeit()
 t_r1 = 420
 qm_cb = 0.3
 qm_r = 0.3
@@ -208,14 +209,16 @@ while abs(t_r0 - t_r1) > 1e-6:
     t_idg = jetaflow.heat_fixed_power(Q_idg)
     to_tank_ff = jetaflow.split_flows(qm_t)
     t_r1 = jetaflow.t
+stop = timeit.timeit()
     
 print("\nReference \n")
 print("T_HX", t_mix)
-print("T_CB ", t_hpfp[1], " iteration ", i)
+print("T_CB ", t_hpfp[1], " iteration ", i, " elapsed time ", stop - start)
 print("P_v ", t_hpfp[0])
 print("Q ", Q_fohe+Q_idg)
 
 
+start = timeit.timeit()
 t_r1 = 320
 qm_cb = 0.1
 qm_r = 0.017
@@ -242,9 +245,10 @@ while abs(t_r0 - t_r1) > 1e-6:
     t_fohe = h2flow.heat_fixed_power(Q_gsmt) 
     cb_ff = h2flow.split_flows(qm_cb)
     t_r1 = h2flow.t
+stop = timeit.timeit()
 print("\nCompressor Pre-Mix \n")
 print("T_HX", t_hpfp[1])
-print("T_CB ", t_fohe, " iteration ", i)
+print("T_CB ", t_fohe, " iteration ", i, " elapsed time ", stop - start)
 print("P_v ", t_hpfp[0])
 print("Q ", Q_gsmt)
 
@@ -252,7 +256,7 @@ sumpq = t_hpfp[0] + Q_gsmt
 #dh = qm_cb*(H2_h(t_fohe, p_hpfp, 1)-H2_h(t0, p0, 0))
 # print(sumpq, dh)
 
-
+start = timeit.timeit()
 t_r1 = 320
 qm_cb = 0.1
 qm_r = 0.017
@@ -281,9 +285,10 @@ while abs(t_r0 - t_r1) > 1e-6:
     t_fohe = h2flow.heat_fixed_power(Q_gsmt) 
     cb_ff = h2flow.split_flows(qm_cb)
     t_r1 = h2flow.t
+stop = timeit.timeit()
 print("\nCompressor with Dual Mix \n")
 print("T_HX", t_mix2)
-print("T_CB ", t_fohe, " iteration ", i)
+print("T_CB ", t_fohe, " iteration ", i, " elapsed time ", stop - start)
 print("P_v ", t_hpfp[0])
 print("Q ", Q_gsmt)
 
@@ -292,7 +297,7 @@ sumpq = t_hpfp[0] + Q_gsmt
 # print(sumpq, dh)
 
 
-
+start = timeit.timeit()
 t_r1 = 320
 qm_cb = 0.1
 qm_r = 0.45
@@ -316,9 +321,10 @@ while abs(t_r0 - t_r1) > 1e-6:
     t_fohe = h2flow.heat_fixed_power(Q_gsmt- Q_vap) 
     cb_ff = h2flow.split_flows(qm_cb)
     t_r1 = h2flow.t
+stop = timeit.timeit()
 print("\nCompressor After-Mix \n")
 print("T_HX", t_mix)
-print("T_CB ", t_fohe, " iteration ", i)
+print("T_CB ", t_fohe, " iteration ", i, " elapsed time ", stop - start)
 print("P_v ", t_hpfp[0])
 print("Q ", Q_gsmt)
 
@@ -326,6 +332,7 @@ sumpq = t_hpfp[0] + Q_gsmt
 #dh = qm_cb*(H2_h(t_fohe, p_hpfp, 1)-H2_h(t0, p0, 0))
 # print(sumpq, dh)
 
+start = timeit.timeit()
 t_r1 = 320
 qm_cb = 0.1
 qm_r = 0.5
@@ -352,9 +359,10 @@ while abs(t_r0 - t_r1) > 1e-6:
     t_fohe = h2flow.heat_fixed_power(Q_gsmt)
     cb_ff = h2flow.split_flows(qm_cb)
     t_r1 = h2flow.t
+stop = timeit.timeit()
 print("\nPump \n")
 print("T_HX", t_mix)
-print("T_CB ", t_fohe, " iteration ", i)
+print("T_CB ", t_fohe, " iteration ", i, " elapsed time ", stop - start)
 print("P_p ", t_hpfp[0])
 print("Q ", Q_gsmt)
 
