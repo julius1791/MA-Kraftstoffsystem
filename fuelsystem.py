@@ -1,45 +1,150 @@
 # -*- coding: utf-8 -*-
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import fuelflow
-import timeit
 
-# def interpolate(X, Y, x: float):
-#     """
-#     Linear interpolation along axis X
+
+
+def reference(t_cb, qm_hpfp, Q_fohe, Q_idg, p_hpfp, eta_hpfp, p_lpfp, eta_lpfp, qm_cb, t0, p0):
+    t_r1 = 420
+    i = 0
+    qm_t = 0.1
+    #h0 = fuelflow.JetaFlow(1, t0, p0).calc_h()
+    #hcb = fuelflow.JetaFlow(1, t_cb, p_hpfp).calc_h()
+    while abs(t_cb-t_r1) > 1e-6:
+        jetaflow = fuelflow.JetaFlow(qm_cb+qm_t, t0, p0)
+        i+=1
+        P_lpfp, _ = jetaflow.pump_hydraulic(p_lpfp, eta_lpfp)
+        jetaflow.mix_flows(fuelflow.JetaFlow(qm_hpfp-qm_t-qm_cb, t_cb, jetaflow.p))
+        jetaflow.heat_fixed_power(Q_fohe)
+        P_hpfp, _ = jetaflow.pump_hydraulic(p_hpfp, eta_hpfp)
+        jetaflow.sat_p()
+        jetaflow.split_flows(qm_cb)
+        jetaflow.heat_fixed_power(Q_idg)
+        jetaflow.split_flows(qm_t)
+        t_r1 = jetaflow.t
+        qm_t = qm_t + (t_r1 - t_cb)/300
+    qm_r = qm_hpfp - qm_t - qm_cb
+    return qm_r, qm_t, P_lpfp, P_hpfp, i
+
+def get_dh(qm_cb, t_cb, p_hpfp, t0, p0):
+    cb = fuelflow.H2Flow(qm_cb, t_cb, p_hpfp, 1)
+    f0 = fuelflow.H2Flow(qm_cb, t0, p0, 0)
+    dH = cb.qm * cb.calc_h() - f0.qm * f0.calc_h()
+    return dH
+
+def h2pump(t_cb, t_hx, eta_hpfp, p_hpfp, qm_cb, t0, p0):
+    qm_r1 = 0.5
+    h_mix = fuelflow.H2Flow(1, t_hx, p_hpfp, 1).calc_h()
+    dH = get_dh(qm_cb, t_cb, p_hpfp, t0, p0)
+    t_r1 = 300
+    i = 0
+    t_mix = 0
+    while abs(t_cb - t_r1) + abs(t_mix-t_hx) > 1e-6:
+        i+=1
+        h2flow = fuelflow.H2Flow(qm_cb, t0, p0, 0)
+        P_hpfp, _ = h2flow.pump_hydraulic(p_hpfp, eta_hpfp)
+        H_0 = h2flow.calc_h()*h2flow.qm
+        t_mix = h2flow.mix_flows(fuelflow.H2Flow(qm_r1, t_cb, p_hpfp, 1))
+        H_mix = h_mix*h2flow.qm
+        h2flow.heat_fixed_power(dH-P_hpfp)
+        h2flow.split_flows(qm_cb)
+        t_r1 = h2flow.t
+        h_r = h2flow.calc_h()
+        qm_r1 = (H_mix-H_0)/h_r
+    return qm_r1, P_hpfp, dH-P_hpfp, i
+
+def h2after(t_cb, t_hx, eta_hpfp, p_hpfp, qm_cb, t0, p0):
+    qm_r1 = 0.45
+    h_mix = fuelflow.H2Flow(1, t_hx, p_hpfp, 1).calc_h()
+    dH = get_dh(qm_cb, t_cb, p_hpfp, t0, p0)
+    t_r1 = 300
+    i = 0
+    t_mix = 0
+    while abs(t_cb - t_r1) + abs(t_mix-t_hx) > 1e-6:
+        i+=1
+        h2flow = fuelflow.H2Flow(qm_cb, t0, p0, 0)
+        Q_vap = h2flow.heat_to_saturation()
+        P_hpfp, t_hpfp = h2flow.compress_thermic(p_hpfp, eta_hpfp)
+        H_0 = h2flow.calc_h()*h2flow.qm
+        t_mix = h2flow.mix_flows(fuelflow.H2Flow(qm_r1, t_cb, p_hpfp, 1))
+        H_mix = h_mix*h2flow.qm
+        h2flow.heat_fixed_power(dH - P_hpfp - Q_vap) 
+        h2flow.split_flows(qm_cb)
+        t_r1 = h2flow.t
+        h_r = h2flow.calc_h()
+        qm_r1 = (H_mix-H_0)/h_r
+    return qm_r1, P_hpfp, dH-P_hpfp, i
+
+def h2dual(t_cb, t_hx, eta_hpfp, p_hpfp, qm_cb, t0, p0):
+    qm_r1 = 0.45
+    h_mix = fuelflow.H2Flow(1, t_hx, p_hpfp, 1).calc_h()
+    dH = get_dh(qm_cb, t_cb, p_hpfp, t0, p0)
+    t_r1 = 300
+    i = 0
     
-#     Parameters
-#     ----------
-#     X : array_like 
-#         sorted list of Physical properties forming the abscissa of the interpolation
-#     Y : array_like 
-#         sorted list of Physical properties forming the ordinate of the interpolation
-#     x : float 
-#         Point of interest on the abscissa
+    vap = fuelflow.H2Flow(1, 300, p_hpfp, 1)
+    vap.t = vap.sat_t() + 5
+    h_vap = vap.calc_h()
+    H_0 = fuelflow.H2Flow(qm_cb, t0, p0, 0).calc_h()*qm_cb
+    h_r = fuelflow.H2Flow(1, t_cb, p_hpfp, 1).calc_h()
+    qm_v = (H_0 - qm_cb*h_vap)/(h_vap-h_r)
+    t_mix2 = 0
+    while abs(t_cb - t_r1) + abs(t_mix2-t_hx) > 1e-6:
+        i+=1
+        h2flow = fuelflow.H2Flow(qm_cb, t0, p0, 0)
+        h2flow.mix_flows(fuelflow.H2Flow(qm_v, t_cb, p_hpfp, 1))
+        P_hpfp, t_hpfp = h2flow.compress_thermic(p_hpfp, eta_hpfp)
+        H_0 = h2flow.qm*h2flow.calc_h()
+        t_mix2 = h2flow.mix_flows(fuelflow.H2Flow(qm_r1, t_cb, p_hpfp, 1))
+        H_mix = h_mix*h2flow.qm
+        h2flow.heat_fixed_power(dH - P_hpfp) 
+        h2flow.split_flows(qm_cb)
+        t_r1 = h2flow.t
+        h_r = h2flow.calc_h()
+        qm_r1 = (H_mix-H_0)/h_r
+    return qm_r1, qm_v, P_hpfp, dH-P_hpfp, i
 
-#     Returns
-#     -------
-#     y : float
-#         Point of interest on the ordinate
-
-#     """
-#     # find the nearest point above point of interest
-#     x1 = X[X > x].min()
-#     # find the nearest point below point of interest
-#     x0 = X[X < x].max()
-#     # get indeces of the known points
-#     id_1 = np.where(X == x1)
-#     id_0 = np.where(X == x0)
-#     # get ordinates of the known points
-#     y1 = Y[id_1]
-#     y0 = Y[id_0]
-#     # apply linear interpolation
-#     y = y0 + (y1-y0)/(x1-x0)*(x-x0)
-#     return y
+def h2pre(t_cb, t_hx, eta_hpfp, p_hpfp, qm_cb, t0, p0):
+    qm_r1 = 0.02
+    dH = get_dh(qm_cb, t_cb, p_hpfp, t0, p0)
+    t_r1 = 300
+    i = 0
+    t_hpfp = 0
+    while abs(t_cb - t_r1) + abs(t_hpfp-t_hx)> 1e-6:
+        i+=1
+        h2flow = fuelflow.H2Flow(qm_cb, t0, p0, 0)
+        h2flow.mix_flows(fuelflow.H2Flow(qm_r1, t_cb, p_hpfp, 1))
+        P_hpfp, t_hpfp = h2flow.compress_thermic(p_hpfp, eta_hpfp)
+        h2flow.heat_fixed_power(dH-P_hpfp) 
+        h2flow.split_flows(qm_cb)
+        qm_r1 = qm_r1 + (t_hx - t_hpfp)/10000
+        t_r1 = h2flow.t
+    return qm_r1, P_hpfp, dH-P_hpfp, i
 
 
+t_bk = 300
+t_wu = 250
+eta_p = 0.88
+p_h = 3e6
+qm_cb = 0.1
+t0 = 22
+p0 = 2e5
 
 
+qm_r , qm_t, P_lpfp, P_hpfp, i = reference(430, 1, 200000, 5500, 3e6, 0.88, 5e5, 0.83, 0.3, 250, 0.4e5)
+print(qm_r , qm_t, P_lpfp, P_hpfp, i)
 
+qm_r1, qm_v, P_hpfp, Q, i = h2dual(t_bk, t_wu, eta_p, p_h, qm_cb, t0, p0)
+print(qm_r1, qm_v, P_hpfp, Q, i)
+
+qm_r1, P_hpfp, Q, i = h2pump(t_bk, t_wu, eta_p, p_h, qm_cb, t0, p0)
+print(qm_r1, P_hpfp, Q, i)
+
+qm_r1, P_hpfp, Q, i = h2after(t_bk, t_wu, eta_p, p_h, qm_cb, t0, p0)
+print(qm_r1, P_hpfp, Q, i)
+
+qm_r1, P_hpfp, Q, i = h2pre(t_bk, t_wu, eta_p, p_h, qm_cb, t0, p0)
+print(qm_r1, P_hpfp, Q, i)
 
 # jeta_props = jeta_properties(300, 1e5)
 # dh = jeta_properties(400, 1e5)[1]-jeta_properties(300, 1e5)[1]
@@ -181,191 +286,11 @@ import timeit
 
 
 
-start = timeit.timeit()
-t_r1 = 420
-qm_cb = 0.3
-qm_r = 0.3
-qm_t = 0.1
-t0 = 250
-p0 = 0.4e5
-p_lpfp = 3e5
-eta_lpfp = 0.83
-Q_fohe = 200000
-p_hpfp = 3e6
-eta_hpfp = 0.88
-Q_idg = 5500
-
-t_r0 = 1000
-i = 0
-while abs(t_r0 - t_r1) > 1e-6:
-    jetaflow = fuelflow.JetaFlow(qm_cb+qm_t, t0, p0)
-    i+=1
-    t_r0 = t_r1
-    t_lpfp = jetaflow.pump_hydraulic(p_lpfp, eta_lpfp)
-    t_mix = jetaflow.mix_flows(fuelflow.JetaFlow(qm_r, t_r0, jetaflow.p))
-    t_fohe = jetaflow.heat_fixed_power(Q_fohe)
-    t_hpfp = jetaflow.pump_hydraulic(p_hpfp, eta_hpfp)
-    cb_ff = jetaflow.split_flows(qm_cb)
-    t_idg = jetaflow.heat_fixed_power(Q_idg)
-    to_tank_ff = jetaflow.split_flows(qm_t)
-    t_r1 = jetaflow.t
-stop = timeit.timeit()
-    
-print("\nReference \n")
-print("T_HX", t_mix)
-print("T_CB ", t_hpfp[1], " iteration ", i, " elapsed time ", stop - start)
-print("P_v ", t_hpfp[0])
-print("Q ", Q_fohe+Q_idg)
 
 
-start = timeit.timeit()
-t_r1 = 320
-qm_cb = 0.1
-qm_r = 0.017
-t0 = 20
-p0 = 2e5
-eta_lpfp = 0.8
-Q_gsmt = 331000
-p_hpfp = 3e6
-eta_hpfp = 0.88
-
-t_r0 = 1000
-i = 0
-
-while abs(t_r0 - t_r1) > 1e-6:
-    i+=1
-    t_r0 = t_r1
-    h2flow = fuelflow.H2Flow(qm_cb, t0, p0, 0)
-    t_mix = h2flow.mix_flows(fuelflow.H2Flow(qm_r, t_r0, p_hpfp, 1))
-    # print("p_mix ", h2flow.p)
-    # print("T_mix ", t_mix)
-    # print("T_sat ", sat_t(h2flow.p, True))
-    t_hpfp = h2flow.compress_thermic(p_hpfp, eta_hpfp)
-    # print("T_HPFP ", t_hpfp)
-    t_fohe = h2flow.heat_fixed_power(Q_gsmt) 
-    cb_ff = h2flow.split_flows(qm_cb)
-    t_r1 = h2flow.t
-stop = timeit.timeit()
-print("\nCompressor Pre-Mix \n")
-print("T_HX", t_hpfp[1])
-print("T_CB ", t_fohe, " iteration ", i, " elapsed time ", stop - start)
-print("P_v ", t_hpfp[0])
-print("Q ", Q_gsmt)
-
-sumpq = t_hpfp[0] + Q_gsmt
-#dh = qm_cb*(H2_h(t_fohe, p_hpfp, 1)-H2_h(t0, p0, 0))
-# print(sumpq, dh)
-
-start = timeit.timeit()
-t_r1 = 320
-qm_cb = 0.1
-qm_r = 0.017
-qm_r2 = 0.45
-t0 = 20
-p0 = 2e5
-eta_lpfp = 0.8
-Q_gsmt = 331000
-p_hpfp = 3e6
-eta_hpfp = 0.88
-
-t_r0 = 1000
-i = 0
-
-while abs(t_r0 - t_r1) > 1e-6:
-    i+=1
-    t_r0 = t_r1
-    h2flow = fuelflow.H2Flow(qm_cb, t0, p0, 0)
-    t_mix = h2flow.mix_flows(fuelflow.H2Flow(qm_r, t_r0, p_hpfp, 1))
-    # print("p_mix ", h2flow.p)
-    # print("T_mix ", t_mix)
-    # print("T_sat ", sat_t(h2flow.p, True))
-    t_hpfp = h2flow.compress_thermic(p_hpfp, eta_hpfp)
-    t_mix2 = h2flow.mix_flows(fuelflow.H2Flow(qm_r2, t_r0, p_hpfp, 1))
-    # print("T_HPFP ", t_hpfp)
-    t_fohe = h2flow.heat_fixed_power(Q_gsmt) 
-    cb_ff = h2flow.split_flows(qm_cb)
-    t_r1 = h2flow.t
-stop = timeit.timeit()
-print("\nCompressor with Dual Mix \n")
-print("T_HX", t_mix2)
-print("T_CB ", t_fohe, " iteration ", i, " elapsed time ", stop - start)
-print("P_v ", t_hpfp[0])
-print("Q ", Q_gsmt)
-
-sumpq = t_hpfp[0] + Q_gsmt
-# dh = qm_cb*(H2_h(t_fohe, p_hpfp, 1)-H2_h(t0, p0, 0))
-# print(sumpq, dh)
 
 
-start = timeit.timeit()
-t_r1 = 320
-qm_cb = 0.1
-qm_r = 0.45
-t0 = 20
-p0 = 2e5
-eta_lpfp = 0.8
-Q_gsmt = 380000
-p_hpfp = 3e6
-eta_hpfp = 0.88
 
-t_r0 = 1000
-i = 0
 
-while abs(t_r0 - t_r1) > 1e-6:
-    i+=1
-    t_r0 = t_r1
-    h2flow = fuelflow.H2Flow(qm_cb, t0, p0, 0)
-    Q_vap = h2flow.heat_to_saturation()
-    t_hpfp = h2flow.compress_thermic(p_hpfp, eta_hpfp)
-    t_mix = h2flow.mix_flows(fuelflow.H2Flow(qm_r, t_r0, p_hpfp, 1))
-    t_fohe = h2flow.heat_fixed_power(Q_gsmt- Q_vap) 
-    cb_ff = h2flow.split_flows(qm_cb)
-    t_r1 = h2flow.t
-stop = timeit.timeit()
-print("\nCompressor After-Mix \n")
-print("T_HX", t_mix)
-print("T_CB ", t_fohe, " iteration ", i, " elapsed time ", stop - start)
-print("P_v ", t_hpfp[0])
-print("Q ", Q_gsmt)
 
-sumpq = t_hpfp[0] + Q_gsmt
-#dh = qm_cb*(H2_h(t_fohe, p_hpfp, 1)-H2_h(t0, p0, 0))
-# print(sumpq, dh)
 
-start = timeit.timeit()
-t_r1 = 320
-qm_cb = 0.1
-qm_r = 0.5
-t0 = 20
-p0 = 2e5
-eta_lpfp = 0.8
-Q_gsmt = 422000
-p_hpfp = 3e6
-eta_hpfp = 0.8
-
-t_r0 = 1000
-i = 0
-
-while abs(t_r0 - t_r1) > 1e-6:
-    i+=1
-    t_r0 = t_r1
-    h2flow = fuelflow.H2Flow(qm_cb, t0, p0, 0)
-    t_hpfp = h2flow.pump_hydraulic(p_hpfp, eta_hpfp)
-    # print(t_hpfp)
-    t_mix = h2flow.mix_flows(fuelflow.H2Flow(qm_r, t_r0, p_hpfp, 1))
-    # print("p_mix ", h2flow.p)
-    # print("T_mix ", t_mix)
-    # print("T_sat ", sat_t(h2flow.p, True))
-    t_fohe = h2flow.heat_fixed_power(Q_gsmt)
-    cb_ff = h2flow.split_flows(qm_cb)
-    t_r1 = h2flow.t
-stop = timeit.timeit()
-print("\nPump \n")
-print("T_HX", t_mix)
-print("T_CB ", t_fohe, " iteration ", i, " elapsed time ", stop - start)
-print("P_p ", t_hpfp[0])
-print("Q ", Q_gsmt)
-
-sumpq = t_hpfp[0] + Q_gsmt
-# dh = qm_cb*(H2_h(t_fohe, p_hpfp, 1)-H2_h(t0, p0, 0))
-# print(sumpq, dh)

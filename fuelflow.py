@@ -35,7 +35,7 @@ class FuelFlow:
         self.t = temperature
         self.p = pressure   
     
-    def reduce_pressure(self, pressure_ratio):      
+    def reduce_pressure(self, p1):      
         """
         Adiabatic pressure reduction (for instance in a HX or throttle)
 
@@ -49,14 +49,13 @@ class FuelFlow:
         t1 : float
             Temperature after pressure drop
         """
-        if pressure_ratio > 1:
-            message = "The selected pressure ratio " + str(pressure_ratio)
-            message += " is greater than 1. Expected a value smaller than 1"
+        if p1 > self.p:
+            message = "The selected pressure " + str(p1)
+            message += " is greater than initial pressure."
             raise ValueError(message)
         h0 =  self.calc_h()     
         h1 = h0                                   
-        p0 = self.p
-        p1 = p0 * pressure_ratio   
+        p1 = p1
         self.p = p1
         t1 = self.raise_to_h(h1)          
         self.t = t1
@@ -86,6 +85,43 @@ class FuelFlow:
         self.raise_to_h(h1)
         return self.t
     
+    # def pump_hydraulic(self, p1: float, eta: float):
+    #     """
+    #     Method for raising pressure of fuel flow in a hydraulic pump
+
+    #     Parameters
+    #     ----------
+    #     p1 : float
+    #         final pressure (Pa)
+    #     eta : float
+    #         pump efficiency 
+
+    #     Returns
+    #     -------
+    #     P : float
+    #         pump power (W)
+    #     t1 : float
+    #         final temperature (K)
+    #     """
+    #     # a hydraulic pump may only be used on supercooled liquids
+    #     if type(self) == H2Flow:
+    #         if self.sat != 0:
+    #             raise ValueError(saturation_exception(self.sat, 0))
+    #     # initial density and specific enthalpy
+    #     rho = self.calc_rho()
+    #     h0 = self.calc_h()
+    #     # reversible pump work
+    #     a_rev = (p1-self.p)/rho
+    #     # pump work
+    #     a = a_rev/eta
+    #     # final enthalpy and temperature
+    #     h1 = a + h0
+    #     self.p = p1
+    #     t1 = self.raise_to_h(h1)
+    #     # pump power
+    #     P = a*self.qm
+    #     return P, t1
+        
     def pump_hydraulic(self, p1: float, eta: float):
         """
         Method for raising pressure of fuel flow in a hydraulic pump
@@ -103,25 +139,34 @@ class FuelFlow:
             pump power (W)
         t1 : float
             final temperature (K)
-        """
+        """     
         # a hydraulic pump may only be used on supercooled liquids
         if type(self) == H2Flow:
             if self.sat != 0:
                 raise ValueError(saturation_exception(self.sat, 0))
-        # initial density and specific enthalpy
-        rho = self.calc_rho()
+        # calculate initial specific entropy and enthalpy
+        s0 = self.calc_s()
         h0 = self.calc_h()
-        # reversible pump work
-        a_rev = (p1-self.p)/rho
-        # pump work
+        sim = self
+        # find temperature that yields the same entropy at higher pressure
+        sim.p = p1
+        ts1, _ = sim.find_t_for_s(s0)
+        sim.t = ts1
+        # find the specific enthalpy of the isentropic point 
+        hs1 = sim.calc_h()
+        # find reversible pump work
+        a_rev = hs1 - h0 
+        # calculate actual compression work and final enthalpy
         a = a_rev/eta
-        # final enthalpy and temperature
-        h1 = a + h0
+        h1 = h0 + a
+        # find final temperature
         self.p = p1
         t1 = self.raise_to_h(h1)
-        # pump power
+        # calculate compressor power
         P = a*self.qm
         return P, t1
+        
+
     
     def mix_flows(self, secondary_flow):
         """
@@ -155,14 +200,14 @@ class FuelFlow:
         self.qm = qm1
         return t1
     
-    def split_flows(self, ratio: float):
+    def split_flows(self, qm: float):
         """
         Method for splitting one flow instance into two separate flows
 
         Parameters
         ----------
-        ratio : float
-            ratio between mass flow of initial flow and secondary outflow
+        qm : float
+            mass flow of split flow
 
         Returns
         -------
@@ -172,16 +217,16 @@ class FuelFlow:
         # splitting flows is possible regardless of saturation state, 
         # however in the saturation regime it is assumed that both  split flows
         # receive the same ratio of liquid and gas
-        qm0 = self.qm                                                   # kg/s
-        # mass flow of the split flows
-        qm1 = qm0*(1-ratio)                                             # kg/s
-        qm2 = qm0*ratio                                                 # kg/s
-        self.qm = qm1
+        if qm > self.qm:
+            message = "Can't split " + str(qm) + " kg/s because "
+            message += "original flow is only " + str(self.qm) + " kg/s"
+            raise ValueError(message)
         # secondary flow inherits pressure and temperature from primary flow
+        self.qm = self.qm - qm
         if type(self) == H2Flow:
-            return H2Flow(qm2, self.t, self.p, self.sat)
+            return H2Flow(qm, self.t, self.p, self.sat)
         else:
-            return JetaFlow(qm2, self.t, self.p)
+            return JetaFlow(qm, self.t, self.p)
     
     def sat_t(self):
         """calculate saturation temperature (K) given the instance pressure"""
@@ -502,7 +547,7 @@ class JetaFlow(FuelFlow):
         """antoine equation parameters for jet a"""
         A = 8.81923182000836
         B = 1374.12563
-        C = 502.76012
+        C = -43.54
         return A, B, C
     
     def calc_h(self):
@@ -538,7 +583,7 @@ class JetaFlow(FuelFlow):
         """
         # loop until target enthalpy is achieved
         i = 0
-        while abs(self.calc_h()-h) > 1e-9:
+        while abs(self.calc_h()-h) > 1e-6:
             i += 1
             # calculate temperature step asssuming constant heat capacity
             dt = (h-self.calc_h())/self.calc_cp()
@@ -571,4 +616,4 @@ class JetaFlow(FuelFlow):
             sim.t = sim.t/math.exp((sim.calc_s()-s)/sim.calc_cp())
         if verbosity:
             print("find_t_for_s,", i)
-        return sim.t
+        return sim.t, 0
