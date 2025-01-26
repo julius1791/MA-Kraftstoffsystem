@@ -122,29 +122,38 @@ def h2pre(t_cb, t_hx, eta_hpfp, p_hpfp, qm_cb, t0, p0):
     return qm_r1, P_hpfp, dH-P_hpfp, i
 
 
-t_bk = 300
-t_wu = 250
+t_bk = 270
+t_wu = 200
 eta_p = 0.88
 p_h = 3e6
 qm_cb = 0.1
 t0 = 22
 p0 = 2e5
 
-
+print("reference")
+print("qmr qmt Plp Php i")
 qm_r , qm_t, P_lpfp, P_hpfp, i = reference(430, 1, 200000, 5500, 3e6, 0.88, 5e5, 0.83, 0.3, 250, 0.4e5)
-print(qm_r , qm_t, P_lpfp, P_hpfp, i)
+print(round(qm_r, 3) , round(qm_t, 3), round(P_lpfp/1000, 3), round(P_hpfp/1000, 3), i)
 
+print("\nh2dual")
+print("qmr qmv Php Q i")
 qm_r1, qm_v, P_hpfp, Q, i = h2dual(t_bk, t_wu, eta_p, p_h, qm_cb, t0, p0)
-print(qm_r1, qm_v, P_hpfp, Q, i)
+print(round(qm_r1, 3), round(qm_v, 3), round(P_hpfp/1000, 3), round(Q/1000, 3), i)
 
+print("\nh2pump")
+print("qmr Php Q i")
 qm_r1, P_hpfp, Q, i = h2pump(t_bk, t_wu, eta_p, p_h, qm_cb, t0, p0)
-print(qm_r1, P_hpfp, Q, i)
+print(round(qm_r1, 3), round(P_hpfp/1000, 3), round(Q/1000, 3), i)
 
+print("\nh2after")
+print("qmr Php Q i")
 qm_r1, P_hpfp, Q, i = h2after(t_bk, t_wu, eta_p, p_h, qm_cb, t0, p0)
-print(qm_r1, P_hpfp, Q, i)
+print(round(qm_r1, 3), round(P_hpfp/1000, 3), round(Q/1000, 3), i)
 
+print("\nh2pre")
+print("qmr Php Q i")
 qm_r1, P_hpfp, Q, i = h2pre(t_bk, t_wu, eta_p, p_h, qm_cb, t0, p0)
-print(qm_r1, P_hpfp, Q, i)
+print(round(qm_r1, 3), round(P_hpfp/1000, 3), round(Q/1000, 3), i)
 
 # jeta_props = jeta_properties(300, 1e5)
 # dh = jeta_properties(400, 1e5)[1]-jeta_properties(300, 1e5)[1]

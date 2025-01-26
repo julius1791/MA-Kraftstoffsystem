@@ -192,11 +192,8 @@ class FuelFlow:
         qm1 = (self.qm+secondary_flow.qm)                               # kg/s
         # final specific enthalpy
         h1 = H1/qm1                                                     # J/kg
-        # final pressure
-        p1 = min(self.p, secondary_flow.p)                              # Pa
         # final temperature
         t1 = self.raise_to_h(h1)                                        # K
-        self.p = p1
         self.qm = qm1
         return t1
     

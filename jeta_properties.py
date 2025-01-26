@@ -25,8 +25,6 @@ for file in files:
         content = pd.read_csv(os.path.join(pathlib.Path().resolve(), prop_dir, file), delimiter=",")
         tpp.update({name: content})
 
-
-                                   
 # import data from json
 with open(os.path.join(
         pathlib.Path().resolve(), prop_dir, "jeta.json")) as f:
