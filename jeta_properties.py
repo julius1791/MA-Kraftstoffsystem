@@ -8,23 +8,38 @@ import math
 prop_dir = "material properties"
 R = 8.3145                                                          # Jmol-1K
 
-def import_jeta_properties():        
-    """calculate specific gas constant for jeta and extract coefficients for 
-    enthalpy, entropy and heat capacity calculation"""                                                             
-    # import data from json
-    with open(os.path.join(
-            pathlib.Path().resolve(), prop_dir, "jeta.json")) as f:
-        jeta_props = json.load(f)
-    M_jeta = float(jeta_props["molecular_weight"])                  # gmol-1
-    R_jeta = R/M_jeta                                               # kJ/kgK  
-    
-    # iterate over split string, remove brackets and convert to float
-    a_list = list()
-    for a in jeta_props["a_coefficients"].split(" "):
-        a = a.replace("]", "")
-        a = a.replace("[", "")
-        a_list.append(float(a))
-    return R_jeta, a_list
+                         
+
+# find files in target directory
+files = [f for f in os.listdir(os.path.join(pathlib.Path().resolve(), prop_dir)) if os.path.isfile(
+    os.path.join(pathlib.Path().resolve(), prop_dir, f))]
+# init dictionary for tpp
+tpp = dict()
+# iterate list of files
+for file in files:
+    # only import .csv files
+    if file.split(".")[1] == "csv":
+        # use filename as index (without extension)
+        name = file.split(".")[0]
+        # feed file contents into pandas dataframe
+        content = pd.read_csv(os.path.join(pathlib.Path().resolve(), prop_dir, file), delimiter=",")
+        tpp.update({name: content})
+
+
+                                   
+# import data from json
+with open(os.path.join(
+        pathlib.Path().resolve(), prop_dir, "jeta.json")) as f:
+    jeta_props = json.load(f)
+M_jeta = float(jeta_props["molecular_weight"])                  # gmol-1
+R_jeta = R/M_jeta                                               # kJ/kgK  
+
+# iterate over split string, remove brackets and convert to float
+a_list = list()
+for a in jeta_props["a_coefficients"].split(" "):
+    a = a.replace("]", "")
+    a = a.replace("[", "")
+    a_list.append(float(a))
 
 ###################################################
 # ## c_p  (isobare Wärmekapazität)  [J/(kg*K)] ## #
@@ -33,7 +48,6 @@ def import_jeta_properties():
 def calc_jeta_cp(t: float, p: float):
     """function for calculating specific heat capacity of jet a"""
     # import specific gas constant and polynomial coefficients
-    R_jeta, a_list = import_jeta_properties()
     
     # init variables for calculation loop
     i = 0
@@ -57,7 +71,6 @@ def calc_jeta_cp(t: float, p: float):
 #############################################
 
 def calc_jeta_enthalpy(t: float, p: float):
-    R_jeta, a_list = import_jeta_properties()
 
     rho = calc_jeta_density(t, p)
     
@@ -79,7 +92,6 @@ def calc_jeta_enthalpy(t: float, p: float):
 #############################################
     
 def calc_jeta_entropy(t: float, p: float):
-    R_jeta, a_list = import_jeta_properties()
     
     # sum up enthalpy components
     s =  -a_list[0]*pow(t, -2)/2
@@ -115,7 +127,7 @@ def calc_jeta_density(t: float, p: float):
 
     """
     # import thermo-physical properties of jet fuel from .csv 
-    jeta_tpp = import_tpp()["jeta"]
+    jeta_tpp = tpp["jeta"]
     # feed the relevant data into numpy arrays
     temp = jeta_tpp[["Temperature (K)"]].to_numpy()
     press = jeta_tpp[["Pressure (Mpa)"]].to_numpy()
@@ -225,28 +237,4 @@ def find_p(p: float, press):
         return p0, p1
     return p0, p1
 
-def import_tpp():
-    """
-    Import all thermophysical property data stored on .csv files in "stoffdaten" directory 
 
-    Returns
-    -------
-    tpp : dict
-        dictionary indexed by filename with thermo-physical properties
-
-    """
-    # find files in target directory
-    files = [f for f in os.listdir(os.path.join(pathlib.Path().resolve(), prop_dir)) if os.path.isfile(
-        os.path.join(pathlib.Path().resolve(), prop_dir, f))]
-    # init dictionary for tpp
-    tpp = dict()
-    # iterate list of files
-    for file in files:
-        # only import .csv files
-        if file.split(".")[1] == "csv":
-            # use filename as index (without extension)
-            name = file.split(".")[0]
-            # feed file contents into pandas dataframe
-            content = pd.read_csv(os.path.join(pathlib.Path().resolve(), prop_dir, file), delimiter=",")
-            tpp.update({name: content})
-    return tpp
