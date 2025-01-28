@@ -3,6 +3,11 @@ import jeta_properties as jeta
 import math
 
 verbosity = False
+t_oil = 350         # K
+dT_ref = 105        # K
+q_ref = 123105    # J/kg
+tpr_ref = 0.01489   # -
+
 
 def saturation_exception(sat, sat_exp):
     """function for generating exception warning of incompatible saturation"""
@@ -37,7 +42,7 @@ class FuelFlow:
     
     def reduce_pressure(self, p1):      
         """
-        Adiabatic pressure reduction (for instance in a HX or throttle)
+        Adiabatic pressure reduction (for instance in a throttle)
 
         Parameters
         ----------
@@ -82,6 +87,12 @@ class FuelFlow:
         h0 = self.calc_h()                                              # J/kg
         # final enthalpy
         h1 = h0 + q                                                     # J/kg
+        
+        if type(self) == H2Flow:
+            dT = t_oil - self.t
+            tpr = tpr_ref*q/q_ref/dT*dT_ref
+            p1 = self.p * (1-tpr)
+            self.p = p1
         self.raise_to_h(h1)
         return self.t
     
@@ -193,9 +204,12 @@ class FuelFlow:
         # final specific enthalpy
         h1 = H1/qm1                                                     # J/kg
         # final temperature
-        t1 = self.raise_to_h(h1)                                        # K
+        p1 = secondary_flow.p*secondary_flow.qm/qm1 + self.p*self.qm/qm1
+        self.p = p1
         self.qm = qm1
-        return t1
+        t1 = self.raise_to_h(h1)       
+        self.t = t1
+        return t1, p1
     
     def split_flows(self, qm: float):
         """
@@ -329,17 +343,6 @@ class H2Flow(FuelFlow):
         """
         p_crit = 1.2964e6                                               # Pa
         
-        # find saturation temperature
-        t_sat = self.sat_t()                                            # K
-        
-        # initialise copies of instance in superheated and supercooled form
-        vapour = self
-        liquid = self
-        liquid.t = t_sat - 0.1
-        liquid.sat = 0
-        vapour.t - t_sat + 0.1
-        vapour.sat = 1
-        
         # set solver bounds and initial values depending on physical state
         # of instance after raising enthalpy
         
@@ -350,6 +353,16 @@ class H2Flow(FuelFlow):
             tmin = 20
             self.sat = 1
         else:
+            # find saturation temperature
+            t_sat = self.sat_t()                                            # K
+            
+            # initialise copies of instance in superheated and supercooled form
+            vapour = self
+            liquid = self
+            liquid.t = t_sat - 0.1
+            liquid.sat = 0
+            vapour.t - t_sat + 0.1
+            vapour.sat = 1
             # super heated vapour
             if h > vapour.calc_h():
                 tmin = t_sat + 0.1

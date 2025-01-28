@@ -26,133 +26,172 @@ def reference(t_cb, qm_hpfp, Q_fohe, Q_idg, p_hpfp, eta_hpfp, p_lpfp, eta_lpfp, 
     qm_r = qm_hpfp - qm_t - qm_cb
     return qm_r, qm_t, P_lpfp, P_hpfp, i
 
-def get_dh(qm_cb, t_cb, p_hpfp, t0, p0):
-    cb = fuelflow.H2Flow(qm_cb, t_cb, p_hpfp, 1)
+def get_dh(qm_cb, t_cb, p_cb, t0, p0):
+    cb = fuelflow.H2Flow(qm_cb, t_cb, p_cb, 1)
     f0 = fuelflow.H2Flow(qm_cb, t0, p0, 0)
     dH = cb.qm * cb.calc_h() - f0.qm * f0.calc_h()
     return dH
 
-def h2pump(t_cb, t_hx, eta_hpfp, p_hpfp, qm_cb, t0, p0):
-    qm_r1 = 0.5
-    h_mix = fuelflow.H2Flow(1, t_hx, p_hpfp, 1).calc_h()
-    dH = get_dh(qm_cb, t_cb, p_hpfp, t0, p0)
-    t_r1 = 300
+def h2pump(t_cbt, t_hxt, eta_hpfp, p_cbt, qm_cb, t0, p0):
+    qm_r = 0.5
+    p_hpfp = p_cbt
+    dH = get_dh(qm_cb, t_cbt, p_cbt, t0, p0)
+    t_r = t_cbt
+    t_rold = 0
     i = 0
-    t_mix = 0
-    while abs(t_cb - t_r1) + abs(t_mix-t_hx) > 1e-6:
+    t_hxa = 0
+    p_cba = 0
+    t_cba = 0
+    p_r = p_cbt
+    p_rold = 0
+    while abs(t_cbt - t_cba) + abs(t_hxa-t_hxt) + abs(p_cbt - p_cba) + abs(t_r - t_rold)+ abs(p_r - p_rold)> 2e-6:
         i+=1
+        t_rold = t_r
+        p_rold = p_r
         h2flow = fuelflow.H2Flow(qm_cb, t0, p0, 0)
         P_hpfp, _ = h2flow.pump_hydraulic(p_hpfp, eta_hpfp)
-        H_0 = h2flow.calc_h()*h2flow.qm
-        t_mix = h2flow.mix_flows(fuelflow.H2Flow(qm_r1, t_cb, p_hpfp, 1))
-        H_mix = h_mix*h2flow.qm
+        t_hxa, _ = h2flow.mix_flows(fuelflow.H2Flow(qm_r, t_r, p_r, 1))
         h2flow.heat_fixed_power(dH-P_hpfp)
-        h2flow.split_flows(qm_cb)
-        t_r1 = h2flow.t
-        h_r = h2flow.calc_h()
-        qm_r1 = (H_mix-H_0)/h_r
-    return qm_r1, P_hpfp, dH-P_hpfp, i
+        ff_cb = h2flow.split_flows(qm_cb)
+        ff_cb.reduce_pressure(ff_cb.p-168.9e3)
+        t_cba = ff_cb.t
+        p_cba = ff_cb.p
+        p_hpfp += p_cbt - p_cba
+        p_r = h2flow.p
+        t_r = h2flow.t
+        qm_r += (t_hxt-t_hxa)/400
+    return qm_r, P_hpfp, dH-P_hpfp, i
 
-def h2after(t_cb, t_hx, eta_hpfp, p_hpfp, qm_cb, t0, p0):
-    qm_r1 = 0.45
-    h_mix = fuelflow.H2Flow(1, t_hx, p_hpfp, 1).calc_h()
-    dH = get_dh(qm_cb, t_cb, p_hpfp, t0, p0)
-    t_r1 = 300
+def h2after(t_cbt, t_hxt, eta_hpfp, p_cbt, qm_cb, t0, p0):
+    qm_r = 0.45
+    p_hpfp = p_cbt
+    dH = get_dh(qm_cb, t_cbt, p_cbt, t0, p0)
+    t_r = t_cbt
+    t_rold = 0
     i = 0
-    t_mix = 0
-    while abs(t_cb - t_r1) + abs(t_mix-t_hx) > 1e-6:
+    t_hxa = 0
+    p_cba = 0
+    t_cba = 0
+    p_r = p_cbt
+    p_rold = 0
+    while abs(t_cbt - t_cba) + abs(t_hxa-t_hxt) + abs(p_cbt - p_cba) + abs(t_r - t_rold)+ abs(p_r - p_rold)> 2e-6:
         i+=1
+        t_rold = t_r
+        p_rold = p_r
         h2flow = fuelflow.H2Flow(qm_cb, t0, p0, 0)
         Q_vap = h2flow.heat_to_saturation()
         P_hpfp, t_hpfp = h2flow.compress_thermic(p_hpfp, eta_hpfp)
-        H_0 = h2flow.calc_h()*h2flow.qm
-        t_mix = h2flow.mix_flows(fuelflow.H2Flow(qm_r1, t_cb, p_hpfp, 1))
-        H_mix = h_mix*h2flow.qm
+        t_hxa, _ = h2flow.mix_flows(fuelflow.H2Flow(qm_r, t_r, p_r, 1))
         h2flow.heat_fixed_power(dH - P_hpfp - Q_vap) 
-        h2flow.split_flows(qm_cb)
-        t_r1 = h2flow.t
-        h_r = h2flow.calc_h()
-        qm_r1 = (H_mix-H_0)/h_r
-    return qm_r1, P_hpfp, dH-P_hpfp, i
+        ff_cb = h2flow.split_flows(qm_cb)
+        ff_cb.reduce_pressure(ff_cb.p-168.9e3)
+        t_cba = ff_cb.t
+        p_cba = ff_cb.p
+        p_hpfp += p_cbt - p_cba
+        t_r = h2flow.t
+        p_r = h2flow.p
+        qm_r += (t_hxt-t_hxa)/400
+    return qm_r, P_hpfp, dH-P_hpfp, i
 
-def h2dual(t_cb, t_hx, eta_hpfp, p_hpfp, qm_cb, t0, p0):
-    qm_r1 = 0.45
-    h_mix = fuelflow.H2Flow(1, t_hx, p_hpfp, 1).calc_h()
-    dH = get_dh(qm_cb, t_cb, p_hpfp, t0, p0)
-    t_r1 = 300
+def h2dual(t_cbt, t_hxt, eta_hpfp, p_cbt, qm_cb, t0, p0):
+    qm_r = 0.45
+    p_hpfp = p_cbt
+    dH = get_dh(qm_cb, t_cbt, p_cbt, t0, p0)
+    t_r = t_cbt
+    t_rold = 0
     i = 0
+    t_hxa = 0
+    p_cba = 0
+    t_cba = 0
+    p_r = p_cbt
+    p_rold = 0
+    qm_v = 0.03
+    t_va = 0
+    t_vt = 30
     
-    vap = fuelflow.H2Flow(1, 300, p_hpfp, 1)
-    vap.t = vap.sat_t() + 5
-    h_vap = vap.calc_h()
-    H_0 = fuelflow.H2Flow(qm_cb, t0, p0, 0).calc_h()*qm_cb
-    h_r = fuelflow.H2Flow(1, t_cb, p_hpfp, 1).calc_h()
-    qm_v = (H_0 - qm_cb*h_vap)/(h_vap-h_r)
-    t_mix2 = 0
-    while abs(t_cb - t_r1) + abs(t_mix2-t_hx) > 1e-6:
+    while abs(t_va - t_vt) + abs(t_cbt - t_cba) + abs(t_hxa-t_hxt) + abs(p_cbt - p_cba) + abs(t_r - t_rold)+ abs(p_r - p_rold)> 2e-6:
         i+=1
+        t_rold = t_r
+        p_rold = p_r
         h2flow = fuelflow.H2Flow(qm_cb, t0, p0, 0)
-        h2flow.mix_flows(fuelflow.H2Flow(qm_v, t_cb, p_hpfp, 1))
+        t_va, _ = h2flow.mix_flows(fuelflow.H2Flow(qm_v, t_cbt, p_cbt, 1))
+        t_vt = h2flow.sat_t() + 10
+        qm_v += -(t_va - t_vt)/1600
         P_hpfp, t_hpfp = h2flow.compress_thermic(p_hpfp, eta_hpfp)
-        H_0 = h2flow.qm*h2flow.calc_h()
-        t_mix2 = h2flow.mix_flows(fuelflow.H2Flow(qm_r1, t_cb, p_hpfp, 1))
-        H_mix = h_mix*h2flow.qm
+        t_hxa, _ = h2flow.mix_flows(fuelflow.H2Flow(qm_r, t_r, p_r, 1))
         h2flow.heat_fixed_power(dH - P_hpfp) 
-        h2flow.split_flows(qm_cb)
-        t_r1 = h2flow.t
-        h_r = h2flow.calc_h()
-        qm_r1 = (H_mix-H_0)/h_r
-    return qm_r1, qm_v, P_hpfp, dH-P_hpfp, i
+        ff_cb = h2flow.split_flows(qm_cb)
+        ff_cb.reduce_pressure(ff_cb.p-168.9e3)
+        t_cba = ff_cb.t
+        p_cba = ff_cb.p
+        p_hpfp += p_cbt - p_cba
+        t_r = h2flow.t
+        p_r = h2flow.p
+        qm_r += (t_hxt-t_hxa)/400
+    return qm_r, qm_v, P_hpfp, dH-P_hpfp, i
 
-def h2pre(t_cb, t_hx, eta_hpfp, p_hpfp, qm_cb, t0, p0):
-    qm_r1 = 0.02
-    dH = get_dh(qm_cb, t_cb, p_hpfp, t0, p0)
-    t_r1 = 300
+def h2pre(t_cbt, t_hxt, eta_hpfp, p_cbt, qm_cb, t0, p0):
+    qm_r = 0.02
+    p_hpfp = p_cbt
+    dH = get_dh(qm_cb, t_cbt, p_cbt, t0, p0)
+    t_r = t_cbt
+    t_rold = 0
     i = 0
-    t_hpfp = 0
-    while abs(t_cb - t_r1) + abs(t_hpfp-t_hx)> 1e-6:
+    t_hxa = 0
+    p_cba = 0
+    t_cba = 0
+    p_r = p_cbt
+    p_rold = 0
+    while abs(t_cbt - t_cba) + abs(t_hxa-t_hxt) + abs(p_cbt - p_cba) + abs(t_r - t_rold)+ abs(p_r - p_rold)> 2e-6:
         i+=1
+        t_rold = t_r
+        p_rold = p_r
         h2flow = fuelflow.H2Flow(qm_cb, t0, p0, 0)
-        h2flow.mix_flows(fuelflow.H2Flow(qm_r1, t_cb, p_hpfp, 1))
-        P_hpfp, t_hpfp = h2flow.compress_thermic(p_hpfp, eta_hpfp)
+        h2flow.mix_flows(fuelflow.H2Flow(qm_r, t_r, p_r, 1))
+        P_hpfp, t_hxa = h2flow.compress_thermic(p_hpfp, eta_hpfp)
         h2flow.heat_fixed_power(dH-P_hpfp) 
-        h2flow.split_flows(qm_cb)
-        qm_r1 = qm_r1 + (t_hx - t_hpfp)/10000
-        t_r1 = h2flow.t
-    return qm_r1, P_hpfp, dH-P_hpfp, i
+        ff_cb = h2flow.split_flows(qm_cb)
+        ff_cb.reduce_pressure(ff_cb.p-168.9e3)
+        t_cba = ff_cb.t
+        p_cba = ff_cb.p
+        p_hpfp += p_cbt - p_cba
+        t_r = h2flow.t
+        p_r = h2flow.p
+        qm_r += (t_hxt-t_hxa)/400
+    return qm_r, P_hpfp, dH-P_hpfp, i
 
 
 t_bk = 270
 t_wu = 200
 eta_p = 0.88
-p_h = 3e6
+p_cb = 1331391
 qm_cb = 0.1
 t0 = 22
-p0 = 2e5
+p0 = 4.2e5
 
 print("reference")
 print("qmr qmt Plp Php i")
-qm_r , qm_t, P_lpfp, P_hpfp, i = reference(430, 1, 200000, 5500, 3e6, 0.88, 5e5, 0.83, 0.3, 250, 0.4e5)
+qm_r , qm_t, P_lpfp, P_hpfp, i = reference(430, 1, 200000, 5500, p_cb, 0.88, 5e5, 0.83, 0.3, 250, 0.4e5)
 print(round(qm_r, 3) , round(qm_t, 3), round(P_lpfp/1000, 3), round(P_hpfp/1000, 3), i)
 
 print("\nh2dual")
 print("qmr qmv Php Q i")
-qm_r1, qm_v, P_hpfp, Q, i = h2dual(t_bk, t_wu, eta_p, p_h, qm_cb, t0, p0)
+qm_r1, qm_v, P_hpfp, Q, i = h2dual(t_bk, t_wu, eta_p, p_cb, qm_cb, t0, p0)
 print(round(qm_r1, 3), round(qm_v, 3), round(P_hpfp/1000, 3), round(Q/1000, 3), i)
 
 print("\nh2pump")
 print("qmr Php Q i")
-qm_r1, P_hpfp, Q, i = h2pump(t_bk, t_wu, eta_p, p_h, qm_cb, t0, p0)
+qm_r1, P_hpfp, Q, i = h2pump(t_bk, t_wu, eta_p, p_cb, qm_cb, t0, p0)
 print(round(qm_r1, 3), round(P_hpfp/1000, 3), round(Q/1000, 3), i)
 
 print("\nh2after")
 print("qmr Php Q i")
-qm_r1, P_hpfp, Q, i = h2after(t_bk, t_wu, eta_p, p_h, qm_cb, t0, p0)
+qm_r1, P_hpfp, Q, i = h2after(t_bk, t_wu, eta_p, p_cb, qm_cb, t0, p0)
 print(round(qm_r1, 3), round(P_hpfp/1000, 3), round(Q/1000, 3), i)
 
 print("\nh2pre")
 print("qmr Php Q i")
-qm_r1, P_hpfp, Q, i = h2pre(t_bk, t_wu, eta_p, p_h, qm_cb, t0, p0)
+qm_r1, P_hpfp, Q, i = h2pre(t_bk, t_wu, eta_p, p_cb, qm_cb, t0, p0)
 print(round(qm_r1, 3), round(P_hpfp/1000, 3), round(Q/1000, 3), i)
 
 # jeta_props = jeta_properties(300, 1e5)
