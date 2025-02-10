@@ -561,12 +561,14 @@ class H2Flow(FuelFlow):
             raise ValueError(saturation_exception(self.sat, 0))
         
         h0 = self.calc_h()                                              # J/kg
-        t1 = self.sat_t() + 0.1                                         # K
+        _, p = self.calc_static()
+        t1 = self.sat_t() + 1 + self.v**2/(2*h2.calc_H2_cp(self.sat_t() + 1, p))  # K
         self.t = t1
         h1 = self.calc_h()                                              # J/kg
         Q_dot = (h1 - h0)*self.qm                                       # W
         self.sat  = 1
         return Q_dot
+    
     def copy(self):
         return H2Flow(self.qm, self.t, self.p, self.v, self.sat)
 
