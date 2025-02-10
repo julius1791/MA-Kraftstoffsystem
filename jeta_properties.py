@@ -8,8 +8,6 @@ import math
 prop_dir = "material properties"
 R = 8.3145                                                          # Jmol-1K
 
-                         
-
 # find files in target directory
 files = [f for f in os.listdir(os.path.join(pathlib.Path().resolve(), prop_dir)) if os.path.isfile(
     os.path.join(pathlib.Path().resolve(), prop_dir, f))]

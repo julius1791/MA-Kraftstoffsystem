@@ -2,11 +2,13 @@ import h2_properties as h2
 import jeta_properties as jeta
 import math
 
-verbosity = False
 t_oil = 350         # K
 dT_ref = 105        # K
-q_ref = 123105    # J/kg
+q_ref = 123105      # J/kg
 tpr_ref = 0.01489   # -
+tolerance = 1e-6    # -
+max_iter = 50       # -
+p_crit = 1.2964e6   # Pa
 
 
 def saturation_exception(sat, sat_exp):
@@ -20,7 +22,7 @@ def saturation_exception(sat, sat_exp):
 ###############################################################################
 
 class FuelFlow:
-    def __init__(self, mass_flow: float, temperature: float, pressure: float):
+    def __init__(self, mass_flow: float, temperature: float, pressure: float, velocity: float):
         """
         FuelFlow constructor
 
@@ -29,9 +31,11 @@ class FuelFlow:
         mass_flow : float
             mass flow of h2 (kg/s)
         temperature : float
-            temperature (K)
+            total temperature (K)
         pressure : float
-            pressure (Pa)
+            total pressure (Pa)
+        velocity : float
+            velocity of fluid flow (m/s)
         saturation : float
             physical state of hydrogen 0 -> super cooled liquid, 
             1 -> overheated gas/supercritical, 0~1 -> saturation state
@@ -39,6 +43,7 @@ class FuelFlow:
         self.qm = mass_flow
         self.t = temperature
         self.p = pressure   
+        self.v = velocity
     
     def reduce_pressure(self, p1):      
         """
@@ -47,12 +52,12 @@ class FuelFlow:
         Parameters
         ----------
         pressure_ratio : float
-            Pressure ratio across the component being modelled
+            total pressure ratio across the component being modelled (Pa)
 
         Returns
         -------
         t1 : float
-            Temperature after pressure drop
+            final total temperature (K)
         """
         if p1 > self.p:
             message = "The selected pressure " + str(p1)
@@ -78,60 +83,23 @@ class FuelFlow:
         Returns
         -------
         t1 : float
-            final temperature (K)
+            final total temperature (K)
         """
         # this method may be used regardless of saturation
         # specific heat
         q = Q_dot/self.qm                                               # J/kg
-        # initial specific enthalpy
+        # initial specific total enthalpy
         h0 = self.calc_h()                                              # J/kg
-        # final enthalpy
+        # final specific total enthalpy
         h1 = h0 + q                                                     # J/kg
         
-        if type(self) == H2Flow:
+        if isinstance(self, H2Flow):
             dT = t_oil - self.t
             tpr = tpr_ref*q/q_ref/dT*dT_ref
             p1 = self.p * (1-tpr)
             self.p = p1
         self.raise_to_h(h1)
         return self.t
-    
-    # def pump_hydraulic(self, p1: float, eta: float):
-    #     """
-    #     Method for raising pressure of fuel flow in a hydraulic pump
-
-    #     Parameters
-    #     ----------
-    #     p1 : float
-    #         final pressure (Pa)
-    #     eta : float
-    #         pump efficiency 
-
-    #     Returns
-    #     -------
-    #     P : float
-    #         pump power (W)
-    #     t1 : float
-    #         final temperature (K)
-    #     """
-    #     # a hydraulic pump may only be used on supercooled liquids
-    #     if type(self) == H2Flow:
-    #         if self.sat != 0:
-    #             raise ValueError(saturation_exception(self.sat, 0))
-    #     # initial density and specific enthalpy
-    #     rho = self.calc_rho()
-    #     h0 = self.calc_h()
-    #     # reversible pump work
-    #     a_rev = (p1-self.p)/rho
-    #     # pump work
-    #     a = a_rev/eta
-    #     # final enthalpy and temperature
-    #     h1 = a + h0
-    #     self.p = p1
-    #     t1 = self.raise_to_h(h1)
-    #     # pump power
-    #     P = a*self.qm
-    #     return P, t1
         
     def pump_hydraulic(self, p1: float, eta: float):
         """
@@ -140,37 +108,38 @@ class FuelFlow:
         Parameters
         ----------
         p1 : float
-            final pressure (Pa)
+            final total pressure (Pa)
         eta : float
-            pump efficiency 
+            pump efficiency (-)
 
         Returns
         -------
         P : float
             pump power (W)
         t1 : float
-            final temperature (K)
+            final total temperature (K)
         """     
         # a hydraulic pump may only be used on supercooled liquids
-        if type(self) == H2Flow:
+        if isinstance(self, H2Flow):
             if self.sat != 0:
                 raise ValueError(saturation_exception(self.sat, 0))
-        # calculate initial specific entropy and enthalpy
+        # calculate initial specific entropy and total enthalpy
         s0 = self.calc_s()
         h0 = self.calc_h()
-        sim = self
-        # find temperature that yields the same entropy at higher pressure
+        # initial copy of flow instance to calculate ideal process
+        sim = self.copy()
+        # find static temperature that yields the same entropy at higher total pressure
         sim.p = p1
         ts1, _ = sim.find_t_for_s(s0)
         sim.t = ts1
-        # find the specific enthalpy of the isentropic point 
+        # find the specific total enthalpy of the isentropic point 
         hs1 = sim.calc_h()
         # find reversible pump work
         a_rev = hs1 - h0 
-        # calculate actual compression work and final enthalpy
+        # calculate actual compression work and final total enthalpy
         a = a_rev/eta
         h1 = h0 + a
-        # find final temperature
+        # find final total pressure and temperature
         self.p = p1
         t1 = self.raise_to_h(h1)
         # calculate compressor power
@@ -181,30 +150,30 @@ class FuelFlow:
     
     def mix_flows(self, secondary_flow):
         """
-        Method for mixing two hydrogen flows into one
+        Method for mixing two fuel flow instances into one
 
         Parameters
         ----------
-        secondary_flow : H2_Flow
-            secondary hydrogen flow 
+        secondary_flow : FuelFlow
+            secondary fuel flow 
 
         Returns
         -------
         float
-            final temperature (K)
+            final total temperature (K)
         """
         # this method may be applied regardless of saturation states
-        # find initial enthalpy 
+        # find initial total enthalpy 
         H0_1 = self.calc_h()*self.qm                                    # J
         H0_2 = secondary_flow.calc_h()*secondary_flow.qm                # J
-        # calculate final enthalpy
+        # final total enthalpy
         H1 = H0_1 + H0_2                                                # J
         # final mass flow
         qm1 = (self.qm+secondary_flow.qm)                               # kg/s
-        # final specific enthalpy
+        # final specific total enthalpy
         h1 = H1/qm1                                                     # J/kg
-        # final temperature
-        p1 = secondary_flow.p*secondary_flow.qm/qm1 + self.p*self.qm/qm1
+        # final total pressure
+        p1 = min(self.p, secondary_flow.p)
         self.p = p1
         self.qm = qm1
         t1 = self.raise_to_h(h1)       
@@ -213,7 +182,7 @@ class FuelFlow:
     
     def split_flows(self, qm: float):
         """
-        Method for splitting one flow instance into two separate flows
+        Method for splitting one fuel flow instance into two separate flows
 
         Parameters
         ----------
@@ -234,21 +203,27 @@ class FuelFlow:
             raise ValueError(message)
         # secondary flow inherits pressure and temperature from primary flow
         self.qm = self.qm - qm
-        if type(self) == H2Flow:
-            return H2Flow(qm, self.t, self.p, self.sat)
+        if isinstance(self, H2Flow):
+            return H2Flow(qm, self.t, self.p, self.v, self.sat)
         else:
-            return JetaFlow(qm, self.t, self.p)
+            return JetaFlow(qm, self.t, self.p, self.v)
     
     def sat_t(self):
         """calculate saturation temperature (K) given the instance pressure"""
+        # calculate static temperature and pressure
+        _, p = self.calc_static()
+        # antoine equation
         A, B, C = self.antoine()
-        t = B/(A-math.log(self.p, 10))-C                                # K
+        t = B/(A-math.log(p, 10))-C                                # K
         return t
     
     def sat_p(self):
         """calculate saturation pressure (Pa) given the instance temperature"""
+        # calculate static temperature and pressure
+        t, _ = self.calc_static()
+        # antoine equation
         A, B, C = self.antoine()
-        p = 10**(A-(B/(self.t + C)))                                    # Pa
+        p = 10**(A-(B/(t + C)))                                    # Pa
         return p
     
     
@@ -257,20 +232,21 @@ class FuelFlow:
     ######### Dummy methods that are populated in the child classes ###########
     ###########################################################################
    
+    def calc_static(self):
+        raise NotImplementedError("Use Subclass")
     def antoine(self):
-        return
+        raise NotImplementedError("Use Subclass")
     def calc_h(self):
-        return
-    def calc_cp(self):
-        return
+        raise NotImplementedError("Use Subclass")
     def calc_s(self):
-        return
-    def calc_rho(self):
-        return
+        raise NotImplementedError("Use Subclass")
     def raise_to_h(self, h):
-        return
+        raise NotImplementedError("Use Subclass")
     def find_t_for_s(self, s):
-        return
+        raise NotImplementedError("Use Subclass")
+    def copy(self):
+        raise NotImplementedError("Use Subclass")
+    
     
 ###############################################################################
 ################## Child class for hydrogen fuel flow #########################
@@ -279,11 +255,39 @@ class FuelFlow:
 class H2Flow(FuelFlow):
     def __init__(
             self, mass_flow: float, temperature: float, 
-            pressure: float, saturation: float):
-        FuelFlow.__init__(self, mass_flow, temperature, pressure)
+            pressure: float, velocity: float, saturation: float):
+        FuelFlow.__init__(self, mass_flow, temperature, pressure, velocity)
         # hydrogen requires the additional saturation attribute due to it being
         # present in both liquid and gaseous form throughout the fuel system
         self.sat = saturation
+        
+    def calc_static(self, tolerance=tolerance, max_iter=max_iter):
+        if self.sat != 1 and self.sat != 0:
+            A, B, C = self.antoine()
+            condition_bool = True
+            i = 0
+            ps1 = self.p
+            while condition_bool > tolerance:
+                ps0 = ps1
+                ts1= B/(A-math.log(ps0, 10))-C 
+                ps1 = self.p - h2.calc_H2_density(ts1, ps0)*self.v**2/2
+                condition_bool = abs(ps0-ps1) > tolerance
+                if i > max_iter:
+                    raise ValueError("calc_static did not converge")
+            return ts1, ps1
+        ts1 = self.t
+        ps1 = self.p
+        condition_bool = True
+        i = 0
+        while condition_bool > tolerance:
+            i+=1
+            ts0 = ts1
+            ts1 = ts1*0.1 + 0.9*(self.t - self.v**2/(2*h2.calc_H2_cp(ts0, ps1)))
+            ps1 = self.p - h2.calc_H2_density(ts0, ps1)*self.v**2/2
+            condition_bool = abs(ts0-ts1) > tolerance
+            if i > max_iter:
+                raise ValueError("calc_static did not converge")
+        return ts1, ps1
     
     def antoine(self):
         """antoine equation parameters for hydrogen"""
@@ -293,118 +297,126 @@ class H2Flow(FuelFlow):
         return A, B, C
     
     def calc_h(self):
-        """calculate specific enthalpy of instance"""
+        """calculate specific total enthalpy of instance"""
+        # calculate static temperature and pressure
+        t, p = self.calc_static()
         if self.sat == 0 or self.sat == 1:
-            h = h2.calc_H2_enthalpy(self.t, self.p)                     # J/kg
+            h = h2.calc_H2_enthalpy(t, p) + self.v**2/2                 # J/kg
         else:
-            h_v = h2.calc_H2_enthalpy(self.t + 0.1, self.p)             # J/kg
-            h_l = h2.calc_H2_enthalpy(self.t - 0.1, self.p)             # J/kg
-            h = self.sat*h_v + (1-self.sat)*h_l                         # J/kg
+            h_v = h2.calc_H2_enthalpy(t + 0.1, p)                       # J/kg
+            h_l = h2.calc_H2_enthalpy(t - 0.1, p)                       # J/kg
+            h = self.sat*h_v + (1-self.sat)*h_l + self.v**2/2           # J/kg
         return h
     
     def calc_cp(self):
         """calculate specific isobaric heat capacity of instance"""
-        return h2.calc_H2_cp(self.t, self.p)                            # J/kgK
+        # calculate static temperature and pressure
+        t, p = self.calc_static()
+        return h2.calc_H2_cp(t, p)                                      # J/kgK
     
     def calc_s(self):
         """calculate specific entropy of instance"""
+        # calculate static temperature and pressure
+        t, p = self.calc_static()
         if self.sat == 0 or self.sat == 1:
-            s = h2.calc_H2_entropy(self.t, self.p)                      # J/kgK
+            s = h2.calc_H2_entropy(t, p)                                # J/kgK
         else:
-            s_v = h2.calc_H2_entropy(self.t + 0.1, self.p)              # J/kgK
-            s_l = h2.calc_H2_entropy(self.t - 0.1, self.p)              # J/kgK
+            s_v = h2.calc_H2_entropy(t + 0.1, p)                        # J/kgK
+            s_l = h2.calc_H2_entropy(t - 0.1, p)                        # J/kgK
             s = self.sat*s_v + (1-self.sat)*s_l                         # J/kgK
         return s
     
     def calc_rho(self):
         """calculate density of instance"""
+        # calculate static temperature and pressure
+        t, p = self.calc_static()
         if self.sat == 0 or self.sat == 1:
-            rho = h2.calc_H2_density(self.t, self.p)                    # kg/m3
+            rho = h2.calc_H2_density(t, p)                              # kg/m3
         else:
-            rho_v = h2.calc_H2_density(self.t + 0.1, self.p)            # kg/m3
-            rho_l = h2.calc_H2_density(self.t - 0.1, self.p)            # kg/m3
+            rho_v = h2.calc_H2_density(t + 0.1, p)                      # kg/m3
+            rho_l = h2.calc_H2_density(t - 0.1, p)                      # kg/m3
             rho = self.sat*rho_v + (1-self.sat)*rho_l                   # kg/m3
         return rho
     
     def raise_to_h(self, h):
         """
-        Increase enthalpy of instance to given value by calculating the 
-        corresponding temperature
+        Increase total enthalpy of instance to given value by calculating the 
+        corresponding total temperature
 
         Parameters
         ----------
         h : float
-            target specific enthalpy (J/kg)
+            target specific total enthalpy (J/kg)
 
         Returns
         -------
         float
-            final temperature (K)
+            final total temperature (K)
         """
-        p_crit = 1.2964e6                                               # Pa
-        
         # set solver bounds and initial values depending on physical state
         # of instance after raising enthalpy
         
+        # find saturation temperature and static pressure
+        t_sat = self.sat_t()
+        _, p = self.calc_static()
+        
         # supercritical fluid 
         if self.p > p_crit:
-            self.t = 300
-            tmax = 2000
-            tmin = 20
-            self.sat = 1
+            tmax, tmin = self.init_loop(2000, 15, 300, 1)
+            return self.enthalpy_loop(tmax, tmin, h)
         else:
-            # find saturation temperature
-            t_sat = self.sat_t()                                            # K
-            
             # initialise copies of instance in superheated and supercooled form
-            vapour = self
-            liquid = self
-            liquid.t = t_sat - 0.1
-            liquid.sat = 0
-            vapour.t - t_sat + 0.1
-            vapour.sat = 1
-            # super heated vapour
+            vapour, liquid = self.init_vapour_liquid()
+            # check for super heated vapour
             if h > vapour.calc_h():
-                tmin = t_sat + 0.1
-                self.t = tmin + 10
-                tmax = 2000
-                self.sat = 1
-            # saturation regime
+                tmin = t_sat + 1 + self.v**2/(2*h2.calc_H2_cp(t_sat, p))
+                tmax, tmin = self.init_loop(2000, tmin, tmin + 10, 1)
+                return self.enthalpy_loop(tmax, tmin, h)
+            # check for saturation 
             elif h > liquid.calc_h():
                 h_l = liquid.calc_h()
                 h_v = vapour.calc_h()
                 self.sat = (h - h_l)/(h_v-h_l)
-                self.t = t_sat
+                self.t = t_sat + self.v**2/(2*h2.calc_H2_cp(t_sat, p))
                 return self.t
-            # supercooled liquid 
+            # else it must be supercooled liquid 
             else:
-                self.sat = 0
-                tmax = t_sat - 0.1
-                self.t = tmax - 5
-                tmin = 1
-        
+                tmax = t_sat - 1 + self.v**2/(2*h2.calc_H2_cp(t_sat, p))
+                tmax, tmin = self.init_loop(tmax, 1, tmax - 5, 0)
+                return self.enthalpy_loop(tmax, tmin, h)
+            
+    def init_loop(self, tmax, tmin, t, sat):
+        self.t = t
+        self.sat = sat
+        return tmax, tmin
+    
+    def enthalpy_loop(self, tmax, tmin, h, tolerance=tolerance, max_iter=max_iter, verbosity=False):
+        """Iteratively determine final temperature for given specific total 
+        enthalpy and total pressure of supercooled/heated fluid"""
         # loop until target enthalpy is achieved
         i = 0
-        while abs(self.calc_h()-h) > 1e-6:
+        while abs(self.calc_h()-h) > tolerance:
             i += 1
-            # calculate temperature step asssuming constant heat capacity
+            # calculate total temperature step assuming constant heat capacity
             dt = (h-self.calc_h())/self.calc_cp()
             self.t = self.t + dt
 
-            # ensure that the new calculated temperature is within the bounds
-            # for the current state
+            # ensure that the new calculated total temperature is within the 
+            # bounds for the current state
             if self.t > tmax:
                 self.t = tmax
             if self.t < tmin:
                 self.t = tmin
+            if i > max_iter:
+                raise ValueError("raise_to_h did not converge")
         if verbosity:
             print("raise_to_h,", i)
         return self.t
     
     def find_t_for_s(self, s):
         """
-        Find the temperature corresponding to a given specific entropy and
-        instance pressure
+        Find the total temperature corresponding to a given specific entropy and
+        instance total pressure
 
         Parameters
         ----------
@@ -418,66 +430,77 @@ class H2Flow(FuelFlow):
         sat_s : float
             saturation parameter in final state
         """
-        p_crit = 1.2964e6
-        sim = self
-        
-        # find saturation temperature
-        t_sat = self.sat_t()
-        
-        # initialise copies of instance in superheated and supercooled form
-        vapour = self
-        liquid = self
-        liquid.t = t_sat - 0.1
-        liquid.sat = 0
-        vapour.t - t_sat + 0.1
-        vapour.sat = 1
-        
         # set solver bounds and initial values depending on physical state
         # of instance after raising enthalpy
         
+        sim = self.copy()
+        # find saturation temperature and static pressure
+        t_sat = self.sat_t()
+        _, p = self.calc_static()
+        
         # supercritical fluid 
         if sim.p > p_crit:
-            sim.t = t_sat + 10
-            tmax = 2000
-            tmin = 20
-            sim.sat = 1
+            tmax, tmin = sim.init_loop(2000, 15, t_sat + 10, 1)
+            return sim.entropy_loop(tmax, tmin, s)
         else:
-            # super heated vapour
+            # initialise copies of instance in superheated and supercooled form
+            vapour, liquid = self.init_vapour_liquid()
+            
+            # check for super heated vapour
             if s > vapour.calc_s():
-                tmin = t_sat + 0.1
-                sim.t = tmin + 10
-                tmax = 2000
-                sim.sat = 1
-            # saturation regime
+                tmin = t_sat + 1 + self.v**2/(2*h2.calc_H2_cp(t_sat, p))
+                tmax, tmin = sim.init_loop(2000, tmin, tmin + 10, 1)
+                return sim.entropy_loop(tmax, tmin, s)
+            # check for saturation 
             elif s > liquid.calc_s():
                 s_l = liquid.calc_s()
                 s_v = vapour.calc_s()
                 sim.sat = (s - s_l)/(s_v-s_l)
                 sim.t = t_sat
                 return sim.t, sim.sat
-            # supercooled liquid 
+            # else it must be supercooled liquid 
             else:
-                sim.sat = 0
-                tmax = t_sat - 0.1
-                sim.t = tmax - 5
-                tmin = 1
+                tmax = t_sat - 1 + self.v**2/(2*h2.calc_H2_cp(t_sat, p))
+                tmax, tmin = sim.init_loop(tmax, 1, tmax - 5, 0)
+                return sim.entropy_loop(tmax, tmin, s)
         
+        
+    def entropy_loop(self, tmax, tmin, s, tolerance=tolerance, max_iter=max_iter, verbosity=False):
+        """Iteratively determine final temperature for given specific entropy 
+        and total pressure of supercooled/heated fluid within constraints"""
         # loop until target entropy is achieved
         i = 0
-        while abs(sim.calc_s()-s) > 1e-9:
+        while abs(self.calc_s()-s) > tolerance:
             i += 1
             # calculate temperature step asssuming constant heat capacity
-            sim.t = sim.t/math.exp((sim.calc_s()-s)/sim.calc_cp())
+            self.t = self.t/math.exp((self.calc_s()-s)/self.calc_cp())
             
             # ensure that the new calculated temperature is within the bounds
             # for the current state
-            if sim.t > tmax:
-                sim.t = tmax
-            if sim.t < tmin:
-                sim.t = tmin
+            if self.t > tmax:
+                self.t = tmax
+            if self.t < tmin:
+                self.t = tmin
+            if i > max_iter:
+                raise ValueError("find_t_for_s did not converge")
         if verbosity:
             print("find_t_for_s,", i)
-        return sim.t, sim.sat
+        return self.t, self.sat
+    
+    def init_vapour_liquid(self):
+        """"Initialise H2flow instances of saturated vapour/liquid"""
+        # find saturation temperature and static pressure
+        t_sat = self.sat_t()
+        _, p = self.calc_static()
+        
+        # initialise copies of instance in superheated and supercooled form
+        vapour = self.copy()
+        liquid = self.copy()
+        liquid.t = t_sat - 1 + self.v**2/(2*h2.calc_H2_cp(t_sat - 1, p))
+        liquid.sat = 0
+        vapour.t = t_sat + 1 + self.v**2/(2*h2.calc_H2_cp(t_sat + 1, p))
+        vapour.sat = 1
+        return vapour, liquid
     
     def compress_thermic(self, p1: float, eta: float):
         """
@@ -544,14 +567,33 @@ class H2Flow(FuelFlow):
         Q_dot = (h1 - h0)*self.qm                                       # W
         self.sat  = 1
         return Q_dot
+    def copy(self):
+        return H2Flow(self.qm, self.t, self.p, self.v, self.sat)
+
 
 ###############################################################################
 #################### Child class for jet a fuel flow ##########################
 ###############################################################################
 
 class JetaFlow(FuelFlow):
-    def __init__(self, mass_flow: float, temperature: float, pressure: float):
-        FuelFlow.__init__(self, mass_flow, temperature, pressure)
+    def __init__(self, mass_flow: float, temperature: float, pressure: float, velocity: float):
+        FuelFlow.__init__(self, mass_flow, temperature, pressure, velocity)
+    
+    def calc_static(self, tolerance=tolerance, max_iter=max_iter):
+        """"calculate static temperature and pressure of fuel flow"""
+        ts1 = self.t
+        ps1 = self.p
+        condition_bool = True
+        i = 0
+        while condition_bool > tolerance:
+            i+=1
+            ts0 = ts1
+            ts1 = ts1*0.1 + 0.9*(self.t - self.v**2/(2*jeta.calc_jeta_cp(ts0, ps1)))
+            ps1 = self.p - jeta.calc_jeta_density(ts0, ps1)*self.v**2/2
+            condition_bool = abs(ts0-ts1) > tolerance
+            if i > max_iter:
+                raise ValueError("calc_static did not converge")
+        return ts1, ps1
     
     def antoine(self):
         """antoine equation parameters for jet a"""
@@ -561,22 +603,34 @@ class JetaFlow(FuelFlow):
         return A, B, C
     
     def calc_h(self):
-        """calculate specific enthalpy of instance"""
-        return jeta.calc_jeta_enthalpy(self.t, self.p)
+        """calculate specific total enthalpy of instance"""
+        # calculate static temperature and pressure
+        t, p = self.calc_static()
+        h = jeta.calc_jeta_enthalpy(t, p) + self.v**2/2                 # J/kg
+        return h
     
     def calc_cp(self):
         """calculate specific heat capacity of instance"""
-        return jeta.calc_jeta_cp(self.t, self.p)
+        # calculate static temperature and pressure
+        t, p = self.calc_static()
+        cp = jeta.calc_jeta_cp(t, p)                                    # J/kgK
+        return cp
 
     def calc_s(self):
         """calculate specific entropy of instance"""
-        return jeta.calc_jeta_entropy(self.t, self.p)
+        # calculate static temperature and pressure
+        t, p = self.calc_static()
+        s = jeta.calc_jeta_entropy(t, p)
+        return s
     
     def calc_rho(self):
         """calculate specific density of instance"""
-        return jeta.calc_jeta_density(self.t, self.p)
+        # calculate static temperature and pressure
+        t, p = self.calc_static()
+        rho = jeta.calc_jeta_density(t, p)
+        return rho
     
-    def raise_to_h(self, h):
+    def raise_to_h(self, h, tolerance=tolerance, max_iter=max_iter, verbosity=False):
         """
         Increase enthalpy of instance to given value by calculating the 
         corresponding temperature
@@ -593,16 +647,18 @@ class JetaFlow(FuelFlow):
         """
         # loop until target enthalpy is achieved
         i = 0
-        while abs(self.calc_h()-h) > 1e-6:
+        while abs(self.calc_h()-h) > tolerance:
             i += 1
-            # calculate temperature step asssuming constant heat capacity
+            # calculate total temperature step asssuming constant heat capacity
             dt = (h-self.calc_h())/self.calc_cp()
             self.t = self.t + dt
+            if i > max_iter:
+                raise ValueError("raise_to_h did not converge")
         if verbosity:
             print("raise_to_h,", i)
         return self.t
     
-    def find_t_for_s(self, s):
+    def find_t_for_s(self, s, tolerance=tolerance, max_iter=max_iter, verbosity=False):
         """
         Find the temperature corresponding to a given specific entropy and
         instance pressure
@@ -620,10 +676,15 @@ class JetaFlow(FuelFlow):
         sim = self
         # loop until target entropy is achieved
         i = 0
-        while abs(sim.calc_s()-s) > 1e-9:
+        while abs(sim.calc_s()-s) > tolerance:
             i += 1
             # calculate temperature step asssuming constant heat capacity
             sim.t = sim.t/math.exp((sim.calc_s()-s)/sim.calc_cp())
+            if i > max_iter:
+                raise ValueError("find_t_for_s did not converge")
         if verbosity:
             print("find_t_for_s,", i)
         return sim.t, 0
+    
+    def copy(self):
+        return JetaFlow(self.qm, self.t, self.p, self.v)
