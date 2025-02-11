@@ -403,15 +403,22 @@ class H2Flow(FuelFlow):
 
             # ensure that the new calculated total temperature is within the 
             # bounds for the current state
-            if self.t > tmax:
-                self.t = tmax
-            if self.t < tmin:
-                self.t = tmin
+            self.loop_check_bounds(tmax, tmin)
+            
+            # quit loop after max iterations are reached
             if i > max_iter:
                 raise ValueError("raise_to_h did not converge")
         if verbosity:
             print("raise_to_h,", i)
         return self.t
+    
+    def loop_check_bounds(self, tmax, tmin):
+        """Ensure that total temperature remains within specified limits"""
+        if self.t > tmax:
+            self.t = tmax
+        if self.t < tmin:
+            self.t = tmin
+        return
     
     def find_t_for_s(self, s):
         """
@@ -477,10 +484,9 @@ class H2Flow(FuelFlow):
             
             # ensure that the new calculated temperature is within the bounds
             # for the current state
-            if self.t > tmax:
-                self.t = tmax
-            if self.t < tmin:
-                self.t = tmin
+            self.loop_check_bounds(tmax, tmin)
+            
+            # quit loop after max iterations are reached
             if i > max_iter:
                 raise ValueError("find_t_for_s did not converge")
         if verbosity:
