@@ -23,7 +23,13 @@ w_h2o_air_0 = 0.000000
 lhv_h2 = 119.96e6       # J/kg
 t_ref = 298.15          # K
 
-def calc_parallel_combustion(phi, t_h2_0, t_air_0, p_h2, p_air, Q):
+# specific heat of vaporisation of water
+q_vap_h2o = 2.4417e6    # J/kg
+
+# specific heat capacity of liquid water (ideal fluid)
+c_h2o = 4.186e3         # J/kgK
+
+def calc_parallel_combustion(Q, t_h2_0, p_h2, t_air_0, p_air=1e5, w_h2o_air_0=0, t_hx=283.15, phi=0.1):
     """
     Calculate the mass flow of hydrogen to a bleed air supplied 
     parallel combustion chamber required to supply the set amount of heat  
@@ -40,6 +46,8 @@ def calc_parallel_combustion(phi, t_h2_0, t_air_0, p_h2, p_air, Q):
         static pressure of hydrogen prior to injection (Pa)
     p_air : float
         static pressure of bleed air (Pa)
+    t_hx : float
+        static temperature of the cooled exhaust gas (K)
     Q : float
         Heat demand (W)
 
@@ -49,30 +57,20 @@ def calc_parallel_combustion(phi, t_h2_0, t_air_0, p_h2, p_air, Q):
         hydrogen mass flow (kg/s)
 
     """
-    # calculate ratio of dry air to hydrogen given the equivalence ratio before combustion
+    # calculate ratio of dry air to hydrogen before combustion
     w_air_h2_0 = w_o2/w_h2 / (phi*w_o2_air)
     
-    ###########################################################################
+    # calculate ratio of dry air to hydrogen after combustion
+    w_air_h2_1 = w_o2/w_h2 * (1/(phi*w_o2_air)-1)
     
-    # only required if combustion gases are cooled to a 
-    # temperature that isn't the reference temperature
+    # calculate ratio of water produced in combustion to hydrogen
+    w_h2o_h2 = w_h2o/w_h2
     
-    # # calculate 
-    # w_air_h2_1 = w_o2/w_h2 * (1/(phi*w_o2_air)-1)
-    
-    # # calculate ratio of water produced in combustion to hydrogen
-    # w_h2o_h2 = w_h2o/w_h2
-    
-    # # calculate specific humidity after combustion
-    # w_h2o_air_1 = w_h2o_h2/w_air_h2_1 + w_h2o_air*w_air_h2_0/w_air_h2_1 
-    
-    ###########################################################################
-    
-    # calculate premix gas temperature
-    t0 = calculate_initial_temperature(w_air_h2_0, t_h2_0, t_air_0, p_air, p_h2)
+    # calculate specific humidity after combustion
+    w_h2o_air_1 = w_h2o_h2/w_air_h2_1 + w_h2o_air_0*w_air_h2_0/w_air_h2_1 
     
     # calculate the mass flow of hydrogen required
-    qm_h2 = calculate_enthalpy_change(w_air_h2_0, w_h2o_air_0, t0, p_air, Q)
+    qm_h2 = calculate_enthalpy_change(w_air_h2_0, w_air_h2_1, w_h2o_air_0, w_h2o_air_1, t_h2_0, t_air_0, p_air, p_h2, t_hx, Q)
     return qm_h2
 
 def calculate_initial_temperature(w_air_h2, t_h2_0, t_air_0, p_air, p_h2):
@@ -109,7 +107,9 @@ def calculate_initial_temperature(w_air_h2, t_h2_0, t_air_0, p_air, p_h2):
     condition_bool = True
     while condition_bool:
         # calculate change in specific enthalpy of hydrogen
-        dh_h2 = h2.calc_H2_enthalpy(t_h2_0, p_h2) - h2.calc_H2_enthalpy(t1, p_air)
+        dh_h2 = (
+            h2.calc_H2_enthalpy(t_h2_0, p_h2) - h2.calc_H2_enthalpy(t1, p_air)
+        )
         
         # calculate change in specific enthalpy of air
         air0.TW = t_air_0, w_h2o_air_0
@@ -131,22 +131,30 @@ def calculate_initial_temperature(w_air_h2, t_h2_0, t_air_0, p_air, p_h2):
         condition_bool = abs(dh) > tolerance
     return t1
 
-def calculate_enthalpy_change(w_air_h2_0, w_h2o_air_0, t0, p, Q):
+def calculate_enthalpy_change(w_air_h2_0, w_air_h2_1, w_h2o_air_0, w_h2o_air_1, t_h2_0, t_air_0, p_air, p_h2, t_hx, Q):
     """
     Calculate the specific heat that is transferred in the heat exchanger 
     following the parallel combustion chamber if the exhaust gases are cooled 
-    to 25˚C/298.15 K
+    to the given temperature
 
     Parameters
     ----------
     w_air_h2_0 : float
         mass ratio of dry air [before combustion] to hydrogen (-)
+    w_air_h2_1 : float
+        mass ratio of dry air [after combustion] to hydrogen (-)
     w_h2o_air_0 : float
         specific humidity of inlet bleed air (-)
-    t0 : float
-        Initial temperature in combustion chamber (K)
-    p : float
+    t_h2_0 : float
+        static temperature of hydrogen prior to injection (K)
+    t_air_0 : float
+        static temperature of bleed air (K)
+    p_air : float
         static pressure of bleed air (Pa)
+    p_h2 : float
+        static pressure of hydrogen (Pa)
+    t_hx : float
+        static temperature of the cooled exhaust gas (K)
     Q : float
         Heat demand (W)
 
@@ -157,26 +165,61 @@ def calculate_enthalpy_change(w_air_h2_0, w_h2o_air_0, t0, p, Q):
 
     """
     # calculate the specific enthalpy difference of hydrogen to the reference point
-    dh_h2_0 = h2.calc_H2_enthalpy(t0, p) - h2.calc_H2_enthalpy(t_ref, p)
+    dh_h2_0 = h2.calc_H2_enthalpy(t_h2_0, p_h2) - h2.calc_H2_enthalpy(t_ref, p_air)
     
     # calculate the specific enthalpy differenc of bleed air to the reference point
     air0 = psp.MoistAir()
     airref0 = psp.MoistAir()
-    air0.TW = t0, w_h2o_air_0
+    air0.TW = t_air_0, w_h2o_air_0
     airref0.TW = t_ref, w_h2o_air_0
     dh_air_0 = (air0.specific_enthalpy-airref0.specific_enthalpy)*1e3
     
-    # calculate the specific enthalpy difference of the mixture
-    dh0 = (dh_h2_0+w_air_h2_0 * dh_air_0)/(1+w_air_h2_0)
+    # calculate [hydrogen] specific enthalpy difference of mixture to reference 
+    # before combustion
+    dh0 = (dh_h2_0+w_air_h2_0 * dh_air_0)
     
-    # calculate the [mixture] specific heat transferred in the heat exchanger
-    q = dh0 + lhv_h2/(1+w_air_h2_0)
+    # calculate the specific enthalpy difference of heat exchanger exit gases
+    # to reference
+    
+    # initial assumption: cooled gas is oversaturated
+    hxair = psp.MoistAir()
+    hxairref = psp.MoistAir()
+    hxair.TR = t_hx, 1
+    
+    # check assumption for validity
+    
+    # exhaust gas has less than 100% relative humiditiy
+    if w_air_h2_1 < hxair.specific_humidity:
+        # set specific humidity and liquid water mass factor
+        hxair.TW = t_hx, w_air_h2_1
+        w_lh2o_h2 = 0
+        dh_lh2o = 0
+        hxairref.TW = t_ref, w_air_h2_1
+    
+    # exhaust gas is saturated
+    else:
+        # set liquid mass factor
+        w_lh2o_h2 = (w_air_h2_1 - hxair.specific_humidity)/w_air_h2_1
+        
+        hxairref.TR = t_ref, 1
+    
+        # calculate specific enthalpy difference of liquid water to reference
+        dh_lh2o = q_vap_h2o + (t_ref-t_hx) * c_h2o
+    
+    # calculate specific enthalpy difference of humid air to reference
+    dh_hxair = (hxairref.specific_enthalpy - hxair.specific_enthalpy)*1e3
+    
+    # calculate [hyrogen] specific enthalpy difference of mixture to reference
+    # after combustion
+    dh1 = dh_hxair * w_air_h2_1 + dh_lh2o * w_lh2o_h2
+  
     # calculate the [hydrogen] specific heat transferred in the heat exchanger
-    q_h2 = q*(1+w_air_h2_0)
+    q = dh0 + lhv_h2 + dh1
+
     # calculate the mass of hydrogen needed to supply the heat demand
-    qm_h2 = Q/q_h2
+    qm_h2 = Q/q
 
     return qm_h2
 
 if __name__ == "__main__":
-    print(calc_parallel_combustion(1/10, 250, 344, 1.6e6, 1e5, 150e3))
+    print(calc_parallel_combustion(150e3, 22, 4.2e5, 344))

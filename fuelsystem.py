@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-import matplotlib.pyplot as plt
 import fuelflow
+import h2_stoffmodell
+from parallel_comustion import calc_parallel_combustion
 
 tolerance = 1e-6
 v0 = 40
@@ -33,22 +34,30 @@ def get_dh(qm_cb, t_cb, p_cb, t0, p0, v):
     dH = cb.qm * cb.calc_h() - f0.qm * f0.calc_h()
     return dH
 
-def h2pump(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb, t0, p0, v = v0, tolerance = tolerance):
+def h2pump(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx = 0, pcc=False, v = v0, tolerance = tolerance):
     qm_r = 0.5
     p_hpfp = p_cbt
-    dH = get_dh(qm_cb, t_cbt, p_cbt, t0, p0, v)
-    h_r = dH/qm_cb
+    dH0 = get_dh(qm_cb0, t_cbt, p_cbt, t0, p0, v) 
+    dH = dH0
+    h_r = dH/qm_cb0
     i = 0
+    P_r = 0
+    P_hpfp = 0
     condition_bool = True
     while condition_bool:
         i+=1
+        if pcc:
+            qm_cb = qm_cb0 + calc_parallel_combustion(dH-P_r-P_hpfp-Q_hx, t_cbt, p_cbt, 344)
+            dH = dH0 * qm_cb / qm_cb0
+        else:
+            qm_cb = qm_cb0
         h_rold = h_r
         h2flow = fuelflow.H2Flow(qm_cb, t0, p0, v, 0)
         P_hpfp, _ = h2flow.pump_hydraulic(p_hpfp, eta_hpfp)
         ff_r = fuelflow.H2Flow(qm_r, 200, p_hpfp, v, 1)
         ff_r.raise_to_h(h_r)
         t_hxa, _ = h2flow.mix_flows(ff_r)
-        h2flow.heat_fixed_power(dH-P_hpfp)
+        h2flow.heat_fixed_power(dH-P_hpfp-P_r)
         ff_cb = h2flow.split_flows(qm_cb)
         P_r, _ = h2flow.compress_thermic(p_hpfp, eta_r)
         ff_cb.reduce_pressure(ff_cb.p-168.9e3)
@@ -62,14 +71,16 @@ def h2pump(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb, t0, p0, v = v0, toleranc
             and abs(t_hxa-t_hxt) > tolerance 
             and abs(p_cbt - p_cba) > tolerance 
             and abs(h_r - h_rold) > tolerance) 
+    print(t_cbt - t_cba, t_hxa-t_hxt, p_cbt - p_cba, h_r - h_rold)
     return qm_r, P_hpfp, P_r, dH-P_hpfp, i
 
-def h2after(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb, t0, p0, v = v0, tolerance = tolerance):
+def h2after(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb, t0, p0, Q_hx = 0, pcc=False, v = v0, tolerance = tolerance):
     qm_r = 0.5
     p_hpfp = p_cbt
     dH = get_dh(qm_cb, t_cbt, p_cbt, t0, p0, v)
     h_r = dH/qm_cb
     i = 0
+    P_r = 0
     condition_bool = True
     while condition_bool:
         i+=1
@@ -80,7 +91,7 @@ def h2after(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb, t0, p0, v = v0, toleran
         ff_r = fuelflow.H2Flow(qm_r, 200, p_hpfp, v, 1)
         ff_r.raise_to_h(h_r)
         t_hxa, _ = h2flow.mix_flows(ff_r)
-        h2flow.heat_fixed_power(dH - P_hpfp - Q_vap) 
+        h2flow.heat_fixed_power(dH - P_hpfp - Q_vap-P_r) 
         ff_cb = h2flow.split_flows(qm_cb)
         ff_cb.reduce_pressure(ff_cb.p-168.9e3)
         t_cba = ff_cb.t
@@ -94,9 +105,10 @@ def h2after(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb, t0, p0, v = v0, toleran
             and abs(t_hxa-t_hxt) > tolerance 
             and abs(p_cbt - p_cba) > tolerance 
             and abs(h_r - h_rold) > tolerance) 
+    print(t_cbt - t_cba, t_hxa-t_hxt, p_cbt - p_cba, h_r - h_rold)
     return qm_r, P_hpfp, P_r, dH-P_hpfp, i
 
-def h2dual(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb, t0, p0, v = v0, tolerance = tolerance):
+def h2dual(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb, t0, p0, Q_hx = 0, pcc=False, v = v0, tolerance = tolerance):
     qm_r = 0.5
     qm_v = 0.02
     p_hpfp = p_cbt
@@ -104,6 +116,7 @@ def h2dual(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb, t0, p0, v = v0, toleranc
     h_r = dH/qm_cb
     h_v = h_r
     i = 0
+    P_r = 0
     condition_bool = True
     
     while condition_bool:
@@ -120,7 +133,7 @@ def h2dual(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb, t0, p0, v = v0, toleranc
         ff_r = fuelflow.H2Flow(qm_r, 200, p_hpfp, v, 1)
         ff_r.raise_to_h(h_r)
         t_hxa, _ = h2flow.mix_flows(ff_r)
-        h2flow.heat_fixed_power(dH - P_hpfp) 
+        h2flow.heat_fixed_power(dH - P_hpfp - P_r) 
         ff_cb = h2flow.split_flows(qm_cb)
         ff_cb.reduce_pressure(ff_cb.p-168.9e3)
         h_v = h2flow.calc_h()
@@ -138,14 +151,16 @@ def h2dual(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb, t0, p0, v = v0, toleranc
             and abs(p_cbt - p_cba) > tolerance 
             and abs(h_r - h_rold) > tolerance
             and abs(h_v - h_vold) > tolerance)
+    print(t_cbt - t_cba, t_hxa-t_hxt, p_cbt - p_cba, h_r - h_rold)
     return qm_r, qm_v, P_hpfp, P_r, dH-P_hpfp, i
 
-def h2pre(t_cbt, t_hxt, eta_hpfp, p_cbt, qm_cb, t0, p0, v = v0, tolerance = tolerance):
+def h2pre(t_cbt, t_hxt, eta_hpfp, p_cbt, qm_cb, t0, p0, Q_hx = 0, pcc=False, v = v0, tolerance = tolerance):
     qm_r = 0.07
     p_hpfp = p_cbt
     dH = get_dh(qm_cb, t_cbt, p_cbt, t0, p0, v)
     h_r = dH/qm_cb
     i = 0
+    P_r = 0
     condition_bool = True
     while condition_bool:
         i+=1
@@ -155,7 +170,7 @@ def h2pre(t_cbt, t_hxt, eta_hpfp, p_cbt, qm_cb, t0, p0, v = v0, tolerance = tole
         ff_r.raise_to_h(h_r)
         h2flow.mix_flows(ff_r)
         P_hpfp, t_hxa = h2flow.compress_thermic(p_hpfp, eta_hpfp)
-        h2flow.heat_fixed_power(dH-P_hpfp) 
+        h2flow.heat_fixed_power(dH-P_hpfp-P_r) 
         ff_cb = h2flow.split_flows(qm_cb)
         h_r = h2flow.calc_h()
         ff_cb.reduce_pressure(ff_cb.p-168.9e3)
@@ -168,6 +183,7 @@ def h2pre(t_cbt, t_hxt, eta_hpfp, p_cbt, qm_cb, t0, p0, v = v0, tolerance = tole
             and abs(t_hxa-t_hxt) > tolerance 
             and abs(p_cbt - p_cba) > tolerance 
             and abs(h_r - h_rold) > tolerance) 
+    print(t_cbt - t_cba, t_hxa-t_hxt, p_cbt - p_cba, h_r - h_rold)
     return qm_r, P_hpfp, dH-P_hpfp, i
 
 
@@ -185,19 +201,25 @@ if __name__ == "__main__":
     t0 = 22
     p0 = 4.2e5
     
-    print("reference")
-    print("qmr qmt Plp Php i")
-    qm_r , qm_t, P_lpfp, P_hpfp, i = reference(430, 1, 200000, 5500, p_cb, 0.88, 5e5, 0.83, 0.3, 250, 0.4e5)
-    print(round(qm_r, 4) , round(qm_t, 4), round(P_lpfp/1000, 3), round(P_hpfp/1000, 3), i)
     
-    print("\nh2dual")
-    print("qmr qmv Php P_r Q i")
-    qm_r1, qm_v, P_hpfp, P_r, Q, i = h2dual(t_bk, t_wu, eta_p, eta_r, p_cb, qm_cb, t0, p0)
-    print(round(qm_r1, 4), round(qm_v, 4), round(P_hpfp/1000, 3), round(P_r/1000, 3), round(Q/1000, 3), i)
+    # print("reference")
+    # print("qmr qmt Plp Php i")
+    # qm_r , qm_t, P_lpfp, P_hpfp, i = reference(430, 1, 200000, 5500, p_cb, 0.88, 5e5, 0.83, 0.3, 250, 0.4e5)
+    # print(round(qm_r, 4) , round(qm_t, 4), round(P_lpfp/1000, 3), round(P_hpfp/1000, 3), i)
+    
+    # print("\nh2dual")
+    # print("qmr qmv Php P_r Q i")
+    # qm_r1, qm_v, P_hpfp, P_r, Q, i = h2dual(t_bk, t_wu, eta_p, eta_r, p_cb, qm_cb, t0, p0)
+    # print(round(qm_r1, 4), round(qm_v, 4), round(P_hpfp/1000, 3), round(P_r/1000, 3), round(Q/1000, 3), i)
     
     print("\nh2pump")
     print("qmr Php P_r Q i")
     qm_r1, P_hpfp, P_r, Q, i = h2pump(t_bk, t_wu, eta_p, eta_r, p_cb, qm_cb, t0, p0)
+    print(round(qm_r1, 4), round(P_hpfp/1000, 3), round(P_r/1000, 3), round(Q/1000, 3), i)
+    
+    print("\nh2pump_pcc")
+    print("qmr Php P_r Q i")
+    qm_r1, P_hpfp, P_r, Q, i = h2pump(t_bk, t_wu, eta_p, eta_r, p_cb, qm_cb, t0, p0, 200e3, True)
     print(round(qm_r1, 4), round(P_hpfp/1000, 3), round(P_r/1000, 3), round(Q/1000, 3), i)
     
     print("\nh2after")
