@@ -74,16 +74,23 @@ def h2pump(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx = 0, pcc=F
     print(t_cbt - t_cba, t_hxa-t_hxt, p_cbt - p_cba, h_r - h_rold)
     return qm_r, P_hpfp, P_r, dH-P_hpfp, i
 
-def h2after(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb, t0, p0, Q_hx = 0, pcc=False, v = v0, tolerance = tolerance):
+def h2after(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx = 0, pcc=False, v = v0, tolerance = tolerance):
     qm_r = 0.5
     p_hpfp = p_cbt
-    dH = get_dh(qm_cb, t_cbt, p_cbt, t0, p0, v)
-    h_r = dH/qm_cb
+    dH0 = get_dh(qm_cb0, t_cbt, p_cbt, t0, p0, v)
+    dH = dH0
+    h_r = dH/qm_cb0
     i = 0
     P_r = 0
+    P_hpfp = 0
     condition_bool = True
     while condition_bool:
         i+=1
+        if pcc:
+            qm_cb = qm_cb0 + calc_parallel_combustion(dH-P_r-P_hpfp-Q_hx, t_cbt, p_cbt, 344)
+            dH = dH0 * qm_cb / qm_cb0
+        else:
+            qm_cb = qm_cb0
         h_rold = h_r
         h2flow = fuelflow.H2Flow(qm_cb, t0, p0, v, 0)
         Q_vap = h2flow.heat_to_saturation()
@@ -108,19 +115,26 @@ def h2after(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb, t0, p0, Q_hx = 0, pcc=F
     print(t_cbt - t_cba, t_hxa-t_hxt, p_cbt - p_cba, h_r - h_rold)
     return qm_r, P_hpfp, P_r, dH-P_hpfp, i
 
-def h2dual(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb, t0, p0, Q_hx = 0, pcc=False, v = v0, tolerance = tolerance):
+def h2dual(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx = 0, pcc=False, v = v0, tolerance = tolerance):
     qm_r = 0.5
     qm_v = 0.02
     p_hpfp = p_cbt
-    dH = get_dh(qm_cb, t_cbt, p_cbt, t0, p0, v)
-    h_r = dH/qm_cb
+    dH0 = get_dh(qm_cb0, t_cbt, p_cbt, t0, p0, v)
+    dH = dH0
+    h_r = dH/qm_cb0
     h_v = h_r
     i = 0
     P_r = 0
+    P_hpfp = 0
     condition_bool = True
     
     while condition_bool:
         i+=1
+        if pcc:
+            qm_cb = qm_cb0 + calc_parallel_combustion(dH-P_r-P_hpfp-Q_hx, t_cbt, p_cbt, 344)
+            dH = dH0 * qm_cb / qm_cb0
+        else:
+            qm_cb = qm_cb0
         h_rold = h_r
         h_vold = h_v
         h2flow = fuelflow.H2Flow(qm_cb, t0, p0, v, 0)
@@ -154,16 +168,23 @@ def h2dual(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb, t0, p0, Q_hx = 0, pcc=Fa
     print(t_cbt - t_cba, t_hxa-t_hxt, p_cbt - p_cba, h_r - h_rold)
     return qm_r, qm_v, P_hpfp, P_r, dH-P_hpfp, i
 
-def h2pre(t_cbt, t_hxt, eta_hpfp, p_cbt, qm_cb, t0, p0, Q_hx = 0, pcc=False, v = v0, tolerance = tolerance):
+def h2pre(t_cbt, t_hxt, eta_hpfp, p_cbt, qm_cb0, t0, p0, Q_hx = 0, pcc=False, v = v0, tolerance = tolerance):
     qm_r = 0.07
     p_hpfp = p_cbt
-    dH = get_dh(qm_cb, t_cbt, p_cbt, t0, p0, v)
-    h_r = dH/qm_cb
+    dH0 = get_dh(qm_cb0, t_cbt, p_cbt, t0, p0, v)
+    dH = dH0
+    h_r = dH/qm_cb0
     i = 0
     P_r = 0
+    P_hpfp = 0
     condition_bool = True
     while condition_bool:
         i+=1
+        if pcc:
+            qm_cb = qm_cb0 + calc_parallel_combustion(dH-P_r-P_hpfp-Q_hx, t_cbt, p_cbt, 344)
+            dH = dH0 * qm_cb / qm_cb0
+        else:
+            qm_cb = qm_cb0
         h_rold = h_r
         h2flow = fuelflow.H2Flow(qm_cb, t0, p0, v, 0)
         ff_r = fuelflow.H2Flow(qm_r, 200, p0, v, 1)
@@ -202,15 +223,15 @@ if __name__ == "__main__":
     p0 = 4.2e5
     
     
-    # print("reference")
-    # print("qmr qmt Plp Php i")
-    # qm_r , qm_t, P_lpfp, P_hpfp, i = reference(430, 1, 200000, 5500, p_cb, 0.88, 5e5, 0.83, 0.3, 250, 0.4e5)
-    # print(round(qm_r, 4) , round(qm_t, 4), round(P_lpfp/1000, 3), round(P_hpfp/1000, 3), i)
+    print("reference")
+    print("qmr qmt Plp Php i")
+    qm_r , qm_t, P_lpfp, P_hpfp, i = reference(430, 1, 200000, 5500, p_cb, 0.88, 5e5, 0.83, 0.3, 250, 0.4e5)
+    print(round(qm_r, 4) , round(qm_t, 4), round(P_lpfp/1000, 3), round(P_hpfp/1000, 3), i)
     
-    # print("\nh2dual")
-    # print("qmr qmv Php P_r Q i")
-    # qm_r1, qm_v, P_hpfp, P_r, Q, i = h2dual(t_bk, t_wu, eta_p, eta_r, p_cb, qm_cb, t0, p0)
-    # print(round(qm_r1, 4), round(qm_v, 4), round(P_hpfp/1000, 3), round(P_r/1000, 3), round(Q/1000, 3), i)
+    print("\nh2dual")
+    print("qmr qmv Php P_r Q i")
+    qm_r1, qm_v, P_hpfp, P_r, Q, i = h2dual(t_bk, t_wu, eta_p, eta_r, p_cb, qm_cb, t0, p0)
+    print(round(qm_r1, 4), round(qm_v, 4), round(P_hpfp/1000, 3), round(P_r/1000, 3), round(Q/1000, 3), i)
     
     print("\nh2pump")
     print("qmr Php P_r Q i")
