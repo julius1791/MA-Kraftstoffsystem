@@ -38,7 +38,7 @@ def get_dh(qm_cb, t_cb, p_cb, t0, p0, v):
     return dH
 
 def h2pump(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx = 0, pcc=False, v = v0, tolerance = tolerance):
-    qm_r = 0.5
+    qm_r = 0.3
     p_hpfp = p_cbt
     dH0 = get_dh(qm_cb0, t_cbt, p_cbt, t0, p0, v) 
     dH = dH0
@@ -174,8 +174,6 @@ def h2dual(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx = 0, pcc=F
             and abs(h_r - h_rold) > tolerance
             and abs(h_v - h_vold) > tolerance)
         if i > max_iter:
-            return 0, 0, 0, 0, 200
-        if i > max_iter:
             return 0, 0, 0, 0, 0, 200
     print(t_cbt - t_cba, t_hxa-t_hxt, p_cbt - p_cba, h_r - h_rold)
     return qm_r, qm_v, P_hpfp, P_r, dH-P_hpfp, i
@@ -227,8 +225,8 @@ def h2pre(t_cbt, t_hxt, eta_hpfp, p_cbt, qm_cb0, t0, p0, Q_hx = 0, pcc=False, v 
 
 if __name__ == "__main__":
 
-    t_bk = 400
-    t_wu = 250
+    t_bk = 250
+    t_wu = 200
     eta_p = 0.88
     eta_r = 0.8
     p_cb = 1.5e6
@@ -242,15 +240,15 @@ if __name__ == "__main__":
     # qm_r , qm_t, P_lpfp, P_hpfp, i = reference(430, 1, 200000, 5500, p_cb, 0.88, 5e5, 0.83, 0.3, 250, 0.4e5)
     # print(round(qm_r, 4) , round(qm_t, 4), round(P_lpfp/1000, 3), round(P_hpfp/1000, 3), i)
     
-    # print("\nh2dual")
-    # print("qmr qmv Php P_r Q i")
-    # qm_r1, qm_v, P_hpfp, P_r, Q, i = h2dual(t_bk, t_wu, eta_p, eta_r, p_cb, qm_cb, t0, p0)
-    # print(round(qm_r1, 4), round(qm_v, 4), round(P_hpfp/1000, 3), round(P_r/1000, 3), round(Q/1000, 3), i)
+    print("\nh2dual")
+    print("qmr qmv Php P_r Q i")
+    qm_r1, qm_v, P_hpfp, P_r, Q, i = h2dual(t_bk, t_wu, eta_p, eta_r, p_cb, qm_cb, t0, p0)
+    print(round(qm_r1, 4), round(qm_v, 4), round(P_hpfp/1000, 3), round(P_r/1000, 3), round(Q/1000, 3), i)
     
-    print("\nh2pump")
-    print("qmr Php P_r Q i")
-    qm_r1, P_hpfp, P_r, Q, i = h2pump(t_bk, t_wu, eta_p, eta_r, p_cb, qm_cb, t0, p0)
-    print(round(qm_r1, 4), round(P_hpfp/1000, 3), round(P_r/1000, 3), round(Q/1000, 3), i)
+    # print("\nh2pump")
+    # print("qmr Php P_r Q i")
+    # qm_r1, P_hpfp, P_r, Q, i = h2pump(t_bk, t_wu, eta_p, eta_r, p_cb, qm_cb, t0, p0)
+    # print(round(qm_r1, 4), round(P_hpfp/1000, 3), round(P_r/1000, 3), round(Q/1000, 3), i)
     
     # print("\nh2pump_pcc")
     # print("qmr Php P_r Q i")
