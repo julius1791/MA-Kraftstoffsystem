@@ -103,7 +103,6 @@ class H2Flow:
         
         return t1
     
-    
     def heat_to_saturation(self):
         """
         Method for adding heat to fuel in heat exchanger, creating a 
@@ -140,7 +139,6 @@ class H2Flow:
         t1, p1 = apply_total_pressure(pt1, ht1, t1, self.v)
         self.t = t1
         self.p = p1
-        
         
         return Q_dot
     
@@ -226,8 +224,7 @@ class H2Flow:
         # final mass flow
         qm = (self.qm+secondary_flow.qm)                                # kg/s
         # final specific total enthalpy
-        ht = Ht/qm       
-                                               # J/kg
+        ht = Ht/qm                                                      # J/kg
         self.vap = True
         self.qm = qm
         self.ht = ht
@@ -283,16 +280,10 @@ class H2Flow:
         t1 = calc_t(self.ht, self.p, self.v, self.vap)
         self.t = t1
         return t1
+    
+    def copy(self):
+        return H2Flow(self.qm, self.t, self.p, self.v, self.vap)
         
-
-
-
-
-
-
-
-
-
 
 
 
@@ -383,21 +374,68 @@ def calc_pt(t, p, v):
     pt = p + h2.calc_H2_density(t, p) * v**2/2
     return pt
 
-        
 def calc_t(ht, p, v, vap):
-    h = ht - v**2/2
+    
+    t1, tmax, tmin = define_calc_t_bounds(ht, p, v, vap)
+    
+    condition_bool = True
+    i = 0
+    while condition_bool:
+        i += 1 
+        t0 = t1
+        
+        ht_a = calc_ht(t0, p, v)
+        t1 += (ht - ht_a)/(h2.calc_h2_cp(t0, p))
+        
+        t1 = loop_check_bounds(t1, tmax, tmin)
+        
+        condition_bool = not (
+            abs(ht-ht_a)/(ht+ht_a) < tolerance
+        )
+        if i > max_iter:
+            raise Exception("Exceeded number of iterations")
+    return t1
+        
+def calc_tp(ht, pt, v, vap):
+    
+    t1, tmax, tmin = define_calc_t_bounds(ht, pt, v, vap)
+    p1 = pt
+    
+    condition_bool = True
+    i = 0
+    while condition_bool:
+        i += 1 
+        t0 = t1
+        p0 = p1
+        
+        ht_a = calc_ht(t0, p0, v)
+        pt_a = p1 + h2.calc_h2_density(t0, p0) * v**2/2
+        t1 += (ht - ht_a)/(h2.calc_h2_cp(t0, p0))
+        p1 += pt-pt_a
+        
+        t1 = loop_check_bounds(t1, tmax, tmin)
+        
+        condition_bool = not (
+            abs(ht-ht_a)/(ht+ht_a) < tolerance
+            and abs(pt-pt_a)/(pt+pt_a) < tolerance
+        )
+        if i > max_iter:
+            raise Exception("Exceeded number of iterations")
+    return t1
+
+def define_calc_t_bounds(ht, p, v, vap):
     if p < p_crit:
         t_sat = sat_t(p)
         if vap:
-            h_vap = calc_ht(t_sat+1, p, v) - v**2/2
-            if h < h_vap:
+            ht_vap = calc_ht(t_sat+1, p, v)
+            if ht < ht_vap:
                 raise ValueError("Enthalpy too low for vapour")
             tmin = t_sat + 1
             tmax = 2000
             t1 = t_sat + 10
         else:
-            h_l = calc_ht(t_sat-1, p, v) - v**2/2
-            if h > h_l:
+            ht_l = calc_ht(t_sat-1, p, v)
+            if ht > ht_l:
                 raise ValueError("Enthalpy too high for liquid")
             tmax = t_sat - 1
             tmin = 16
@@ -407,20 +445,7 @@ def calc_t(ht, p, v, vap):
         tmin = 16
         tmax = 2000
         t1 = 40
-    
-    condition_bool = True
-    i = 0
-    while condition_bool:
-        i += 1 
-        t0 = t1
-        h_a = h2.calc_H2_enthalpy(t1, p)
-        t1 += 2*(h - h_a)/(h2.calc_H2_cp(t1, p) + h2.calc_H2_cp(t0, p))
-        
-        t1 = loop_check_bounds(t1, tmax, tmin)
-        condition_bool = not abs(h-h_a)/(h+h_a) < tolerance
-        if i > max_iter:
-            raise Exception("Exceeded number of iterations")
-    return t1
+    return t1, tmax, tmin
 
 def loop_check_bounds(t ,tmax, tmin):
     """Ensure that total temperature remains within specified limits"""
