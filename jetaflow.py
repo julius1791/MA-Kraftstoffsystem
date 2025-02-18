@@ -18,7 +18,10 @@ def antoine():
 ###############################################################################
 
 class JetaFlow:
-    def __init__(self, mass_flow: float, temperature: float, pressure: float, velocity: float):
+    def __init__(
+            self, mass_flow: float,
+            temperature: float, pressure: float, velocity: float
+        ):
         """
         FuelFlow constructor
 
@@ -118,7 +121,8 @@ class JetaFlow:
         # calculate initial specific entropy and specific total enthalpy
         s = jeta.calc_jeta_entropy(self.t, self.p)
         ht_0 = self.ht
-        # find static temperature that yields the same entropy at higher pressure
+        # find static temperature that yields
+        # the same entropy at higher pressure
         ts1 = find_t_for_s(s, p1, self.t)
         # find the specific total enthalpy of the isentropic point 
         ht_s1 = calc_ht(ts1, p1, self.v)
@@ -216,7 +220,10 @@ class JetaFlow:
         while condition_bool > tolerance:
             i+=1
             ts0 = ts1
-            ts1 = ts1*0.1 + 0.9*(self.t - self.v**2/(2*jeta.calc_jeta_cp(ts0, ps1)))
+            ts1 = [
+                ts1*0.1 
+                + 0.9*(self.t - self.v**2/(2*jeta.calc_jeta_cp(ts0, ps1)))
+            ]
             ps1 = self.p - jeta.calc_jeta_density(ts0, ps1)*self.v**2/2
             condition_bool = abs(ts0-ts1) > tolerance
             if i > max_iter:

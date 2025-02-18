@@ -32,7 +32,10 @@ def antoine():
 ###############################################################################
 
 class H2Flow:
-    def __init__(self, mass_flow: float, temperature: float, pressure: float, velocity: float, vapour:bool):
+    def __init__(
+            self, mass_flow: float, temperature: float,
+            pressure: float, velocity: float, vapour:bool
+        ):
         """
         FuelFlow constructor
 
@@ -162,13 +165,18 @@ class H2Flow:
         """     
         # function is meant for pumping into the supercritical state
         if p1 < p_crit:
-            raise ValueError("Expected supercritical final pressure. Got p1 = " + str(p1))
+            raise ValueError(
+                "Expected supercritical final pressure. Got p1 = " + str(p1)
+            )
         
         # calculate initial specific entropy and specific total enthalpy
         s = h2.calc_H2_entropy(self.t, self.p)
         ht_0 = self.ht
-        # find static temperature that yields the same entropy at higher pressure
-        ts1 = find_t_for_s(s, p1, self.t)
+        # guess isentropic temperature
+        ts_guess = self.t * (p1/self.p)**0.286
+        # find static temperature that yields 
+        # the same entropy at higher pressure
+        ts1 = find_t_for_s(s, p1, ts_guess)
         # find the specific total enthalpy of the isentropic point 
         ht_s1 = calc_ht(ts1, p1, self.v)
         # find reversible pump work
@@ -177,6 +185,7 @@ class H2Flow:
         a = a_rev/eta
         ht_1 = ht_0 + a
         
+        # set attributes
         self.p = p1
         self.ht = ht_1
         self.vap = True
@@ -225,6 +234,7 @@ class H2Flow:
         qm = (self.qm+secondary_flow.qm)                                # kg/s
         # final specific total enthalpy
         ht = Ht/qm                                                      # J/kg
+        
         self.vap = True
         self.qm = qm
         self.ht = ht
@@ -385,7 +395,7 @@ def calc_t(ht, p, v, vap):
         t0 = t1
         
         ht_a = calc_ht(t0, p, v)
-        t1 += (ht - ht_a)/(h2.calc_h2_cp(t0, p))
+        t1 += (ht - ht_a)/(h2.calc_H2_cp(t0, p))
         
         t1 = loop_check_bounds(t1, tmax, tmin)
         
@@ -409,8 +419,8 @@ def calc_tp(ht, pt, v, vap):
         p0 = p1
         
         ht_a = calc_ht(t0, p0, v)
-        pt_a = p1 + h2.calc_h2_density(t0, p0) * v**2/2
-        t1 += (ht - ht_a)/(h2.calc_h2_cp(t0, p0))
+        pt_a = p1 + h2.calc_H2_density(t0, p0) * v**2/2
+        t1 += (ht - ht_a)/(h2.calc_H2_cp(t0, p0))
         p1 += pt-pt_a
         
         t1 = loop_check_bounds(t1, tmax, tmin)
