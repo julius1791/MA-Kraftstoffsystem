@@ -327,6 +327,7 @@ def find_t_for_s(s, p, t):
         t0 = t1
         s_a = h2.calc_H2_entropy(t0, p)
         t1 = t0*math.exp((s-s_a)/h2.calc_H2_cp(t0, p))
+        t1 = 0.6*t1 + 0.4*t0
         s_a = h2.calc_H2_entropy(t1, p)
         condition_bool = not abs(s_a-s)/(s_a+s) < tolerance
         if i > max_iter:
