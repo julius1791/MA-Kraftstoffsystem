@@ -11,55 +11,152 @@ tolerance = 1e-3
 max_iter = 500
 rel_fac = 1/750
 rel_fac_2 = 1/2
-v0 = 20
+v0 = 10
 
-# hydrogen lower heating value (250 K)
-t_ref = 298.15          # K
-lhv_h2_250 = 117.240e6  # J/kg
-lhv_h2_200 = lhv_h2_250 - h2flow.h2.calc_H2_enthalpy(250, 1e6) + h2flow.h2.calc_H2_enthalpy(200, 1e6)
+# hydrogen lower heating value (250 K) / (200 K)
+lhv_h2_250 = 117.24e6  # J/kg
+lhv_h2_200 = (
+    lhv_h2_250 - h2flow.h2.calc_H2_enthalpy(250, 1e6) 
+    + h2flow.h2.calc_H2_enthalpy(200, 1e6)
+)
 
-def reference(t_cbt, qm_hpfp, Q_fohe, Q_idg, pt_cbt, eta_hpfp, p_cav, eta_lpfp, qm_cb, t0, p0, v = v0, tolerance = tolerance):
+# jeta lower heating value (288 K)
+lhv_jeta_288 = 43.10e6  # J/kg
+
+
+def save_results(
+        filename, arch, t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0,
+        Q_hx, pcc, v, P_hpfp, P_r, Q, Q_phc, qm_cb, qm_pch, qm_r, qm_v,
+        i, duration
+    ):
+    path = os.path.join(os.getcwd(), "results", filename)
+    with open(path, "w", newline='') as f:
+        filewriter = csv.writer(f)
+        filewriter.writerow([
+            "architecture", "t_cbt", "t_hxt", "eta_hpfp", "eta_r", "p_cbt",
+            "qm_cb0", "t0", "p0", "Q_hx", "pcc", "v"
+            ])
+        filewriter.writerow([
+            arch, t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt,
+            qm_cb0, t0, p0, Q_hx, pcc, v
+            ])
+        filewriter.writerow(["P_hpfp", "P_rv"])
+        filewriter.writerow([P_hpfp, P_r])
+        filewriter.writerow(["Q", "Q_phc"])
+        filewriter.writerow([Q, Q_phc])
+        filewriter.writerow(["qm_cb", "qm_phc/qm_t", "qm_r", "qm_v"])
+        filewriter.writerow([qm_cb0, qm_pch, qm_r, qm_v])
+        filewriter.writerow([
+            "number of iterations", i, "Execution time: ", duration
+            ])
+    return
+
+def save_failed(
+        filename, arch, t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx, pcc, v, exception
+    ):
+    if len(filename) > 1:
+        failed = filename[:-4] + "FAILED" + ".csv"
+        path = os.path.join(os.getcwd(), "results", failed)
+        with open(path, "w", newline='') as f:
+            filewriter = csv.writer(f)
+            filewriter.writerow(["architecture", "t_cbt", "t_hxt", "eta_hpfp", "eta_r", "p_cbt", "qm_cb0", "t0", "p0", "Q_hx", "pcc", "v"])
+            filewriter.writerow([arch, t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx, pcc, v])
+            filewriter.writerow(["FAILED TO CONVERGE"])
+            filewriter.writerow([exception])
+    return
+
+def reference(
+        t_cbt, qm_hpfp, Q_fohe, Q_idg, pt_cbt, eta_hpfp, p_cav,
+        eta_lpfp, qm_cb, t0, p0, v = v0, tolerance = tolerance, p_lpfp0=5e5, 
+        filename = ""
+):
+    start = time.time()
+    # correct combustion chamber fuel mass flow for temperature
+    lhv_tcbt = (
+        lhv_jeta_288 
+        + jetaflow.jeta.calc_jeta_enthalpy(t_cbt, 1e6) 
+        - jetaflow.jeta.calc_jeta_enthalpy(288, 1e6)
+        )
+    qm_cb = qm_cb * (lhv_jeta_288 / lhv_tcbt)
+    # calculate intitial guess for recirculation flow enthalpy
     ht_r = jetaflow.calc_ht(t_cbt, pt_cbt, v)
-    p_lpfp = 2e5
-    i = 0
+    
+    # guess initial value for fuel mass flow return to tank
     qm_t = 0.1
-    qm_t0 = 0.1
+    qm_t0 = qm_t
+    
+    # set initial value for pump pressures
     p_hpfp = pt_cbt
-    #h0 = fuelflow.JetaFlow(1, t0, p0).calc_h()
-    #hcb = fuelflow.JetaFlow(1, t_cb, p_hpfp).calc_h()
+    p_lpfp = p_lpfp0
+    
+    # init loop variables
+    i = 0
     condition_bool = True
     while condition_bool:
+        print(qm_t, p_lpfp, p_hpfp)
         i+=1
         ht_rold = ht_r
+        # fuel from boost pump
         ff_main = jetaflow.JetaFlow(qm_cb+qm_t, t0, p0, v)
+        # calculation of lp fuel pump
         P_lpfp, _ = ff_main.pump_hydraulic(p_lpfp, eta_lpfp)
-        ff_main.mix_flows(jetaflow.JetaFlow(qm_hpfp-qm_t-qm_cb, jetaflow.calc_t(ht_r, ff_main.p, v), ff_main.p, v))
+        if qm_cb + qm_t > qm_hpfp:
+            raise ValueError("Mass flow exceeds HPFP limit. QM_T: " + str(qm_t))
+        # mix of main flow with recirculation flow
+        ff_r = jetaflow.JetaFlow(qm_hpfp-qm_t-qm_cb,
+            jetaflow.calc_t(ht_r, ff_main.p, v), ff_main.p, v
+            )
+        ff_main.mix_flows(ff_r)
+        # calculation of primary heat exchanger
         ff_main.heat_exchanger(Q_fohe)
+        # saturation pressure and static pressure at hp pump inlet
         p_sat_pi = jetaflow.sat_p(ff_main.t)
         p_pi = ff_main.p
+        # calculation of hp fuel pump
         P_hpfp, _ = ff_main.pump_hydraulic(p_hpfp, eta_hpfp)
+        # total pressure and temperature at hp pump outlet
         pt_cba = jetaflow.calc_pt(ff_main.t, ff_main.p, ff_main.v)
         t_cba = ff_main.t
         p_sat_cb = jetaflow.sat_p(t_cba)
         ff_main.split_flows(qm_cb)
         ff_main.heat_exchanger(Q_idg)
-        ff_main.split_flows(qm_t)
-        p_hpfp += (pt_cbt - pt_cba) 
         ht_r = ff_main.ht
-        qm_t += qm_t0 * (t_cba - t_cbt) * rel_fac
-        p_lpfp += (p_sat_pi - p_pi + p_cav)
-        #print(p_lpfp, p_hpfp)
+        
+        p_hpfp_old = p_hpfp
+        p_hpfp += (pt_cbt - pt_cba) * rel_fac_2
+        
+        qm_t += qm_t0 * (t_cba - t_cbt) * rel_fac * 4
+        qm_t = max(0, qm_t)
+        qm_t = min(qm_t, 0.7)
+        
+        #p_lpfp += (p_sat_pi - p_pi + p_cav) * rel_fac_2
+        
+        if p_hpfp > 1.1 * p_hpfp_old :
+            p_hpfp = 1.1*p_hpfp_old
+        elif p_hpfp < 0.9 * p_hpfp_old:
+            p_hpfp = 0.9*p_hpfp_old 
+        
+        print(i, t_cbt - t_cba, pt_cbt - pt_cba, ht_r - ht_rold)
+        
         condition_bool = not (
             abs(t_cbt - t_cba) < tolerance 
             and abs(pt_cbt - pt_cba) < tolerance 
             and abs(ht_r - ht_rold) < tolerance
         )
         if i > max_iter:
-            return 0, 0, 0, 0, i
+            return
     qm_r = qm_hpfp - qm_t - qm_cb
-    print("saturation margin [bar]: " + str((pt_cba - p_sat_cb)/1e5))
-    #print("saturation margin [bar]: " + str(p_pi - p_sat_pi)/1e5)
-    return qm_r, qm_t, P_lpfp, P_hpfp, i
+    print("saturation margin hpp inlet [bar]: " + str((p_pi - p_sat_pi)/1e5))
+    print("saturation margin injector [bar]: " + str((pt_cba - 168.9e3 - p_sat_cb)/1e5))
+    stop = time.time()
+    save_results(
+        filename, "reference", t_cbt, float("nan"), eta_hpfp, eta_r, pt_cbt, 
+        qm_cb, t0, p0, float("nan"), float("nan"), v, 
+        P_hpfp, 0, Q_idg + Q_fohe, 0, qm_cb, qm_t,
+        qm_r, 0, i,
+        stop-start
+    )
+    return
 
 def get_dh(qm_cb, t_cb, p_cb, t0, p0, v):
     cb = h2flow.H2Flow(qm_cb, t_cb, p_cb, v, True)
