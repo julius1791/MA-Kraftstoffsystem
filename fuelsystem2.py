@@ -241,7 +241,6 @@ def h2pump(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx = 0, pcc=F
                     filewriter.writerow(["qm_cb", "qm_r"])
                     filewriter.writerow([qm_cb0, qm_r])
                 filewriter.writerow(["number of iterations", i, "Execution time: ", stop - start])
-        # print(qm_r, P_hpfp, P_r, dH-P_hpfp, i)
     except Exception as e:
         print("Failed to converge: " + filename[:-4] + "FAILED" + ".csv")
         print("Number of iterations: " + str(i))
@@ -255,7 +254,7 @@ def h2pump(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx = 0, pcc=F
                 filewriter.writerow(["FAILED TO CONVERGE"])
                 filewriter.writerow([e])
         return
-    return #qm_r, P_hpfp, P_r, dH-P_hpfp, i
+    return
 
 def h2after(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx = 0, pcc=False, v = v0, tolerance = tolerance, filename=""):
     start = time.time()
@@ -390,8 +389,6 @@ def h2dual(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx = 0, pcc=F
             qm_r = max(0, qm_r)
             qm_v = max(0, qm_v)
             
-            print(t_cbt - t_cba, t_hxa-t_hxt, p_cbt - p_cba)
-            
             if p_hpfp > 1.1 * p_hpfp_old :
                 p_hpfp = 1.1*p_hpfp_old
             elif p_hpfp < 0.9 * p_hpfp_old:
@@ -486,8 +483,7 @@ def h2pre(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx = 0, pcc=Fa
                 p_hpfp = 0.9*p_hpfp_old
             
             condition_bool = not (
-                abs(t_cbt - t_cba) < tolerance 
-                # and abs(h2flow.sat_t(p0)+5 - t_v) < tolerance 
+                abs(t_cbt - t_cba) < tolerance
                 and abs(t_hxa-t_hxt) < tolerance
                 and abs(p_cbt - p_cba) < tolerance 
                 and abs(h_r - h_rold) < tolerance
@@ -514,7 +510,6 @@ def h2pre(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx = 0, pcc=Fa
                     filewriter.writerow(["qm_cb", "qm_r"])
                     filewriter.writerow([qm_cb0, qm_r])
                 filewriter.writerow(["number of iterations", i, "Execution time: ", stop - start])
-        # print(qm_r, P_hpfp, P_r, dH-P_hpfp, i)
     except Exception as e:
         print("Failed to converge: " + filename[:-4] + "FAILED" + ".csv")
         print("Number of iterations: " + str(i))
