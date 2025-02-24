@@ -223,36 +223,16 @@ def h2pump(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx = 0, pcc=F
                 raise Exception("Exceeded max iterations")
         stop = time.time()
         if len(filename) > 1:
-            path = os.path.join(os.getcwd(), "results", filename)
-            with open(path, "w", newline='') as f:
-                filewriter = csv.writer(f)
-                filewriter.writerow(["t_cbt", "t_hxt", "eta_hpfp", "eta_r", "p_cbt", "qm_cb0", "t0", "p0", "Q_hx", "pcc", "v"])
-                filewriter.writerow([t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx, pcc, v])
-                filewriter.writerow(["P_hpfp", "P_rv"])
-                filewriter.writerow([P_hpfp, P_r])
-                if pcc:
-                    filewriter.writerow(["Q", "Q_phc"])
-                    filewriter.writerow([dH-P_hpfp-P_r, dH-P_hpfp-P_r-Q_hx])
-                    filewriter.writerow(["qm_cb", "qm_phc", "qm_r"])
-                    filewriter.writerow([qm_cb0, qm_cb-qm_cb0, qm_r])
-                else:   
-                    filewriter.writerow(["Q"])
-                    filewriter.writerow([dH-P_hpfp-P_r])
-                    filewriter.writerow(["qm_cb", "qm_r"])
-                    filewriter.writerow([qm_cb0, qm_r])
-                filewriter.writerow(["number of iterations", i, "Execution time: ", stop - start])
+            save_results(
+                filename, "pump", t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0,
+                t0, p0, Q_hx, pcc, v, P_hpfp, P_r, dH-P_hpfp-P_r,
+                dH-P_hpfp-P_r-Q_hx, qm_cb, qm_cb-qm_cb0, qm_r, 0, i,
+                stop-start
+            )
     except Exception as e:
         print("Failed to converge: " + filename[:-4] + "FAILED" + ".csv")
         print("Number of iterations: " + str(i))
-        if len(filename) > 1:
-            failed = filename[:-4] + "FAILED" + ".csv"
-            path = os.path.join(os.getcwd(), "results", failed)
-            with open(path, "w", newline='') as f:
-                filewriter = csv.writer(f)
-                filewriter.writerow(["t_cbt", "t_hxt", "eta_hpfp", "eta_r", "p_cbt", "qm_cb0", "t0", "p0", "Q_hx", "pcc", "v"])
-                filewriter.writerow([t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx, pcc, v])
-                filewriter.writerow(["FAILED TO CONVERGE"])
-                filewriter.writerow([e])
+        save_failed(filename, "pump", t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx, pcc, v, e)
         return
     return
 
@@ -310,38 +290,18 @@ def h2after(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx = 0, pcc=
                 raise Exception("Exceeded max iterations")
         stop = time.time()
         if len(filename) > 1:
-            path = os.path.join(os.getcwd(), "results", filename)
-            with open(path, "w", newline='') as f:
-                filewriter = csv.writer(f)
-                filewriter.writerow(["t_cbt", "t_hxt", "eta_hpfp", "eta_r", "p_cbt", "qm_cb0", "t0", "p0", "Q_hx", "pcc", "v"])
-                filewriter.writerow([t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx, pcc, v])
-                filewriter.writerow(["P_hpfp", "P_rv"])
-                filewriter.writerow([P_hpfp, P_r])
-                if pcc:
-                    filewriter.writerow(["Q_vap", "Q", "Q_phc"])
-                    filewriter.writerow([Q_vap,dH-P_hpfp-P_r-Q_vap, dH-P_hpfp-P_r-Q_hx])
-                    filewriter.writerow(["qm_cb", "qm_phc", "qm_r"])
-                    filewriter.writerow([qm_cb0, qm_cb-qm_cb0, qm_r])
-                else:   
-                    filewriter.writerow(["Q"])
-                    filewriter.writerow([dH-P_hpfp-P_r])
-                    filewriter.writerow(["qm_cb", "qm_r"])
-                    filewriter.writerow([qm_cb0, qm_r])
-                filewriter.writerow(["number of iterations", i, "Execution time: ", stop - start])
+            save_results(
+                filename, "after", t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0,
+                t0, p0, Q_hx, pcc, v, P_hpfp, P_r, dH-P_hpfp-P_r,
+                dH-P_hpfp-P_r-Q_hx, qm_cb, qm_cb-qm_cb0, qm_r, 0, i,
+                stop-start
+            )
     except Exception as e:
         print("Failed to converge: " + filename[:-4] + "FAILED" + ".csv")
         print("Number of iterations: " + str(i))
-        print(e)
-        if len(filename) > 1:
-            failed = filename[:-4] + "FAILED" + ".csv"
-            path = os.path.join(os.getcwd(), "results", failed)
-            with open(path, "w", newline='') as f:
-                filewriter = csv.writer(f)
-                filewriter.writerow(["t_cbt", "t_hxt", "eta_hpfp", "eta_r", "p_cbt", "qm_cb0", "t0", "p0", "Q_hx", "pcc", "v"])
-                filewriter.writerow([t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx, pcc, v])
-                filewriter.writerow(["FAILED TO CONVERGE"])
-                filewriter.writerow([e])
-    return qm_r, P_hpfp, P_r, dH-P_hpfp, i
+        save_failed(filename, "after", t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx, pcc, v, e)
+        return
+    return
 
 def h2dual(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx = 0, pcc=False, v = v0, tolerance = tolerance, filename=""):
     start = time.time()
@@ -405,39 +365,19 @@ def h2dual(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx = 0, pcc=F
                 raise Exception("Exceeded max iterations")
         stop = time.time()
         if len(filename) > 1:
-            path = os.path.join(os.getcwd(), "results", filename)
-            with open(path, "w", newline='') as f:
-                filewriter = csv.writer(f)
-                filewriter.writerow(["t_cbt", "t_hxt", "eta_hpfp", "eta_r", "p_cbt", "qm_cb0", "t0", "p0", "Q_hx", "pcc", "v"])
-                filewriter.writerow([t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx, pcc, v])
-                filewriter.writerow(["P_hpfp", "P_rv"])
-                filewriter.writerow([P_hpfp, P_r])
-                if pcc:
-                    filewriter.writerow(["Q", "Q_phc"])
-                    filewriter.writerow([dH-P_hpfp-P_r, dH-P_hpfp-P_r-Q_hx])
-                    filewriter.writerow(["qm_cb", "qm_phc", "qm_r", "qm_v"])
-                    filewriter.writerow([qm_cb0, qm_cb-qm_cb0, qm_r, qm_v])
-                else:   
-                    filewriter.writerow(["Q"])
-                    filewriter.writerow([dH-P_hpfp-P_r])
-                    filewriter.writerow(["qm_cb", "qm_r", "qm_v"])
-                    filewriter.writerow([qm_cb0, qm_r, qm_v])
-                filewriter.writerow(["number of iterations", i, "Execution time: ", stop - start])
+            save_results(
+                filename, "dual", t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0,
+                t0, p0, Q_hx, pcc, v, P_hpfp, P_r, dH-P_hpfp-P_r,
+                dH-P_hpfp-P_r-Q_hx, qm_cb, qm_cb-qm_cb0, qm_r, qm_v, i,
+                stop-start
+            )
     except Exception as e:
         print("Failed to converge: " + filename[:-4] + "FAILED" + ".csv")
         print("Number of iterations: " + str(i))
-        if len(filename) > 1:
-            failed = filename[:-4] + "FAILED" + ".csv"
-            path = os.path.join(os.getcwd(), "results", failed)
-            with open(path, "w", newline='') as f:
-                filewriter = csv.writer(f)
-                filewriter.writerow(["t_cbt", "t_hxt", "eta_hpfp", "eta_r", "p_cbt", "qm_cb0", "t0", "p0", "Q_hx", "pcc", "v"])
-                filewriter.writerow([t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx, pcc, v])
-                filewriter.writerow(["FAILED TO CONVERGE"])
-                filewriter.writerow([e])
+        save_failed(filename, "dual", t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx, pcc, v, e)
         return
     
-    return qm_r, qm_v, P_hpfp, P_r, dH-P_hpfp, i
+    return 
 
 
 def h2pre(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx = 0, pcc=False, v = v0, tolerance = tolerance, filename=""):
@@ -492,38 +432,17 @@ def h2pre(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx = 0, pcc=Fa
                 raise Exception("Exceeded max iterations")
         stop = time.time()
         if len(filename) > 1:
-            path = os.path.join(os.getcwd(), "results", filename)
-            with open(path, "w", newline='') as f:
-                filewriter = csv.writer(f)
-                filewriter.writerow(["t_cbt", "t_hxt", "eta_hpfp", "p_cbt", "qm_cb0", "t0", "p0", "Q_hx", "pcc", "v"])
-                filewriter.writerow([t_cbt, t_hxt, eta_hpfp, p_cbt, qm_cb0, t0, p0, Q_hx, pcc, v])
-                filewriter.writerow(["P_hpfp", "P_rv"])
-                filewriter.writerow([P_hpfp, P_r])
-                if pcc:
-                    filewriter.writerow(["Q", "Q_phc"])
-                    filewriter.writerow([dH-P_hpfp-P_r, dH-P_hpfp-P_r-Q_hx])
-                    filewriter.writerow(["qm_cb", "qm_phc", "qm_r"])
-                    filewriter.writerow([qm_cb0, qm_cb-qm_cb0, qm_r])
-                else:   
-                    filewriter.writerow(["Q"])
-                    filewriter.writerow([dH-P_hpfp-P_r])
-                    filewriter.writerow(["qm_cb", "qm_r"])
-                    filewriter.writerow([qm_cb0, qm_r])
-                filewriter.writerow(["number of iterations", i, "Execution time: ", stop - start])
+            save_results(
+                filename, "pre", t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0,
+                t0, p0, Q_hx, pcc, v, P_hpfp, P_r, dH-P_hpfp-P_r,
+                dH-P_hpfp-P_r-Q_hx, qm_cb, qm_cb-qm_cb0, 0, qm_r, i,
+                stop-start
+            )
     except Exception as e:
         print("Failed to converge: " + filename[:-4] + "FAILED" + ".csv")
         print("Number of iterations: " + str(i))
-        if len(filename) > 1:
-            failed = filename[:-4] + "FAILED" + ".csv"
-            path = os.path.join(os.getcwd(), "results", failed)
-            with open(path, "w", newline='') as f:
-                filewriter = csv.writer(f)
-                filewriter.writerow(["t_cbt", "t_hxt", "eta_hpfp", "eta_r", "p_cbt", "qm_cb0", "t0", "p0", "Q_hx", "pcc", "v"])
-                filewriter.writerow([t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx, pcc, v])
-                filewriter.writerow(["FAILED TO CONVERGE"])
-                filewriter.writerow([e])
+        save_failed(filename, "pre", t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx, pcc, v, e)
         return
-        
     return qm_r, P_hpfp, dH-P_hpfp, i
 
 
