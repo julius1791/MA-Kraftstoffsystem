@@ -4,7 +4,7 @@ import math
 
 # modelling parameters
 tolerance = 1e-3    # -
-max_iter = 50       # -
+max_iter = 100      # -
 
 def antoine():
     """antoine equation parameters for jet a"""
@@ -267,7 +267,7 @@ def find_t_for_s(s, p, t):
         s_a = jeta.calc_jeta_entropy(t0, p)
         t1 = t0*math.exp((s-s_a)/jeta.calc_jeta_cp(t0, p))
         s_a = jeta.calc_jeta_entropy(t1, p)
-        condition_bool = not abs(s_a-s)/(s_a+s) < tolerance
+        condition_bool = not abs(s_a-s) < tolerance
         if i > max_iter:
             raise Exception("Exceeded number of iterations")
     return t1
@@ -305,15 +305,14 @@ def apply_total_pressure(pt, ht, t1, v):
         # calculate specific total enthalpy 
         ht_a = calc_ht(t0, p0, v)
         # calculate total pressure
-        pt_a = p0 + v**2 * jeta.calc_jeta_density(t0, p0) / 2
+        pt_a = p0 + v**2 * jeta.calc_jeta_density(t0, p0) / 1.6
         
         # calculate static pressure and temperature for next iteration
         p1 += pt - pt_a
-        t1 += (ht-ht_a)/min(jeta.calc_jeta_cp(t0, p0), 8e3) / 8
-        t1 = max(16, t1)
+        t1 += (ht-ht_a)/min(jeta.calc_jeta_cp(t0, p0), 8e3) / 4
         condition_bool = not (
-            abs(ht-ht_a)/(ht+ht_a) < tolerance
-            and abs(pt-pt_a)/(pt+pt_a) < tolerance
+            abs(ht-ht_a) < tolerance *1e1
+            and abs(pt-pt_a) < tolerance *1e1
             )
         if i > max_iter:
             raise Exception("Exceeded number of iterations")
@@ -341,8 +340,8 @@ def calc_tp(ht, pt, v):
         p1 += pt-pt_a
         
         condition_bool = not (
-            abs(ht-ht_a)/(ht+ht_a) < tolerance
-            and abs(pt-pt_a)/(pt+pt_a) < tolerance
+            abs(ht-ht_a) < tolerance
+            and abs(pt-pt_a) < tolerance
         )
         if i > max_iter:
             raise Exception("Exceeded number of iterations")
@@ -363,7 +362,7 @@ def calc_t(ht, p, v):
         t1 += (ht - ht_a)/(jeta.calc_jeta_cp(t0, p))
         
         condition_bool = not (
-            abs(ht-ht_a)/(ht+ht_a) < tolerance
+            abs(ht-ht_a) < tolerance
         )
         if i > max_iter:
             raise Exception("Exceeded number of iterations")
