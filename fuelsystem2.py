@@ -13,6 +13,11 @@ rel_fac = 1/750
 rel_fac_2 = 1/2
 v0 = 20
 
+# hydrogen lower heating value (250 K)
+t_ref = 298.15          # K
+lhv_h2_250 = 117.240e6  # J/kg
+lhv_h2_200 = lhv_h2_250 - h2flow.h2.calc_H2_enthalpy(250, 1e6) + h2flow.h2.calc_H2_enthalpy(200, 1e6)
+
 def reference(t_cbt, qm_hpfp, Q_fohe, Q_idg, pt_cbt, eta_hpfp, p_cav, eta_lpfp, qm_cb, t0, p0, v = v0, tolerance = tolerance):
     ht_r = jetaflow.calc_ht(t_cbt, pt_cbt, v)
     p_lpfp = 2e5
@@ -64,6 +69,7 @@ def get_dh(qm_cb, t_cb, p_cb, t0, p0, v):
 
 def h2pump(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx = 0, pcc=False, v = v0, tolerance = tolerance, filename=""):
     start = time.time()
+    qm_cb0 = qm_cb0 * lhv_h2_200 / (lhv_h2_200 - h2flow.h2.calc_H2_enthalpy(200, 1e6) + h2flow.h2.calc_H2_enthalpy(t_cbt, 1e6))
     qm_r = qm_cb0 * (h2flow.calc_ht(t_hxt, p_cbt, v)-h2flow.calc_ht(t0, p0, v))/(h2flow.calc_ht(t_cbt, p_cbt, v)-h2flow.calc_ht(t_hxt, p_cbt, v))
     qm_r0 = qm_r
     p_hpfp = p_cbt
@@ -156,6 +162,7 @@ def h2pump(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx = 0, pcc=F
 
 def h2after(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx = 0, pcc=False, v = v0, tolerance = tolerance, filename=""):
     start = time.time()
+    qm_cb0 = qm_cb0 * lhv_h2_200 / (lhv_h2_200 - h2flow.h2.calc_H2_enthalpy(200, 1e6) + h2flow.h2.calc_H2_enthalpy(t_cbt, 1e6))
     qm_r = qm_cb0 * (h2flow.calc_ht(t_hxt, p_cbt, v)-h2flow.calc_ht(t0, p0, v))/(h2flow.calc_ht(t_cbt, p_cbt, v)-h2flow.calc_ht(t_hxt, p_cbt, v))
     qm_r0 = qm_r
     p_hpfp = p_cbt
@@ -242,6 +249,7 @@ def h2after(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx = 0, pcc=
 
 def h2dual(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx = 0, pcc=False, v = v0, tolerance = tolerance, filename=""):
     start = time.time()
+    qm_cb0 = qm_cb0 * lhv_h2_200 / (lhv_h2_200 - h2flow.h2.calc_H2_enthalpy(200, 1e6) + h2flow.h2.calc_H2_enthalpy(t_cbt, 1e6))
     qm_v = qm_cb0 * (h2flow.calc_ht(h2flow.sat_t(p0)+10, p0, v)-h2flow.calc_ht(t0, p0, v))/(h2flow.calc_ht(t_cbt, p_cbt, v)-h2flow.calc_ht(h2flow.sat_t(p0)+10, p0, v))
     qm_v0 = qm_v
     qm_r = qm_cb0 * (h2flow.calc_ht(t_hxt, p_cbt, v)-h2flow.calc_ht(t0, p0, v))/(h2flow.calc_ht(t_cbt, p_cbt, v)-h2flow.calc_ht(t_hxt, p_cbt, v)) - qm_v
@@ -340,6 +348,7 @@ def h2dual(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx = 0, pcc=F
 
 def h2pre(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, Q_hx = 0, pcc=False, v = v0, tolerance = tolerance, filename=""):
     start = time.time()
+    qm_cb0 = qm_cb0 * lhv_h2_200 / (lhv_h2_200 - h2flow.h2.calc_H2_enthalpy(200, 1e6) + h2flow.h2.calc_H2_enthalpy(t_cbt, 1e6))
     t_mix = t_hxt/(1+((p_cbt/p0)**0.286-1)/eta_hpfp)
     qm_r = qm_cb0 * (h2flow.calc_ht(t_mix, p0, v)-h2flow.calc_ht(t0, p0, v))/(h2flow.calc_ht(t_cbt, p_cbt, v)-h2flow.calc_ht(t_mix, p0, v))
     qm_r0 = qm_r
