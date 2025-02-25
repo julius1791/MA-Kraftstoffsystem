@@ -19,6 +19,7 @@ def get_Data(folder, subfolder):
     t_wu = list()
     qm_r = list()
     qm_v = list()
+    qm_cb = list()
     qm_phc = list()
     Q = list()
     params = dict()
@@ -41,6 +42,7 @@ def get_Data(folder, subfolder):
                 P_mfp.append(float(P_row[0]))
                 Q.append(float(Q_row[0]))
                 qm_r.append(float(qm_row[2]))
+                qm_cb.append(float(qm_row[0]))
                 qm_phc.append(float(qm_row[1]))
                 if subfolder[:3] == "dual":
                     qm_v.append(float(qm_row[3]))
@@ -51,7 +53,7 @@ def get_Data(folder, subfolder):
                     if i in [1,2,6]:
                         continue
                     params.update({name: value})
-    content = {"Parameters": params, "t_bk": t_bk, "t_wu": t_wu, "P_mfp": P_mfp, "P_r": P_r, "Q": Q, "qm_r": qm_r, "qm_v": qm_v, "qm_phc": qm_phc}
+    content = {"Parameters": params, "t_bk": t_bk, "t_wu": t_wu, "P_mfp": P_mfp, "P_r": P_r, "Q": Q, "qm_cb": qm_cb, "qm_r": qm_r, "qm_v": qm_v, "qm_phc": qm_phc}
     json_object = json.dumps(content, indent=4)
     json_fn = os.path.join(folder, subfolder+".json")
     with open(json_fn, "w") as jsonout:
