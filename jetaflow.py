@@ -67,7 +67,7 @@ class JetaFlow:
         self.t = t1
         return t1              
         
-    def heat_exchanger(self, Q_dot: float):
+    def heat_exchanger(self, Q_dot: float, tpr: float):
         """
         Method for heat added in heat exchanger
 
@@ -75,6 +75,8 @@ class JetaFlow:
         ----------
         Q_dot : float
             absolute thermal power added (W)
+        tpr : float
+            total pressure ratio across the heat exchanger (-)
 
         Returns
         -------
@@ -93,7 +95,7 @@ class JetaFlow:
         t1 = calc_t(ht1, self.p, self.v)
         self.t = t1
         
-        pt1 = pt0
+        pt1 = pt0 * tpr
         t1, p1 = apply_total_pressure(pt1, ht1, t1, self.v)
         self.t = t1
         self.p = p1

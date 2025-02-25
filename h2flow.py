@@ -4,12 +4,6 @@ import h2_properties as h2
 import math
 
 
-# hydrogen heat exchanger parameters
-t_oil = 350         # K
-dT_ref = 105        # K
-q_ref = 123105      # J/kg
-tpr_ref = 0.01489   # -
-
 # modelling parameters
 tolerance = 1e-6    # -
 max_iter = 100       # -
@@ -62,7 +56,7 @@ class H2Flow:
         self.vap = vapour
         self.ht = calc_ht(temperature, pressure, velocity)
         
-    def heat_exchanger(self, Q_dot:float):
+    def heat_exchanger(self, Q_dot:float, tpr: float):
         """
         Method for heat added in heat exchanger
 
@@ -70,13 +64,14 @@ class H2Flow:
         ----------
         Q_dot : float
             absolute thermal power added (W)
+        tpr : float
+            total pressure ratio across the heat exchanger (-)
 
         Returns
         -------
         t1 : float
             final total temperature (K)
         """
-        t0 = self.t
         if not self.vap:
             raise ValueError("Expected vapour, not liquid h2")
         # initial specific total enthalpy
@@ -93,20 +88,14 @@ class H2Flow:
         t1 = calc_t(ht1, self.p, self.v, True)                          # K
         self.t = t1
         
-        dT = t_oil - t0
-        tpr = tpr_ref*q/q_ref/dT*dT_ref
-        pt1 = pt0 * (1-tpr)
-        if 1 - tpr > 1:
-            pt1 = pt0
-        if 1 - tpr < 0:
-            pt1 = pt0
+        pt1 = pt0 * tpr
         t1, p1 = apply_total_pressure(pt1, ht1, t1, self.v)
         self.t = t1
         self.p = p1
         
         return t1
     
-    def heat_to_saturation(self):
+    def heat_to_saturation(self, tpr):
         """
         Method for adding heat to fuel in heat exchanger, creating a 
         super heated vapour
@@ -115,33 +104,23 @@ class H2Flow:
         -------
         Q_dot : float
             thermal power required for vaporisation (W)
+        tpr : float
+            total pressure ratio across the heat exchanger (-)
 
         """
         if self.vap:
             raise ValueError("Expected liquid h2")
         
-        t0 = self.t
         pt0 = calc_pt(self.t, self.p, self.v)                           # Pa
         ht0 = calc_ht(self.t, self.p, self.v)                           # J/kg
         t1 = sat_t(self.p) + 5
         self.t = t1
         ht1 = calc_ht(t1, self.p, self.v)                               # J/kg
+        pt1 = pt0 * tpr
         Q_dot = (ht1 - ht0)*self.qm                                     # W
-        self.t1, self.p1 = apply_total_pressure(pt0, ht1, t1, self.v)    
+        self.t, self.p = apply_total_pressure(pt1, ht1, t1, self.v)    
         self.vap = True
         self.ht = ht1
-        
-        q = Q_dot / self.qm
-        dT = t_oil - t0
-        tpr = tpr_ref*q/q_ref/dT*dT_ref
-        pt1 = pt0 * (1-tpr)
-        if 1 - tpr > 1:
-            pt1 = pt0
-        if 1 - tpr < 0:
-            pt1 = pt0
-        t1, p1 = apply_total_pressure(pt1, ht1, t1, self.v)
-        self.t = t1
-        self.p = p1
         
         return Q_dot
     
