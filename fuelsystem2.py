@@ -7,11 +7,14 @@ import csv
 import os
 import time
 
+# results folder
+results_dir = "results2"
+
 tolerance = 1e-3
 max_iter = 500
 rel_fac = 1/750
 rel_fac_2 = 1/2
-v0 = 10
+v0 = 0
 
 # hydrogen lower heating value (250 K) / (200 K)
 lhv_h2_250 = 117.24e6  # J/kg
@@ -30,7 +33,7 @@ def save_results(
         Q_hx, pcc, v, P_hpfp, P_r, Q, Q_phc, qm_cb, qm_pch, qm_r, qm_v, p_hpfp,
         i, duration
     ):
-    path = os.path.join(os.getcwd(), "results2", filename)
+    path = os.path.join(os.getcwd(), results_dir, filename)
     with open(path, "w", newline='') as f:
         filewriter = csv.writer(f)
         filewriter.writerow([
@@ -57,7 +60,7 @@ def save_failed(
     ):
     if len(filename) > 1:
         failed = filename[:-4] + "FAILED" + ".csv"
-        path = os.path.join(os.getcwd(), "results", failed)
+        path = os.path.join(os.getcwd(), results_dir, failed)
         with open(path, "w", newline='') as f:
             filewriter = csv.writer(f)
             filewriter.writerow(["architecture", "t_cbt", "t_hxt", "eta_hpfp", "eta_r", "p_cbt", "qm_cb0", "t0", "p0", "tpr_hx", "Q_hx", "pcc", "v"])
@@ -239,7 +242,7 @@ def h2pump(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, tpr_hx, Q_hx = 
         return
     return
 
-def h2after(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, tpr_hx, tpr_vap=0.98, Q_hx = 0, pcc=False, v = v0, tolerance = tolerance, filename=""):
+def h2after(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, tpr_hx, tpr_vap=0.96, Q_hx = 0, pcc=False, v = v0, tolerance = tolerance, filename=""):
     start = time.time()
     qm_cb0 = qm_cb0 * lhv_h2_200 / (lhv_h2_200 - h2flow.h2.calc_H2_enthalpy(200, 1e6) + h2flow.h2.calc_H2_enthalpy(t_cbt, 1e6))
     qm_r = qm_cb0 * (h2flow.calc_ht(t_hxt, p_cbt, v)-h2flow.calc_ht(t0, p0, v))/(h2flow.calc_ht(t_cbt, p_cbt, v)-h2flow.calc_ht(t_hxt, p_cbt, v))
@@ -268,7 +271,8 @@ def h2after(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, tpr_hx, tpr_va
             ff_r = h2flow.H2Flow(qm_r, h2flow.calc_t(ht_cb, p_cbt, v, True), p_cbt, v, True)
             P_r, _ = ff_r.pump_hydraulic(p_hpfp, eta_r)
             t_hxa, _ = ff_main.mix_flows(ff_r)
-            ff_main.heat_exchanger(dH - P_hpfp - Q_vap  -P_r, tpr_hx) 
+            ff_main.heat_exchanger(dH - P_hpfp  -P_r, tpr_hx) 
+            ff_main.heat_exchanger(- Q_vap, tpr_vap)
             ff_cb = ff_main.split_flows(qm_cb)
             ht_cb = h2flow.calc_ht(t_cbt, ff_main.p, v)
             t_cba = ff_cb.t
