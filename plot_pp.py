@@ -4,14 +4,14 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 
-folder = os.path.join(os.getcwd(), "results")
+folder = os.path.join(os.getcwd(), "results2")
 
-subfolders = ["pump_test", "after_test", "pre_test", "dual_test"]
+subfolders = ["pump", "after", "pre", "dual"]
 
 data = dict()
 for subfolder in subfolders:
     file_path = os.path.join(folder, subfolder + ".json")
-    name = subfolder[:-5]
+    name = subfolder
     with open(file_path) as jsonfile:
         data.update({name: json.load(jsonfile)})
 
@@ -76,18 +76,19 @@ for t_bki in t_bk_u:
             qm_r3[j, i] = qm_r2[idx2][0]
         except:
             qm_r3[j, i] = np.nan
+            P_mfp3[j, i] = np.nan
         j+=1
     i+=1
 
 
-cs = plt.contour(t_bk_u, t_wu_u, P_mfp3/1e3, levels=[*range(0, 20, 5), *range(20, 100, 10), *range(100, 200, 20)])
-plt.clabel(cs, levels=[*range(0, 20, 5), *range(20, 100, 10), *range(100, 200, 20)])
+cs = plt.contour(t_bk_u, t_wu_u, P_mfp3/1e3, levels=[*np.linspace(0, 6.5, 14), *np.linspace(7, 11, 5), *np.linspace(12, 20, 5), 25, *np.linspace(30, 80, 6)])
+plt.clabel(cs)
 plt.xlabel("Brennkammereintrittstemperatur [K]")
 plt.ylabel("Wärmetauschereintrittstemperatur [K]")
 plt.title("Pumpenleistung [kW]")
 plt.show()
 
-cs = plt.contour(t_bk_u, t_wu_u, qm_r3/0.1, levels=[*np.linspace(0, 0.06, 6)/0.1, *np.linspace(0.08, 0.3, 6)/0.1, *np.linspace(0.4, 1, 4)/0.1])
+cs = plt.contour(t_bk_u, t_wu_u, qm_r3/0.1, levels=[*np.linspace(0.0, 0.05, 6)/0.1, *np.linspace(0.06, 0.12, 4)/0.1, *np.linspace(0.15, 0.3, 4)/0.1, *np.linspace(0.4, 1, 4)/0.1])
 plt.clabel(cs)
 plt.xlabel("Brennkammereintrittstemperatur [K]")
 plt.ylabel("Wärmetauschereintrittstemperatur [K]")

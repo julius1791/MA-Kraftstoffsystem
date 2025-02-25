@@ -4,9 +4,9 @@ import pathlib
 import csv
 import json
 
-folder = os.path.join(os.getcwd(), "results")
+folder = os.path.join(os.getcwd(), "results2")
 
-subfolders = ["pump_test", "after_test", "pre_test", "dual_test"]
+subfolders = ["pump", "after", "pre", "dual"]
 
 def get_Data(folder, subfolder):  
     sf_path = os.path.join(folder, subfolder)
@@ -19,29 +19,39 @@ def get_Data(folder, subfolder):
     t_wu = list()
     qm_r = list()
     qm_v = list()
+    qm_phc = list()
+    Q = list()
+    params = dict()
     for file in files:
         # only import .csv files
         if file.split(".")[1] == "csv":
             filename = os.path.join(sf_path, file)
             with open(filename, newline="") as f:
                 data_f = csv.reader(f)
-                _ = next(data_f)
+                param_names = next(data_f)
                 param_row = next(data_f)
                 _ = next(data_f)
                 P_row = next(data_f)
                 _ = next(data_f)
-                _ = next(data_f)
+                Q_row = next(data_f)
                 _ = next(data_f)
                 qm_row = next(data_f)
-                t_bk.append(float(param_row[0]))
-                t_wu.append(float(param_row[1]))
+                t_bk.append(float(param_row[1]))
+                t_wu.append(float(param_row[2]))
                 P_mfp.append(float(P_row[0]))
-                qm_r.append(float(qm_row[1]))
+                Q.append(float(Q_row[0]))
+                qm_r.append(float(qm_row[2]))
+                qm_phc.append(float(qm_row[1]))
                 if subfolder[:3] == "dual":
-                    qm_v.append(float(qm_row[2]))
+                    qm_v.append(float(qm_row[3]))
                 if subfolder[:3] != "pre":
                     P_r.append(float(P_row[1]))
-    content = {"t_bk": t_bk, "t_wu": t_wu, "P_mfp": P_mfp, "P_r": P_r, "qm_r": qm_r, "qm_v": qm_v}
+                params = dict()
+                for i, name, value in zip(range(len(param_names)), param_names, param_row):
+                    if i in [1,2,6]:
+                        continue
+                    params.update({name: value})
+    content = {"Parameters": params, "t_bk": t_bk, "t_wu": t_wu, "P_mfp": P_mfp, "P_r": P_r, "Q": Q, "qm_r": qm_r, "qm_v": qm_v, "qm_phc": qm_phc}
     json_object = json.dumps(content, indent=4)
     json_fn = os.path.join(folder, subfolder+".json")
     with open(json_fn, "w") as jsonout:
