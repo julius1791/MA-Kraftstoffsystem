@@ -3,6 +3,7 @@ import json
 import os
 import matplotlib.pyplot as plt
 import numpy as np
+import h2_properties as h2
 
 folder = os.path.join(os.getcwd(), "results2")
 
@@ -15,34 +16,42 @@ for subfolder in subfolders:
     with open(file_path) as jsonfile:
         data.update({name: json.load(jsonfile)})
 
-for key in data:
-    data_i = data[key]
-    P_mfp = np.array(data_i["P_mfp"])
-    t_wu = np.array(data_i["t_wu"])
-    t_bk = np.array(data_i["t_bk"])
-    if "P_r" in data_i:
-        if np.array(data_i["P_r"]).size == P_mfp.size:
-            P_mfp += np.array(data_i["P_r"])
-    idx = t_wu == 260
-    t_bk1 = t_bk[idx]
-    P_mfp1 = P_mfp[idx]
-    t_wu1 = t_wu[idx]
-    plt.plot(t_bk1, P_mfp1/1e3, label=key)
-plt.legend()
-plt.xlabel("Brennkammereintrittstemperatur [K]")
-plt.ylabel("Leistungsbedarf [kW]")
-plt.title("Wärmetauschereintrittstemperatur = 260 [K]")
-plt.show()
+t_list = [100, 160, 220, 280]
+for t in t_list:
+    for key in data:
+        data_i = data[key]
+        P_mfp = np.array(data_i["P_mfp"])
+        t_wu = np.array(data_i["t_wu"])
+        t_bk = np.array(data_i["t_bk"])
+        if "P_r" in data_i:
+            if np.array(data_i["P_r"]).size == P_mfp.size:
+                P_mfp += np.array(data_i["P_r"])
+        idx = t_wu == t
+        t_bk1 = t_bk[idx]
+        P_mfp1 = P_mfp[idx]
+        t_wu1 = t_wu[idx]
+        plt.plot(t_bk1, P_mfp1/1e3, label=key)
+    plt.legend()
+    plt.xlabel("Brennkammereintrittstemperatur [K]")
+    plt.ylabel("Leistungsbedarf [kW]")
+    plt.title("Wärmetauschereintrittstemperatur = " + str(t) + " [K]")
+    plt.show()
+
+
 
 data_i = data["pump"]
 P_mfp = np.array(data_i["P_mfp"])
+P_fp = P_mfp
+
 t_wu = np.array(data_i["t_wu"])
 t_bk = np.array(data_i["t_bk"])
 qm_r = np.array(data_i["qm_r"])
+Q = np.array(data_i["Q"])
 if "P_r" in data_i:
     if np.array(data_i["P_r"]).size == P_mfp.size:
+        P_r = np.array(data_i["P_r"])
         P_mfp += np.array(data_i["P_r"])
-t_hx_list = range(100, 300, 40)
+t_hx_list = [100, 160, 220, 280]
 for t_hx in t_hx_list:
     
     idx = t_wu == t_hx
@@ -94,3 +103,58 @@ plt.xlabel("Brennkammereintrittstemperatur [K]")
 plt.ylabel("Wärmetauschereintrittstemperatur [K]")
 plt.title("Rezirkulationsmassenstrom/Brennkammermassenstrom [-]")
 plt.show()
+
+
+for subfolder in subfolders:
+    data_i = data[subfolder]
+    P_mfp = np.array(data_i["P_mfp"])
+    P_fp = P_mfp
+    
+    t_wu = np.array(data_i["t_wu"])
+    t_bk = np.array(data_i["t_bk"])
+    qm_r = np.array(data_i["qm_r"])
+    qm_cb = np.array(data_i["qm_cb"])
+    qm_phc = np.array(data_i["qm_phc"])
+    Q = np.array(data_i["Q"])
+    if "P_r" in data_i:
+        if np.array(data_i["P_r"]).size == P_mfp.size:
+            P_r = np.array(data_i["P_r"])
+            P_mfp += np.array(data_i["P_r"])
+            
+    id_200 = t_wu == 180
+    t_bk_200 = t_bk[id_200]
+    P_fp_200 = P_fp[id_200]/1e3
+    if subfolder != "pre":
+        P_r = P_r[id_200]/1e3
+        P_fp_200 -= P_r
+    else:
+        P_r = P_fp_200 * 0
+    Q_200 = Q[id_200]/1e3
+    qm_200 = qm_cb[id_200] + qm_phc[id_200]
+    Q_hx = Q_200.clip(0, 200)
+    Q_phc = Q_200 - Q_hx
+    Q_excess = Q_200 - 200
+    Q_excess = Q_excess.clip(-200, 0)
+    sp = plt.stackplot(t_bk_200, Q_hx, Q_phc, P_fp_200, P_r, baseline="zero")
+    sp = plt.stackplot(t_bk_200, Q_excess, baseline="zero")
+    plt.xlabel("Brennkammereintrittstemperatur [K]")
+    plt.ylabel("Leistung [kW]")
+    plt.title(subfolder)
+    plt.xlim([200,600])
+    plt.ylim([-10, 600])
+    p = 1.7e6
+    h = list()
+    for t in t_bk_200:
+        qmi = qm_200[t_bk_200 == t]
+        Q_hxi = Q_hx[t_bk_200 == t]/1e3
+        Q_phci = Q_phc[t_bk_200 == t]/1e3
+        P_fpi = P_fp_200[t_bk_200 == t]/1e3
+        P_ri = P_r[t_bk_200 == t]/1e3
+        hi = (h2.calc_H2_enthalpy(t, p) - h2.calc_H2_enthalpy(22, 4.2e5))/1e3 * qmi
+        #print((hi-Q_phci - Q_hxi-P_fpi-P_ri)/hi)
+        h.append(hi)
+        
+    plt.plot(t_bk_200, h)
+    plt.show()
+
+
