@@ -94,7 +94,6 @@ def reference(
     i = 0
     condition_bool = True
     while condition_bool:
-        print(qm_t, p_lpfp, p_hpfp)
         i+=1
         ht_rold = ht_r
         # fuel from boost pump
@@ -184,7 +183,7 @@ def h2pump(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, tpr_hx, Q_hx = 
         while condition_bool:
             i+=1
             if pcc:
-                qm_cb = qm_cb0 + calc_parallel_combustion(dH-P_r-P_hpfp-Q_hx, t_cbt, p_cbt, 344)
+                qm_cb = qm_cb0 + calc_parallel_combustion(max(0, dH-P_r-P_hpfp-Q_hx), t_cbt, p_cbt, 344)
                 dH = dH0 * qm_cb / qm_cb0
             else:
                 qm_cb = qm_cb0
@@ -258,7 +257,7 @@ def h2after(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, tpr_hx, tpr_va
         while condition_bool:
             i+=1
             if pcc:
-                qm_cb = qm_cb0 + calc_parallel_combustion(dH-P_r-P_hpfp-Q_hx, t_cbt, p_cbt, 344)
+                qm_cb = qm_cb0 + calc_parallel_combustion(max(0, dH-P_r-P_hpfp-Q_hx), t_cbt, p_cbt, 344)
                 dH = dH0 * qm_cb / qm_cb0
             else:
                 qm_cb = qm_cb0
@@ -330,7 +329,7 @@ def h2dual(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, tpr_hx, Q_hx = 
         while condition_bool:
             i+=1
             if pcc:
-                qm_cb = qm_cb0 + calc_parallel_combustion(dH-P_r-P_hpfp-Q_hx, t_cbt, p_cbt, 344)
+                qm_cb = qm_cb0 + calc_parallel_combustion(max(0, dH-P_r-P_hpfp-Q_hx), t_cbt, p_cbt, 344)
                 dH = dH0 * qm_cb / qm_cb0
             else:
                 qm_cb = qm_cb0
@@ -407,7 +406,7 @@ def h2pre(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, tpr_hx, Q_hx = 0
         while condition_bool:
             i+=1
             if pcc:
-                qm_cb = qm_cb0 + calc_parallel_combustion(dH-P_r-P_hpfp-Q_hx, t_cbt, p_cbt, 344)
+                qm_cb = qm_cb0 + calc_parallel_combustion(max(0, dH-P_r-P_hpfp-Q_hx), t_cbt, p_cbt, 344)
                 dH = dH0 * qm_cb / qm_cb0
             else:
                 qm_cb = qm_cb0
