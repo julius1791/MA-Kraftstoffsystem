@@ -27,6 +27,8 @@ def get_Data(folder, subfolder):
         # only import .csv files
         if file.split(".")[1] == "csv":
             filename = os.path.join(sf_path, file)
+            if "FAILED" == filename[-10:-4]:
+                continue
             with open(filename, newline="") as f:
                 data_f = csv.reader(f)
                 param_names = next(data_f)

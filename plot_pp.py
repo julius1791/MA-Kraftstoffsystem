@@ -73,12 +73,11 @@ i=0
 
 for t_bki in t_bk_u:
     j=0
+    idx = t_bk == t_bki
+    t_wu2 = t_wu[idx]
+    P_mfp2 = P_mfp[idx]
+    qm_r2 = qm_r[idx]
     for t_wui in t_wu_u:
-        
-        idx = t_bk == t_bki
-        t_wu2 = t_wu[idx]
-        P_mfp2 = P_mfp[idx]
-        qm_r2 = qm_r[idx]
         idx2 = t_wu2 == t_wui
         try:
             P_mfp3[j, i] = np.extract(True, P_mfp2[idx2])
