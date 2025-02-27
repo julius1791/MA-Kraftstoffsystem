@@ -46,10 +46,9 @@ def get_Data(folder, subfolder):
                 qm_r.append(float(qm_row[2]))
                 qm_cb.append(float(qm_row[0]))
                 qm_phc.append(float(qm_row[1]))
-                if subfolder[:3] == "dual":
+                if param_row[0] == "dual":
                     qm_v.append(float(qm_row[3]))
-                if subfolder[:3] != "pre":
-                    P_r.append(float(P_row[1]))
+                P_r.append(float(P_row[1]))
                 params = dict()
                 for i, name, value in zip(range(len(param_names)), param_names, param_row):
                     if i in [1,2,6]:
