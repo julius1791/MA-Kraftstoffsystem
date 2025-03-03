@@ -29,7 +29,7 @@ q_vap_h2o = 2.4417e6    # J/kg
 # specific heat capacity of liquid water (ideal fluid)
 c_h2o = 4.186e3         # J/kgK
 
-def calc_parallel_combustion(Q, t_h2_0, p_h2, t_air_0, p_air=1e5, w_h2o_air_0=0, t_hx=283.15, phi=0.1):
+def calc_parallel_combustion(Q, t_h2_0, p_h2, t_air_0, p_air=1e5, w_h2o_air_0=0, t_hx=383.15, phi=0.1):
     """
     Calculate the mass flow of hydrogen to a bleed air supplied 
     parallel combustion chamber required to supply the set amount of heat  
