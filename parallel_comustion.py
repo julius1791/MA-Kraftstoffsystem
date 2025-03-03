@@ -26,10 +26,13 @@ t_ref = 298.15          # K
 # specific heat of vaporisation of water
 q_vap_h2o = 2.4417e6    # J/kg
 
-# specific heat capacity of liquid water (ideal fluid)
+# specific heat capacity of liquid water and isobaric specific heat capacity of air and steam
 c_h2o = 4.186e3         # J/kgK
+cp_l = 1.005e3          # J/kgK
+cp_h2o = 1.996e3        # J/kgK
 
-def calc_parallel_combustion(Q, t_h2_0, p_h2, t_air_0, p_air=1e5, w_h2o_air_0=0, t_hx=383.15, phi=0.1):
+
+def calc_parallel_combustion(Q, t_h2_0, p_h2, t_air_0, p_air=1e5, w_h2o_air_0=0, t_hx=600, phi=0.1):
     """
     Calculate the mass flow of hydrogen to a bleed air supplied 
     parallel combustion chamber required to supply the set amount of heat  
@@ -62,6 +65,7 @@ def calc_parallel_combustion(Q, t_h2_0, p_h2, t_air_0, p_air=1e5, w_h2o_air_0=0,
     
     # calculate ratio of dry air to hydrogen after combustion
     w_air_h2_1 = w_o2/w_h2 * (1/(phi*w_o2_air)-1)
+
     
     # calculate ratio of water produced in combustion to hydrogen
     w_h2o_h2 = w_h2o/w_h2
@@ -179,39 +183,14 @@ def calculate_enthalpy_change(w_air_h2_0, w_air_h2_1, w_h2o_air_0, w_h2o_air_1, 
     dh0 = (dh_h2_0+w_air_h2_0 * dh_air_0)
     
     # calculate the specific enthalpy difference of heat exchanger exit gases
-    # to reference
+    # to reference assuming ideal gas behaviour
     
-    # initial assumption: cooled gas is oversaturated
-    hxair = psp.MoistAir()
-    hxairref = psp.MoistAir()
-    hxair.TR = t_hx, 1
-    
-    # check assumption for validity
-    
-    # exhaust gas has less than 100% relative humiditiy
-    if w_air_h2_1 < hxair.specific_humidity:
-        # set specific humidity and liquid water mass factor
-        hxair.TW = t_hx, w_air_h2_1
-        w_lh2o_h2 = 0
-        dh_lh2o = 0
-        hxairref.TW = t_ref, w_air_h2_1
-    
-    # exhaust gas is saturated
-    else:
-        # set liquid mass factor
-        w_lh2o_h2 = (w_air_h2_1 - hxair.specific_humidity)/w_air_h2_1
-        
-        hxairref.TR = t_ref, 1
-    
-        # calculate specific enthalpy difference of liquid water to reference
-        dh_lh2o = q_vap_h2o + (t_ref-t_hx) * c_h2o
-    
-    # calculate specific enthalpy difference of humid air to reference
-    dh_hxair = (hxairref.specific_enthalpy - hxair.specific_enthalpy)*1e3
+    cp_mix = cp_l * cp_h2o*w_h2o_air_1
+    dh_hxair = cp_mix*(t_ref-t_hx)/1e3
     
     # calculate [hyrogen] specific enthalpy difference of mixture to reference
     # after combustion
-    dh1 = dh_hxair * w_air_h2_1 + dh_lh2o * w_lh2o_h2
+    dh1 = dh_hxair * w_air_h2_1
   
     # calculate the [hydrogen] specific heat transferred in the heat exchanger
     q = dh0 + lhv_h2 + dh1
@@ -222,4 +201,4 @@ def calculate_enthalpy_change(w_air_h2_0, w_air_h2_1, w_h2o_air_0, w_h2o_air_1, 
     return qm_h2
 
 if __name__ == "__main__":
-    print(calc_parallel_combustion(150e3, 22, 4.2e5, 344))
+    print(calc_parallel_combustion(450e3, 22, 4.2e5, 344))

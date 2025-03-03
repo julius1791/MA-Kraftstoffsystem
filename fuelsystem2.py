@@ -43,8 +43,8 @@ def save_results(
         filewriter.writerow([P_hpfp, P_r, p_hpfp])
         filewriter.writerow(["Q", "Q_phc"])
         filewriter.writerow([Q, Q_phc])
-        filewriter.writerow(["qm_cb", "qm_phc/qm_t", "qm_r", "qm_v"])
-        filewriter.writerow([qm_cb0, qm_pch, qm_r, qm_v])
+        filewriter.writerow(["qm_cb", "qm_phc/qm_t", "qm_r", "qm_v", "qm"])
+        filewriter.writerow([qm_cb0, qm_pch, qm_r, qm_v, qm_cb0+qm_pch])
         filewriter.writerow([
             "number of iterations", i, "Execution time: ", duration
             ])
@@ -222,6 +222,7 @@ def h2pump(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, tpr_hx, Q_hx = 
         stop = time.time()
         if len(filename) > 1:
             if qm_r < 0 or qm_cb - qm_cb0 < 0:
+                print(qm_r, qm_cb, qm_cb0)
                 raise ValueError("Solution includes negative mass flow")
             save_results(
                 filename, "pump", t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0,
@@ -459,7 +460,7 @@ def h2pre(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, tpr_hx, Q_hx = 0
 if __name__ == "__main__":
 
     t_bk = 600
-    t_wu = 280
+    t_wu = 100
     eta_p = 0.92
     eta_r = 0.9
     p_cb = 1.5e6+168.9e3
@@ -478,14 +479,14 @@ if __name__ == "__main__":
     # h2dual(t_bk, t_wu, eta_p, eta_r, p_cb, qm_cb, t0, p0, 0.95, filename="test.csv")
     # print(round(qm_r1, 4), round(qm_v, 4), round(P_hpfp/1000, 3), round(P_r/1000, 3), round(Q/1000, 3), i)
     
-    # print("\nh2pump")
-    # print("qmr Php P_r Q i")
-    # h2pump(t_bk, t_wu, eta_p, eta_r, p_cb, qm_cb, t0, p0, 0.95, Q_hx= 200e3, pcc=True, filename="test.csv")
+    print("\nh2pump")
+    print("qmr Php P_r Q i")
+    h2pump(t_bk, t_wu, eta_p, eta_r, p_cb, qm_cb, t0, p0, 0.95, Q_hx= 200e3, pcc=True, filename="test.csv")
     # print(round(qm_r1, 4), round(P_hpfp/1000, 3), round(P_r/1000, 3), round(Q/1000, 3), i)
     
-    print("\nh2after")
-    print("qmr Php P_r Q i")
-    h2after(t_bk, t_wu, eta_p, eta_r, p_cb, qm_cb, t0, p0, 0.95, 0.98, pcc=True)
+    # print("\nh2after")
+    # print("qmr Php P_r Q i")
+    # h2after(t_bk, t_wu, eta_p, eta_r, p_cb, qm_cb, t0, p0, 0.95, 0.98, pcc=True)
     #print(round(qm_r1, 4), round(P_hpfp/1000, 3), round(P_r/1000, 3), round(Q/1000, 3), i)
     
     # print("\nh2pre")
