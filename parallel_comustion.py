@@ -32,7 +32,7 @@ cp_l = 1.005e3          # J/kgK
 cp_h2o = 1.996e3        # J/kgK
 
 
-def calc_parallel_combustion(Q, t_h2_0, p_h2, t_air_0, p_air=1e5, w_h2o_air_0=0, t_hx=600, phi=0.1):
+def calc_parallel_combustion(Q, t_h2_0, p_h2, t_air_0, p_air=1e5, w_h2o_air_0=0, t_hx=600, phi=0.5):
     """
     Calculate the mass flow of hydrogen to a bleed air supplied 
     parallel combustion chamber required to supply the set amount of heat  

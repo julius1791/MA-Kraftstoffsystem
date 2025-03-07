@@ -126,7 +126,7 @@ def calc_jeta_density(t: float, p: float):
     jeta_tpp = tpp["jeta"]
     # feed the relevant data into numpy arrays
     temp = jeta_tpp[["Temperature (K)"]].to_numpy()
-    press = jeta_tpp[["Pressure (Mpa)"]].to_numpy()
+    press = jeta_tpp[["Pressure (MPa)"]].to_numpy()
     rho_arr = jeta_tpp[["Density (kg/m3)"]].to_numpy()
     # pressure unit conversion (Pa to MPa)
     p = p/10e6

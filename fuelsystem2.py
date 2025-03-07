@@ -131,7 +131,7 @@ def reference(
         elif p_hpfp < 0.9 * p_hpfp_old:
             p_hpfp = 0.9*p_hpfp_old 
         
-        print(i, t_cbt - t_cba, pt_cbt - pt_cba, ht_r - ht_rold)
+        #print(i, t_cbt - t_cba, pt_cbt - pt_cba, ht_r - ht_rold)
         
         condition_bool = not (
             abs(t_cbt - t_cba) < tolerance 
@@ -148,10 +148,10 @@ def reference(
     if qm_r < 0 or qm_t < 0:
         raise ValueError("Solution includes negative mass flow")
     save_results(
-        filename, "reference", t_cbt, float("nan"), eta_hpfp, eta_r, pt_cbt, 
+        filename, "reference", t_cbt, float("nan"), eta_hpfp, eta_lpfp, pt_cbt, 
         qm_cb, t0, p0, tpr_fohe, float("nan"), float("nan"), v, 
-        P_hpfp, 0, Q_idg + Q_fohe, 0, qm_cb, qm_t,
-        qm_r, p_hpfp, 0, i,
+        P_hpfp, P_lpfp, Q_idg + Q_fohe, 0, qm_cb, 0, qm_r,
+        qm_t, p_hpfp, i,
         stop-start
     )
     return
@@ -459,8 +459,8 @@ def h2pre(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, tpr_hx, Q_hx = 0
 
 if __name__ == "__main__":
 
-    t_bk = 600
-    t_wu = 100
+    t_bk = 200  
+    t_wu = 180
     eta_p = 0.92
     eta_r = 0.9
     p_cb = 1.5e6+168.9e3
@@ -469,9 +469,9 @@ if __name__ == "__main__":
     p0 = 4.2e5
     
     
-    # print("reference")
-    # print("qmr qmt Plp Php i")
-    # qm_r , qm_t, P_lpfp, P_hpfp, i = reference(470, 1, 200000, 5500, 0.95, 0.98, p_cb, 0.88, 2e4, 0.83, 0.31305, 250, 0.4e5)
+    print("reference")
+    print("qmr qmt Plp Php i")
+    reference(470, 1, 200000, 5500, 0.95, 0.98, p_cb, 0.88, 2e4, 0.83, 0.31305, 250, 1e5, filename="test.csv")
     # print(round(qm_r, 4) , round(qm_t, 4), round(P_lpfp/1000, 3), round(P_hpfp/1000, 3), i)  
     
     # print("\nh2dual")
@@ -479,9 +479,9 @@ if __name__ == "__main__":
     # h2dual(t_bk, t_wu, eta_p, eta_r, p_cb, qm_cb, t0, p0, 0.95, filename="test.csv")
     # print(round(qm_r1, 4), round(qm_v, 4), round(P_hpfp/1000, 3), round(P_r/1000, 3), round(Q/1000, 3), i)
     
-    print("\nh2pump")
-    print("qmr Php P_r Q i")
-    h2pump(t_bk, t_wu, eta_p, eta_r, p_cb, qm_cb, t0, p0, 0.95, Q_hx= 200e3, pcc=True, filename="test.csv")
+    # print("\nh2pump")
+    # print("qmr Php P_r Q i")
+    # h2pump(t_bk, t_wu, eta_p, eta_r, p_cb, qm_cb, t0, p0, 0.95, Q_hx= 200e3, pcc=True, filename="test.csv")
     # print(round(qm_r1, 4), round(P_hpfp/1000, 3), round(P_r/1000, 3), round(Q/1000, 3), i)
     
     # print("\nh2after")

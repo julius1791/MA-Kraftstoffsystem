@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import h2_properties as h2
+import h2_properties_para as h2
 import math
 
 
