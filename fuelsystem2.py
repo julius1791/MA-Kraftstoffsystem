@@ -2,7 +2,7 @@
 
 import h2flow
 import jetaflow
-from parallel_comustion import calc_parallel_combustion
+from parallel_comustion import parallel_combustion
 import csv
 import time
 
@@ -72,8 +72,8 @@ def reference(
     # correct combustion chamber fuel mass flow for temperature
     lhv_tcbt = (
         lhv_jeta_288 
-        + jetaflow.jeta.calc_jeta_enthalpy(t_cbt, 1e6) 
-        - jetaflow.jeta.calc_jeta_enthalpy(288, 1e6)
+        + jetaflow.jeta.calc_jeta_enthalpy(t_cbt, pt_cbt) 
+        - jetaflow.jeta.calc_jeta_enthalpy(288, pt_cbt)
         )
     qm_cb = qm_cb * (lhv_jeta_288 / lhv_tcbt)
     # calculate intitial guess for recirculation flow enthalpy
@@ -172,6 +172,7 @@ def h2pump(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, tpr_hx, Q_hx = 
     dH = dH0
     h_r = dH/qm_cb0
     ht_cb = h2flow.calc_ht(t_cbt, p_cbt, v)
+    t_phc = 400
     i = 0
     P_r = 0
     P_hpfp = 0
@@ -180,7 +181,7 @@ def h2pump(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, tpr_hx, Q_hx = 
         while condition_bool:
             i+=1
             if pcc:
-                qm_cb = qm_cb0 + calc_parallel_combustion(max(0, dH-P_r-P_hpfp-Q_hx), t_cbt, p_cbt, 344)
+                qm_cb = qm_cb0 + parallel_combustion(max(0, dH-P_r-P_hpfp-Q_hx), t_cbt, t_hx=t_phc+40)
                 dH = dH0 * qm_cb / qm_cb0
             else:
                 qm_cb = qm_cb0
@@ -190,7 +191,8 @@ def h2pump(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, tpr_hx, Q_hx = 
             ff_r = h2flow.H2Flow(qm_r, h2flow.calc_t(ht_cb, p_cbt, v, True), p_cbt, v, True)
             P_r, _ = ff_r.pump_hydraulic(p_hpfp, eta_r)
             t_hxa, _ = ff_main.mix_flows(ff_r)
-            ff_main.heat_exchanger(dH-P_hpfp-P_r, tpr_hx)
+            t_phc = ff_main.heat_exchanger(Q_hx, tpr_hx)
+            ff_main.heat_exchanger(dH-P_hpfp-P_r-Q_hx, tpr_hx)
             ff_cb = ff_main.split_flows(qm_cb)
             ht_cb = h2flow.calc_ht(t_cbt, ff_main.p, v)
             p_cba = h2flow.calc_pt(ff_main.t, ff_main.p, ff_main.v)
@@ -247,6 +249,7 @@ def h2after(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, tpr_hx, Q_hx =
     dH = dH0
     h_r = dH/qm_cb0
     ht_cb = h2flow.calc_ht(t_cbt, p_cbt, v)
+    t_phc = 400
     i = 0
     P_r = 0
     P_hpfp = 0
@@ -255,7 +258,7 @@ def h2after(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, tpr_hx, Q_hx =
         while condition_bool:
             i+=1
             if pcc:
-                qm_cb = qm_cb0 + calc_parallel_combustion(max(0, dH-P_r-P_hpfp-Q_hx), t_cbt, p_cbt, 344)
+                qm_cb = qm_cb0 + parallel_combustion(max(0, dH-P_r-P_hpfp-Q_hx), t_cbt, t_hx=t_phc+40)
                 dH = dH0 * qm_cb / qm_cb0
             else:
                 qm_cb = qm_cb0
@@ -266,8 +269,10 @@ def h2after(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, tpr_hx, Q_hx =
             ff_r = h2flow.H2Flow(qm_r, h2flow.calc_t(ht_cb, p_cbt, v, True), p_cbt, v, True)
             P_r, _ = ff_r.pump_hydraulic(p_hpfp, eta_r)
             t_hxa, _ = ff_main.mix_flows(ff_r)
-            ff_main.heat_exchanger(dH - P_hpfp  -P_r, tpr_hx) 
-            ff_main.heat_exchanger(- Q_vap, tpr_hx)
+            ff_main.heat_exchanger(Q_hx, tpr_hx)
+            t_phc=ff_main.heat_exchanger(- Q_vap, tpr_hx)
+            ff_main.heat_exchanger(dH - P_hpfp  -P_r-Q_hx, tpr_hx) 
+            
             ff_cb = ff_main.split_flows(qm_cb)
             ht_cb = h2flow.calc_ht(t_cbt, ff_main.p, v)
             t_cba = ff_cb.t
@@ -317,6 +322,7 @@ def h2dual(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, tpr_hx, Q_hx = 
     p_hpfp = p_cbt
     dH0 = get_dh(qm_cb0, t_cbt, p_cbt, t0, p0, v)
     dH = dH0
+    t_phc = 400
     h_r = dH/qm_cb0
     h_v = h_r
     ht_cb = h2flow.calc_ht(t_cbt, p_cbt, v)
@@ -328,7 +334,7 @@ def h2dual(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, tpr_hx, Q_hx = 
         while condition_bool:
             i+=1
             if pcc:
-                qm_cb = qm_cb0 + calc_parallel_combustion(max(0, dH-P_r-P_hpfp-Q_hx), t_cbt, p_cbt, 344)
+                qm_cb = qm_cb0 + parallel_combustion(max(0, dH-P_r-P_hpfp-Q_hx), t_cbt, t_hx=t_phc+40)
                 dH = dH0 * qm_cb / qm_cb0
             else:
                 qm_cb = qm_cb0
@@ -342,7 +348,8 @@ def h2dual(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, tpr_hx, Q_hx = 
             ff_r = h2flow.H2Flow(qm_r, h2flow.calc_t(ht_cb, p_cbt, v, True), p_cbt, v, True)
             P_r, _ = ff_r.pump_hydraulic(p_hpfp, eta_r)
             t_hxa, _ = ff_main.mix_flows(ff_r)
-            ff_main.heat_exchanger(dH - P_hpfp - P_r, tpr_hx) 
+            t_phc = ff_main.heat_exchanger(Q_hx, tpr_hx)
+            ff_main.heat_exchanger(dH - P_hpfp - P_r-Q_hx, tpr_hx) 
             p_cba = h2flow.calc_pt(ff_main.t, ff_main.p, ff_main.v)
             t_cba = ff_main.t
             ht_cb = h2flow.calc_ht(t_cbt, ff_main.p, v)
@@ -395,6 +402,7 @@ def h2pre(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, tpr_hx, Q_hx = 0
     p_hpfp = p_cbt
     dH0 = get_dh(qm_cb0, t_cbt, p_cbt, t0, p0, v)
     dH = dH0
+    t_phc = 400
     h_r = dH/qm_cb0
     ht_cb = h2flow.calc_ht(t_cbt, p_cbt, v)
     i = 0
@@ -405,7 +413,7 @@ def h2pre(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, tpr_hx, Q_hx = 0
         while condition_bool:
             i+=1
             if pcc:
-                qm_cb = qm_cb0 + calc_parallel_combustion(max(0, dH-P_r-P_hpfp-Q_hx), t_cbt, p_cbt, 344)
+                qm_cb = qm_cb0 + parallel_combustion(max(0, dH-P_r-P_hpfp-Q_hx), t_cbt, t_hx=t_phc+40)
                 dH = dH0 * qm_cb / qm_cb0
             else:
                 qm_cb = qm_cb0
@@ -414,7 +422,8 @@ def h2pre(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, tpr_hx, Q_hx = 0
             ff_r = h2flow.H2Flow(qm_r, h2flow.calc_t(ht_cb, p_cbt, v, True), p_cbt, v, True)
             t_v, _ = ff_main.mix_flows(ff_r)
             P_hpfp, t_hxa = ff_main.pump_hydraulic(p_hpfp, eta_hpfp)
-            ff_main.heat_exchanger(dH-P_hpfp-P_r, tpr_hx) 
+            ff_main.heat_exchanger(Q_hx, tpr_hx)
+            ff_main.heat_exchanger(dH-P_hpfp-P_r-Q_hx, tpr_hx) 
             t_cba = ff_main.t
             p_cba = h2flow.calc_pt(ff_main.t, ff_main.p, ff_main.v)
             ht_cb = h2flow.calc_ht(t_cbt, ff_main.p, v)
@@ -459,7 +468,7 @@ def h2pre(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, tpr_hx, Q_hx = 0
 
 if __name__ == "__main__":
 
-    t_bk = 200  
+    t_bk = 600  
     t_wu = 180
     eta_p = 0.92
     eta_r = 0.9
@@ -469,9 +478,9 @@ if __name__ == "__main__":
     p0 = 4.2e5
     
     
-    print("reference")
-    print("qmr qmt Plp Php i")
-    reference(470, 1, 200000, 5500, 0.95, 0.98, p_cb, 0.88, 2e4, 0.83, 0.31305, 250, 1e5, filename="test.csv")
+    # print("reference")
+    # print("qmr qmt Plp Php i")
+    # reference(470, 1, 200000, 5500, 0.95, 0.98, p_cb, 0.88, 2e4, 0.83, 0.31305, 250, 1e5, filename="test.csv")
     # print(round(qm_r, 4) , round(qm_t, 4), round(P_lpfp/1000, 3), round(P_hpfp/1000, 3), i)  
     
     # print("\nh2dual")
@@ -479,9 +488,9 @@ if __name__ == "__main__":
     # h2dual(t_bk, t_wu, eta_p, eta_r, p_cb, qm_cb, t0, p0, 0.95, filename="test.csv")
     # print(round(qm_r1, 4), round(qm_v, 4), round(P_hpfp/1000, 3), round(P_r/1000, 3), round(Q/1000, 3), i)
     
-    # print("\nh2pump")
-    # print("qmr Php P_r Q i")
-    # h2pump(t_bk, t_wu, eta_p, eta_r, p_cb, qm_cb, t0, p0, 0.95, Q_hx= 200e3, pcc=True, filename="test.csv")
+    print("\nh2pump")
+    print("qmr Php P_r Q i")
+    h2pump(t_bk, t_wu, eta_p, eta_r, p_cb, qm_cb, t0, p0, 0.95, Q_hx= 200e3, pcc=True, filename="test.csv")
     # print(round(qm_r1, 4), round(P_hpfp/1000, 3), round(P_r/1000, 3), round(Q/1000, 3), i)
     
     # print("\nh2after")
