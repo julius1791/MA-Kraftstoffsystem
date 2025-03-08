@@ -181,7 +181,7 @@ def h2pump(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, tpr_hx, Q_hx = 
         while condition_bool:
             i+=1
             if pcc:
-                qm_cb = qm_cb0 + parallel_combustion(max(0, dH-P_r-P_hpfp-Q_hx), t_cbt, t_hx=t_phc+40)
+                qm_cb = qm_cb0 + parallel_combustion(max(0, dH-P_r-P_hpfp-Q_hx), t_cbt, t_hx=t_phc+30)
                 dH = dH0 * qm_cb / qm_cb0
             else:
                 qm_cb = qm_cb0
@@ -258,7 +258,7 @@ def h2after(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, tpr_hx, Q_hx =
         while condition_bool:
             i+=1
             if pcc:
-                qm_cb = qm_cb0 + parallel_combustion(max(0, dH-P_r-P_hpfp-Q_hx), t_cbt, t_hx=t_phc+40)
+                qm_cb = qm_cb0 + parallel_combustion(max(0, dH-P_r-P_hpfp-Q_hx), t_cbt, t_hx=t_phc+30)
                 dH = dH0 * qm_cb / qm_cb0
             else:
                 qm_cb = qm_cb0
@@ -334,7 +334,7 @@ def h2dual(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, tpr_hx, Q_hx = 
         while condition_bool:
             i+=1
             if pcc:
-                qm_cb = qm_cb0 + parallel_combustion(max(0, dH-P_r-P_hpfp-Q_hx), t_cbt, t_hx=t_phc+40)
+                qm_cb = qm_cb0 + parallel_combustion(max(0, dH-P_r-P_hpfp-Q_hx), t_cbt, t_hx=t_phc+30)
                 dH = dH0 * qm_cb / qm_cb0
             else:
                 qm_cb = qm_cb0
@@ -413,7 +413,7 @@ def h2pre(t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0, tpr_hx, Q_hx = 0
         while condition_bool:
             i+=1
             if pcc:
-                qm_cb = qm_cb0 + parallel_combustion(max(0, dH-P_r-P_hpfp-Q_hx), t_cbt, t_hx=t_phc+40)
+                qm_cb = qm_cb0 + parallel_combustion(max(0, dH-P_r-P_hpfp-Q_hx), t_cbt, t_hx=t_phc+30)
                 dH = dH0 * qm_cb / qm_cb0
             else:
                 qm_cb = qm_cb0

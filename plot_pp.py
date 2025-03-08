@@ -7,9 +7,9 @@ import numpy as np
 # import h2_properties as h2
 from matplotlib.patches import Rectangle
 
-csfont = {'family': "serif", "size": 12}
+csfont = {'family': "serif", "serif": ["lmr"], "size": 12}
 plt.rc('font',**csfont)
-plt.rc('text', usetex=False)
+plt.rc('text', usetex=True)
 par = {'mathtext.default': 'regular'}
 plt.rcParams.update(par)
 

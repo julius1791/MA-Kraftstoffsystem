@@ -4,9 +4,9 @@ import matplotlib as mpl
 import os
 import numpy as np
 
-csfont = {'family': "serif", "size": 12}
+csfont = {'family': "serif", "serif": ["lmr"], "size": 12}
 plt.rc('font',**csfont)
-plt.rc('text', usetex=False)
+plt.rc('text', usetex=True)
 par = {'mathtext.default': 'regular'}
 plt.rcParams.update(par)
 
@@ -21,15 +21,15 @@ para = data[2]*100
 plt.plot(T, ortho, label="ortho-$H_2$", color="black", linestyle=":")
 plt.plot(T, para, label="para-$H_2$", color="black", linestyle="--")
 plt.vlines([20, 290], 0, 100, colors=["black"], linestyles=["-"])
-plt.annotate("Siedetemperatur", xytext=[10, 40], xy=[0,0], rotation=90)
-plt.annotate("[Bei 1 bar]", xytext=[22, 40], xy=[0,0], rotation=90)
-plt.annotate("Raumtemperatur", xytext=[280, 40], xy=[0,0], rotation=90)
+plt.annotate("Siedetemperatur", xytext=[9, 30], xy=[0,0], rotation=90)
+plt.annotate("[Bei 1 bar]", xytext=[22, 30], xy=[0,0], rotation=90)
+plt.annotate("Raumtemperatur", xytext=[278, 30], xy=[0,0], rotation=90)
 
 leg = plt.legend(loc="lower center")
 plt.ylim([0, 100])
 plt.xlim([0, 300])
 plt.xlabel("Temperatur [K]")
-plt.ylabel("Anteil in %")
+plt.ylabel("Anteil in \%")
 
 fig = mpl.pyplot.gcf()
 fig.set_size_inches(16/2.54, 9/2.54)
