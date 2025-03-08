@@ -478,9 +478,9 @@ if __name__ == "__main__":
     p0 = 4.2e5
     
     
-    # print("reference")
-    # print("qmr qmt Plp Php i")
-    # reference(470, 1, 200000, 5500, 0.95, 0.98, p_cb, 0.88, 2e4, 0.83, 0.31305, 250, 1e5, filename="test.csv")
+    print("reference")
+    print("qmr qmt Plp Php i")
+    reference(390, 1, 200000, 5500, 0.95, 0.98, p_cb, 0.88, 2e4, 0.83, 0.31305, 250, 1e5, filename="test.csv")
     # print(round(qm_r, 4) , round(qm_t, 4), round(P_lpfp/1000, 3), round(P_hpfp/1000, 3), i)  
     
     # print("\nh2dual")
