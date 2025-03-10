@@ -470,7 +470,7 @@ if __name__ == "__main__":
 
     t_bk = 600  
     t_wu = 180
-    eta_p = 0.92
+    eta_p = 0.154
     eta_r = 0.9
     p_cb = 1.5e6+168.9e3
     qm_cb = 0.1
@@ -478,9 +478,9 @@ if __name__ == "__main__":
     p0 = 4.2e5
     
     
-    print("reference")
-    print("qmr qmt Plp Php i")
-    reference(390, 1, 200000, 5500, 0.95, 0.98, p_cb, 0.88, 2e4, 0.83, 0.31305, 250, 1e5, filename="test.csv")
+    # print("reference")
+    # print("qmr qmt Plp Php i")
+    # reference(390, 1, 200000, 5500, 0.95, 0.98, p_cb, 0.73, 2e4, 0.6, 0.31305, 250, 1e5, filename="test.csv")
     # print(round(qm_r, 4) , round(qm_t, 4), round(P_lpfp/1000, 3), round(P_hpfp/1000, 3), i)  
     
     # print("\nh2dual")

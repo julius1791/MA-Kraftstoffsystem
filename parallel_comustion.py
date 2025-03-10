@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 
 # heat capacities
-cp_o2=918           # J/kgK
-cp_n2=1040          # J/kgK
-cp_h2o=1860         # J/kgK
-cp_h2=14275         # J/kgK
+cp_o2=919.63           # J/kgK
+cp_n2=1041.3          # J/kgK
+cp_h2o=1911.8         # J/kgK
+cp_h2=14858         # J/kgK
 
 # mass numbers
-Mr_o2=32            # g/mol
-Mr_h2=2             # g/mol
-Mr_h2o=18           # g/mol
+Mr_o2=31.9988           # g/mol
+Mr_h2=2.01588	        # g/mol
+Mr_h2o=18.0153          # g/mol
 
 # mass ratio of oxygen in air
-w_o2_air = 0.2314
+w_o2_air = 0.231781
 
 # lower heating value of hydrogen
 lhv_h2 = 119.96e6       # J/kg
@@ -25,7 +25,7 @@ mr_o2_h2 = Mr_o2/(2*Mr_h2)
 # ratio of water produced
 mr_h2o_h2 = Mr_h2o/Mr_h2
 
-def parallel_combustion(Q, t_h2, t_air=344, t_hx=400, phi=0.5):
+def parallel_combustion(Q, t_h2, t_air=272.63, t_hx=400, phi=0.5):
     """
     Calculate the mass flow of hydrogen to a bleed air supplied 
     parallel combustion chamber required to supply the set amount of heat  
@@ -70,4 +70,4 @@ def parallel_combustion(Q, t_h2, t_air=344, t_hx=400, phi=0.5):
     return m_h2
 
 if __name__ == "__main__":
-    print(parallel_combustion(450e3, 400))
+    print(parallel_combustion(450e3, 400, phi=0.3))

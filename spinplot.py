@@ -18,8 +18,8 @@ T = data[0]
 ortho = data[1]*100
 para = data[2]*100
 
-plt.plot(T, ortho, label="ortho-$H_2$", color="black", linestyle=":")
-plt.plot(T, para, label="para-$H_2$", color="black", linestyle="--")
+plt.plot(T, ortho, label="ortho-H$_2$", color="black", linestyle=":")
+plt.plot(T, para, label="para-H$_2$", color="black", linestyle="--")
 plt.vlines([20, 290], 0, 100, colors=["black"], linestyles=["-"])
 plt.annotate("Siedetemperatur", xytext=[9, 30], xy=[0,0], rotation=90)
 plt.annotate("[Bei 1 bar]", xytext=[22, 30], xy=[0,0], rotation=90)
@@ -28,7 +28,7 @@ plt.annotate("Raumtemperatur", xytext=[278, 30], xy=[0,0], rotation=90)
 leg = plt.legend(loc="lower center")
 plt.ylim([0, 100])
 plt.xlim([0, 300])
-plt.xlabel("Temperatur [K]")
+plt.xlabel("Temperatur $T$ [K]")
 plt.ylabel("Anteil in \%")
 
 fig = mpl.pyplot.gcf()
