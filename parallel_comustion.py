@@ -25,7 +25,7 @@ mr_o2_h2 = Mr_o2/(2*Mr_h2)
 # ratio of water produced
 mr_h2o_h2 = Mr_h2o/Mr_h2
 
-def parallel_combustion(Q, t_h2, t_air=272.63, t_hx=400, phi=0.5):
+def parallel_combustion(Q, t_h2, t_air=272.63, t_hx=400, phi=0.3):
     """
     Calculate the mass flow of hydrogen to a bleed air supplied 
     parallel combustion chamber required to supply the set amount of heat  
