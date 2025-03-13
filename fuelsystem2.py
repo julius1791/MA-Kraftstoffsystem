@@ -9,7 +9,7 @@ from operator import itemgetter
 
 # modelling parameters
 tolerance = 1e-1
-max_iter = 500
+max_iter = 100
 rel_fac = 1/250
 rel_fac_2 = 1/2
 
@@ -555,6 +555,8 @@ def h2dual(params, t_cbt, t_hxt, p_cbt, pcc=True, filename="", v=v0, tolerance=t
                 p_hpfp = 1.1*p_hpfp_old
             elif p_hpfp < 0.9 * p_hpfp_old:
                 p_hpfp = 0.9*p_hpfp_old
+                
+            # print(t_cbt - t_cba, t_hxa-t_hxt, p_cbt - p_cba, h_r - h_rold)
             
             condition_bool = not (
                 abs(t_cbt - t_cba) < tolerance 
@@ -630,11 +632,11 @@ if __name__ == "__main__":
     # print("reference")
     # reference(ref_params, 399.15, p_bk, filename="test.csv")
     
-    # print("\nh2dual")
-    # h2dual(dual_params, t_bk, t_wu, p_bk, pcc=True, filename="test.csv")
+    print("\nh2dual")
+    h2dual(dual_params, t_bk, t_wu, p_bk, pcc=True, filename="test.csv")
     
-    print("\nh2pump")
-    h2pump(pump_params, t_bk, t_wu, p_bk, pcc=True, filename="test.csv")
+    # print("\nh2pump")
+    # h2pump(pump_params, t_bk, t_wu, p_bk, pcc=True, filename="test.csv")
     
     # print("\nh2after")
     # h2after(after_params, t_bk, t_wu, p_bk, pcc=True, filename="test.csv")
