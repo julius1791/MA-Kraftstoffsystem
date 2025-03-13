@@ -13,10 +13,15 @@ plt.rc('text', usetex=True)
 par = {'mathtext.default': 'regular'}
 plt.rcParams.update(par)
 
-folder = os.path.join(os.getcwd(), "results2")
+folder = os.path.join(os.getcwd(), "results3")
 save_dir = os.path.join(os.getcwd(), "diagrams")
 
-subfolders = ["pre", "dual", "after", "pump"]
+subfolders = ["dual", "after", "pump"]
+systemnames = ["Vormischung", "Verdampfer", "Pumpe"]
+
+###############################################################################
+############################# Daten Sammeln ###################################
+###############################################################################
 
 data = dict()
 for subfolder in subfolders:
@@ -26,9 +31,13 @@ for subfolder in subfolders:
         data.update({name: json.load(jsonfile)})
 stylelist = ["-", ":", "--", "-."]
 
+###############################################################################
+######################## Leistungsbedarf Systemvergleich ######################
+###############################################################################
+
 t_list = [100, 160, 220, 280]
 for t in t_list:
-    for key, style in zip(data, stylelist):
+    for key, style, name in zip(data, stylelist, systemnames):
         data_i = data[key]
         P_mfp = np.array(data_i["P_mfp"])
         t_wu = np.array(data_i["t_wu"])
@@ -40,19 +49,23 @@ for t in t_list:
         t_bk1 = t_bk[idx]
         P_mfp1 = P_mfp[idx]
         t_wu1 = t_wu[idx]
-        plt.plot(t_bk1, P_mfp1/1e3, label=key, color="black", linestyle=style)
-    plt.legend(title="Architecture", loc="upper right")
-    plt.xlabel("$T_{BK,ein}$ [K]")
+        plt.plot(t_bk1, P_mfp1/1e3, label=name, color="black", linestyle=style)
+    plt.legend(title="Kraftstoffsystem", loc="upper right")
+    plt.xlabel("$T_{BK}$ [K]")
     plt.ylabel("$P_{mech}$ [kW]")
-    plt.title("$T_{HX,ein}$ = " + str(t) + " K")
+    plt.title("$T_{W}$ = " + str(t) + " K")
     fig = mpl.pyplot.gcf()
     fig.set_size_inches(16/2.54, 10.5/2.54)
     fig.savefig(os.path.join(save_dir, 'arch_' + str(t) + '.png'), dpi=600, bbox_inches="tight")
     plt.show()
+    
+
+###############################################################################
+################# Leistungsbedarf Pumpe T_W Vergleich #########################
+###############################################################################
 
 
-
-data_i = data["pump"]
+data_i = data[subfolders[2]]
 P_mfp = np.array(data_i["P_mfp"])
 P_fp = P_mfp
 
@@ -72,14 +85,19 @@ for t_hx, style in zip(t_hx_list, stylelist):
     P_mfp1 = P_mfp[idx]
     t_wu1 = t_wu[idx]
     plt.plot(t_bk1, P_mfp1/1e3, label=str(t_hx) + " K", color="black", linestyle=style)
-plt.legend(title="$T_{HX,ein}$ [K]")
-plt.xlabel("$T_{BK,ein}$ [K]")
+plt.legend(title="$T_{W}$ [K]")
+plt.xlabel("$T_{BK}$ [K]")
 plt.ylabel("$P_{mech}$ [kW]")
-plt.title("Architektur: pump [K]")
+plt.title("Architektur: Pumpe")
 fig = mpl.pyplot.gcf()
 fig.set_size_inches(16/2.54, 10.5/2.54)
 fig.savefig(os.path.join(save_dir, 'pump.png'), dpi=600)
 plt.show()
+
+
+###############################################################################
+################# Leistungsbedarf Pumpe Contour plot ##########################
+###############################################################################
 
 t_wu_u = np.unique(t_wu)
 t_bk_u = np.unique(t_bk)
@@ -103,42 +121,51 @@ for t_bki in t_bk_u:
             P_mfp3[j, i] = np.nan
         j+=1
     i+=1
-lev = [*np.linspace(4, 75, 400)]
-cs = plt.contourf(t_bk_u, t_wu_u, P_mfp3/1e3, levels = lev, cmap="Greys", norm=mpl.colors.LogNorm(2, 75))
+lev = [*np.linspace(20, 280, 400)]
+cs = plt.contourf(t_bk_u, t_wu_u, P_mfp3/1e3, levels = lev, cmap="Greys", norm=mpl.colors.LogNorm(12, 280))
 cb = plt.colorbar(label="$P_{mech}$ [kW]")
-clevs = [4, 5, 6, 8, 10, 12, 15, 20, 30, 50, 75]
+clevs = [20, 30, 45, 60, 80, 120, 180, 280]
 cb.set_ticks(clevs)
 cb.set_ticklabels(clevs)
-plt.xlabel("$T_{BK,ein}$ [K]")
-plt.ylabel("$T_{HX,ein}$ [K]")
-levs = [4, 5, 6, 8, 10, 12, 15, 20]
+plt.xlabel("$T_{BK}$ [K]")
+plt.ylabel("$T_{W}$ [K]")
+levs = [30, 35, 45, 60, 80, 120, 180]
 cs = plt.contour(t_bk_u, t_wu_u, P_mfp3/1e3, levels = levs, colors='black')
-plt.clabel(cs, fontsize=8)
-plt.title("Leistungsbedarf [Architektur: pump]")
+plt.clabel(cs, fontsize=10)
+plt.title("Leistungsbedarf [Architektur: Pumpe]")
 fig = mpl.pyplot.gcf()
 fig.set_size_inches(16/2.54, 10.5/2.54)
 fig.savefig(os.path.join(save_dir, 'pump_power.png'), dpi=600)
 plt.show()
 
+###############################################################################
+################### Massenstromverhältnis Pumpe ###############################
+###############################################################################
+
 lev = [*np.linspace(0.1, 10, 800)]
 cs = plt.contourf(t_bk_u, t_wu_u, qm_r3/0.1, levels=lev, cmap="Greys", norm=mpl.colors.LogNorm(0.08, 10))
-cb = plt.colorbar(label="$\dfrac{\dot{m}_r}{\dot{m}_{bk}}$ [-]")
+cb = plt.colorbar(label="$\dot{m}_r/\dot{m}_{BK}$ [-]")
 clevs = [0.1, 0.2, 0.3, 0.5, 0.8, 1.2, 2, 3, 5, 10]
 cb.set_ticks(clevs)
 cb.set_ticklabels(clevs)
-plt.xlabel("$T_{BK,ein}$ [K]")
-plt.ylabel("$T_{HX,ein}$ [K]")
+plt.xlabel("$T_{BK}$ [K]")
+plt.ylabel("$T_{W}$ [K]")
 clevs = [0.1, 0.2, 0.3, 0.5, 0.8, 1.2, 2, 3]
 cs = plt.contour(t_bk_u, t_wu_u, qm_r3/0.1, levels = clevs, colors='black')
 plt.clabel(cs, fontsize=8)
-plt.title("Massenstromverhältnis [Architektur: pump]")
+plt.title("Massenstromverhältnis [Architektur: Pumpe]")
 fig = mpl.pyplot.gcf()
 fig.set_size_inches(16/2.54, 10.5/2.54)
 fig.savefig(os.path.join(save_dir, 'pump_massflow.png'), dpi=600)
 plt.show()
 
 
-for subfolder in subfolders:
+###############################################################################
+########################### Energie Stackplots ################################
+###############################################################################
+
+
+for subfolder,name in zip(subfolders, systemnames):
     data_i = data[subfolder]
     P_mfp = np.array(data_i["P_mfp"])
     P_fp = P_mfp
@@ -154,7 +181,7 @@ for subfolder in subfolders:
             P_r = np.array(data_i["P_r"])
             P_mfp += np.array(data_i["P_r"])
             
-    id_200 = t_wu == 180
+    id_200 = t_wu == 140
     t_bk_200 = t_bk[id_200]
     P_fp_200 = P_fp[id_200]/1e3
     if subfolder != "pre":
@@ -168,23 +195,26 @@ for subfolder in subfolders:
     Q_phc = Q_200 - Q_hx
     Q_excess = Q_200 - 200
     Q_excess = Q_excess.clip(-200, 0)
+    Q_hx2 = [200 for i in Q_200]
     
-    spP = plt.stackplot(t_bk_200, Q_hx, Q_phc, P_r, P_fp_200, colors=['white', 'white', 'black', 'grey'], baseline="zero")
-    spQ = plt.stackplot(t_bk_200, Q_hx, Q_phc, colors=['white', 'white'], baseline="zero", hatch=['//', "+"], edgecolors=["black", "black"])
-
+    
+    spQ = plt.stackplot(t_bk_200, Q_hx2 , Q_phc, colors=['white', 'white'], baseline="zero", hatch=['//', "+"], edgecolors=["black", "black"])
+    #sp3 = plt.stackplot(t_bk_200, 200, colors=['white'], baseline="zero", hatch=['//'], edgecolors=["black", "black"])
+    spP = plt.stackplot(t_bk_200, Q_hx, Q_phc, P_r, P_fp_200, colors=['none', 'none', 'black', 'grey'], baseline="zero", ec=["none"])
+    
     p1 = Rectangle((0, 0), 1, 1, fc="white", hatch="//", ec="black")
     p2 = Rectangle((0, 0), 1, 1, fc="white", hatch="+", ec="black")
     p3 = Rectangle((0, 0), 1, 1, fc="grey")
     p4 = Rectangle((0, 0), 1, 1, fc="black")
-    if subfolder != "pre":
-        plt.legend([p3, p4, p2, p1], ["$P_{M}$", "$P_{R}$", "$\dot{Q}_{PHC}$", "$\dot{Q}_{HX}$"], loc="lower right", framealpha=1)
+    if subfolder != "pump":
+        plt.legend([p3, p4, p2, p1], ["$P_{HPFC}$", "$P_{R}$", "$\dot{Q}_{PHC}$", "$\dot{Q}_{FOHE}$"], loc="lower right", framealpha=1)
     else:
-        plt.legend([p3, p2, p1], ["$P_{M}$", "$\dot{Q}_{PHC}$", "$\dot{Q}_{HX}$"], loc="lower right", framealpha=1)
+        plt.legend([p3, p4, p2, p1], ["$P_{HPFP}$", "$P_{R}$", "$\dot{Q}_{PHC}$", "$\dot{Q}_{FOHE}$"], loc="lower right", framealpha=1)
 
-    plt.xlabel("$T_{BK,ein}$ [K]")
+    plt.xlabel("$T_{BK}$ [K]")
     plt.ylabel("Leistung [kW]")
-    plt.title("Architektur: " + subfolder)
-    plt.xlim([200,700])
+    plt.title("Architektur: " + name)
+    plt.xlim([160,600])
     plt.ylim([0, 800])
     p = 1.7e6
     h = list()

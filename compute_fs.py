@@ -7,7 +7,7 @@ from gather_data import get_Data
 from pathlib import Path
 
 
-func = "dual"
+func = "after"
 
 # results folder
 results_dir = "results3"
@@ -21,7 +21,7 @@ t_wu_list = range(100, 300, 20)
 
 p_bk = 1.33e6
 
-qm_cb = 0.11
+qm_cb = 0.10998
 eta_p = 0.154
 eta_v = 0.71
 t0 = 25.2
@@ -65,9 +65,6 @@ def create_param_combs(t_bk_list, t_wu_list, folder, results_dir):
             path = os.path.join(results_dir, folder, filename)
             param_combinations.append([t_bk, t_wu, path])
     return param_combinations
-
-
-
 
 
 

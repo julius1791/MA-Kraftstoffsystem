@@ -8,54 +8,106 @@ import json
 import numpy as np
 from pathlib import Path
 
-
-t_bk = 300
-t_wu = 200
-eta_p = 0.92
-eta_r = 0.9
-p_cb = 1.5e6+168.9e3
-qm_cb = 0.10998
-t0 = 22
-p0 = 4.2e5
-pcc = True
-tpr_hx = 0.95
-Q_hx = 200e3
-v = 0
-
+func = "dual"
 
 # results folder (!CHANGE IN fuelsystem2!!!)
 results_dir = "sensitivity"
 
-
 # subfolder
-folders = ["pump", "after", "pre", "dual"]
-folder = folders[3]
+folders = ["pump", "after", "dual"]
+
+
+t_bk = 270
+t_wu = 220
+p_bk = 1.33e6
+
+qm_cb = 0.10998
+qm_cbs = qm_cb+0.005
+eta_p = 0.154
+eta_ps = 0.146
+eta_v = 0.71
+eta_vs = 0.67
+t0 = 25.2
+p0 = 4.2e5
+Q_fohe = 159e3
+Q_fohes = Q_fohe*0.95
+tpr_fohe = 0.95
+tpr_fohes = 1-(1-tpr_fohe)*1.05
+tpr_phc = 0.98
+tpr_phcs = 1-(1-tpr_phc)*1.05
+dT = 20
+dp_l = 260e3
+dp_ls = dp_l*1.05
+dp_inj = 168.9e3
+dp_injs = dp_inj*1.05
+tpr_vhps = 0.98
+tpr_vlps = 0.99
+
+
+
+
+if func == "pump":
+    folder = folders[0]
+    par_name_list = ["Q_fohe", "tpr_fohe", "tpr_phc", "eta_r", "eta_hpfp", "qm_cb0", "dp_l", "dp_inj"]
+    par_unit_list = ["kW", "-", "-", "-", "-", "kg/s", "kPa", "kPa"]
+    par_value_list = [Q_fohes, tpr_fohes, tpr_phcs, eta_vs, eta_ps, qm_cbs, dp_ls, dp_injs]
+    params = {
+        "p0": p0,"t0": t0, "Q_fohe": Q_fohe,"tpr_fohe": tpr_fohe, 
+        "tpr_phc": tpr_phc, "dT": dT,"eta_r": eta_v, "eta_hpfp": eta_p, 
+        "qm_cb0": qm_cb, "dp_l": dp_l, "dp_inj":dp_inj
+    }
+elif func == "after":
+    folder = folders[1]
+    par_name_list = ["Q_fohe", "tpr_fohe", "tpr_phc", "eta_r", "eta_hpfp", "qm_cb0", "dp_l", "dp_inj", "tpr_vhp", "tpr_vlp"]
+    par_unit_list = ["kW", "-", "-", "-", "-", "kg/s", "kPa", "kPa", "-", "-"]
+    par_value_list = [Q_fohes, tpr_fohes, tpr_phcs, eta_vs, eta_vs, qm_cbs, dp_ls, dp_injs, tpr_vhps, tpr_vlps]
+    params = {
+        "p0": p0,"t0": t0, "Q_fohe": Q_fohe,"tpr_fohe": tpr_fohe, 
+        "tpr_phc": tpr_phc, "dT": dT,"eta_r": eta_v, "eta_hpfp": eta_v, 
+        "qm_cb0": qm_cb, "dp_l": dp_l, "dp_inj":dp_inj, "tpr_vhp":1, 
+        "tpr_vlp": 1
+    }
+elif func == "dual":
+    folder = folders[2]
+    par_name_list = ["Q_fohe", "tpr_fohe", "tpr_phc", "eta_r", "eta_hpfp", "qm_cb0", "dp_l", "dp_inj"]
+    par_unit_list = ["kW", "-", "-", "-", "-", "kg/s", "kPa", "kPa"]
+    par_value_list = [Q_fohes, tpr_fohes, tpr_phcs, eta_vs, eta_vs, qm_cbs, dp_ls, dp_injs]
+    params = {
+        "p0": p0,"t0": t0, "Q_fohe": Q_fohe,"tpr_fohe": tpr_fohe, 
+        "tpr_phc": tpr_phc, "dT": dT,"eta_r": eta_v, "eta_hpfp": eta_v, 
+        "qm_cb0": qm_cb, "dp_l": dp_l, "dp_inj":dp_inj
+    }
+
+
 
 foldername = os.path.join(os.getcwd(), results_dir, folder)
 Path(foldername).mkdir(parents=True, exist_ok=True)
 
-pc_list = []
-par_name_list = ["v", "Q_hx", "eta_p", "eta_r", "p_cb", "qm_cb", "tpr_hx"]
-par_unit_list = ["[m/s]", "[kW]", "[-]", "[-]", "[kPa]", "[g/s]", "[-]"]
-step_size = [2, 20, 0.02, 0.02, 200e3, 0.01, 0.01]
+param_comb_list = []
+path_list = []
+step_size = []
+defname = os.path.join(foldername, "default.csv")
 
 for i in range(len(par_name_list)):
-    par_name = par_name_list[i]
 
     filename = str(i)+ ".csv"
     path = os.path.join(foldername, filename)
-    pc = [v, Q_hx, eta_p, eta_r, p_cb, qm_cb, tpr_hx]
-    pc[i] = pc[i] + step_size[i]
-    pc.append(path)
-    pc_list.append(pc)
+    param_comb = params.copy()
+    param_comb[par_name_list[i]] = par_value_list[i]
+    param_comb_list.append(param_comb)
+    path_list.append(path)
+    step_size.append(par_value_list[i]-params[par_name_list[i]])
 
-    
-Parallel(n_jobs=7)(
-                # t_bk, t_wu, eta_p, eta_r, p_cb, qm_cb, t0, p0, tpr_hx, Q_hx=200e3, pcc=pcc, filename=path
-    delayed(fuelsystem2.h2dual)(t_bk, t_wu, pc[2], pc[3], pc[4], pc[5], t0, p0, pc[6], Q_hx=pc[1], v=pc[0], pcc=pcc, filename=pc[7]) for pc in pc_list
-)
-defname = os.path.join(foldername, "default.csv")
-fuelsystem2.h2dual(t_bk, t_wu, eta_p, eta_r, p_cb, qm_cb, t0, p0, tpr_hx, Q_hx=Q_hx, pcc=pcc, filename=defname, v=v)
+if func == "pump":
+    Parallel(n_jobs=i)(delayed(fuelsystem2.h2pump)(pc, t_bk, t_wu, p_bk, filename=path) for pc, path in zip(param_comb_list, path_list))
+    fuelsystem2.h2pump(params, t_bk, t_wu, p_bk, filename=defname)
+elif func == "after":
+    Parallel(n_jobs=i)(delayed(fuelsystem2.h2after)(pc, t_bk, t_wu, p_bk, filename=path) for pc, path in zip(param_comb_list, path_list))
+    fuelsystem2.h2after(params, t_bk, t_wu, p_bk, filename=defname)
+elif func == "dual":
+    Parallel(n_jobs=i)(delayed(fuelsystem2.h2dual)(pc, t_bk, t_wu, p_bk, filename=path) for pc, path in zip(param_comb_list, path_list))
+    fuelsystem2.h2dual(params, t_bk, t_wu, p_bk, filename=defname)
+
 with open(defname, newline='') as def_file:
     data_def = csv.reader(def_file)
     _ = next(data_def)
@@ -68,8 +120,6 @@ with open(defname, newline='') as def_file:
     Q0 = float(Q_row[0])
     P_r0 = float(P_row[1])
     
-
-pc = [v, Q_hx, eta_p, eta_r, p_cb, qm_cb, tpr_hx]
 
 jacobian = np.zeros([len(par_name_list), 3])
 absolute_difference = np.zeros([len(par_name_list), 3])
@@ -112,7 +162,6 @@ for i in range(len(par_name_list)):
         pass
     relative_difference[i, 2] = dQ/Q0
     
-par_vals[10] = Q_hx
 params = dict()
 for i, name, value in zip(range(len(par_names)), par_names, par_vals):
     params.update({name: value})
