@@ -377,6 +377,12 @@ def calc_t(ht, p, v, vap):
         ht_a = calc_ht(t0, p, v)
         t1 += (ht - ht_a)/(h2.calc_H2_cp(t0, p))
         
+        if t1/t0> 1.1:
+            t1 = t0*1.1
+            
+        if t0/t1> 1.1:
+            t1 = t0/1.1
+        
         t1 = loop_check_bounds(t1, tmax, tmin)
         
         condition_bool = not (
