@@ -11,7 +11,7 @@ from operator import itemgetter
 tolerance = 1e-1
 max_iter = 100
 rel_fac = 1/250
-rel_fac_2 = 1/2
+rel_fac_2 = 3/4
 
 # global velocity setting
 v0 = 0
@@ -145,9 +145,12 @@ def reference(params, t_cbt, p_cbt, filename="", v=v0, tolerance=tolerance):
         # idg heat exchanger
         ff_main.heat_exchanger(Q_idg, 1)
         
+        # calculate recirculated mass flow
+        qm_r = qm_hpfp - qm_t - qm_cb
+        
         # calculate independent variables for next iteration
         h_rold = h_r
-        h_r = ff_main.ht
+        h_r = (1+qm_r/qm_cb)*ff_main.ht-qm_r/qm_cb*h_r
         
         p_hpfp_old = p_hpfp
         p_hpfp += (p_cbt - p_cba) * rel_fac_2
@@ -163,7 +166,7 @@ def reference(params, t_cbt, p_cbt, filename="", v=v0, tolerance=tolerance):
             
             
         
-        print(i, t_cbt - t_cba, p_cbt - p_cba, h_r - h_rold)
+        # print(i, t_cbt - t_cba, p_cbt - p_cba, h_r - h_rold)
         
         
         # check for convergence
@@ -179,8 +182,7 @@ def reference(params, t_cbt, p_cbt, filename="", v=v0, tolerance=tolerance):
             print("failed to converge")
             return
     
-    # calculate recirculated mass flow
-    qm_r = qm_hpfp - qm_t - qm_cb
+    
     
     # print("saturation margin hpp inlet [bar]: " + str((p_pi - p_sat_pi)/1e5))
     # print("saturation margin injector [bar]: " + str((ff_cb.p - p_sat_cb - dp_inj)/1e5))
@@ -291,7 +293,7 @@ def h2pump(params, t_cbt, t_hxt, p_cbt, pcc=True, filename="", v=v0, tolerance=t
             
             p_r = ff_main.p
             h_rold = h_r
-            h_r = h2flow.calc_ht(ff_main.t, ff_main.p, ff_main.v)
+            h_r = (1+qm_r/qm_cb)*ff_main.ht-qm_r/qm_cb*h_r
             
             qm_r += qm_r0*(t_hxt-t_hxa) * rel_fac
             qm_r = max(0, qm_r)
@@ -301,6 +303,7 @@ def h2pump(params, t_cbt, t_hxt, p_cbt, pcc=True, filename="", v=v0, tolerance=t
             elif p_hpfp < 0.9 * p_hpfp_old:
                 p_hpfp = 0.9*p_hpfp_old
             
+           
             # print(t_cbt - t_cba, t_hxa-t_hxt, p_cbt - p_cba, h_r - h_rold)
             
             # check for convergence
@@ -417,7 +420,7 @@ def h2after(params, t_cbt, t_hxt, p_cbt, pcc=True, filename="", v=v0, tolerance=
             p_hpfp += (p_cbt - p_cba) * rel_fac_2
             
             h_rold = h_r
-            h_r = ff_main.ht
+            h_r = (1+qm_r/qm_cb)*ff_main.ht-qm_r/qm_cb*h_r
             
             qm_r += qm_r0*(t_hxt-t_hxa) * rel_fac
             qm_r = max(0.001, qm_r)
@@ -543,7 +546,7 @@ def h2dual(params, t_cbt, t_hxt, p_cbt, pcc=True, filename="", v=v0, tolerance=t
             p_hpfp += (p_cbt - p_cba) * rel_fac_2
             
             p_r = ff_main.p
-            h_r = ff_main.ht
+            h_r = (1+(qm_r+qm_v)/qm_cb)*ff_main.ht-(qm_r+qm_v)/qm_cb*h_r
             h_rold = h_r
             
             qm_r += qm_r0*(t_hxt-t_hxa) * rel_fac
@@ -590,7 +593,7 @@ def h2dual(params, t_cbt, t_hxt, p_cbt, pcc=True, filename="", v=v0, tolerance=t
 
 if __name__ == "__main__":
 
-    t_bk = 200  
+    t_bk = 600  
     t_wu = 100
     
     p_bk = 1.33e6
@@ -629,17 +632,17 @@ if __name__ == "__main__":
     }
     
     
-    # print("reference")
-    # reference(ref_params, 399.15, p_bk, filename="test.csv")
+    print("reference")
+    reference(ref_params, 399.15, p_bk, filename="ref.csv")
     
     print("\nh2dual")
-    h2dual(dual_params, t_bk, t_wu, p_bk, pcc=True, filename="test.csv")
+    h2dual(dual_params, t_bk, t_wu, p_bk, pcc=True, filename="dual.csv")
     
-    # print("\nh2pump")
-    # h2pump(pump_params, t_bk, t_wu, p_bk, pcc=True, filename="test.csv")
+    print("\nh2pump")
+    h2pump(pump_params, t_bk, t_wu, p_bk, pcc=True, filename="pump.csv")
     
-    # print("\nh2after")
-    # h2after(after_params, t_bk, t_wu, p_bk, pcc=True, filename="test.csv")
+    print("\nh2after")
+    h2after(after_params, t_bk, t_wu, p_bk, pcc=True, filename="after.csv")
     
 
 
