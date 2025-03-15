@@ -207,7 +207,7 @@ def get_dh(qm_cb, t_cb, p_cb, t0, p0, v):
     dH = qm_cb * (h2flow.calc_ht(t_cb, p_cb, 0) - h2flow.calc_ht(t0, p0, v))
     return dH
 
-def h2pump(params, t_cbt, t_hxt, p_cbt, pcc=True, filename="", v=v0, tolerance=tolerance):
+def h2pump(params, t_cbt, t_hxt, p_cbt, pcc=True, corr=True, filename="", v=v0, tolerance=tolerance):
     # unpack params dict
     p0, t0 = itemgetter("p0","t0")(params)
     Q_fohe, tpr_fohe, tpr_phc, dT = itemgetter("Q_fohe","tpr_fohe", "tpr_phc", "dT")(params)
@@ -217,8 +217,9 @@ def h2pump(params, t_cbt, t_hxt, p_cbt, pcc=True, filename="", v=v0, tolerance=t
     
     start = time.time()
     
-    # correct combustion chamber fuel mass flow for temperature
-    qm_cb0 = qm_cb0 * lhv_h2_200 / (lhv_h2_200 - h2flow.h2.calc_H2_enthalpy(200, 1e6) + h2flow.h2.calc_H2_enthalpy(t_cbt, 1e6))
+    if corr:
+        # correct combustion chamber fuel mass flow for temperature
+        qm_cb0 = qm_cb0 * lhv_h2_200 / (lhv_h2_200 - h2flow.h2.calc_H2_enthalpy(200, 1e6) + h2flow.h2.calc_H2_enthalpy(t_cbt, 1e6))
     
     # guess starting values for independent variables
     qm_r = qm_cb0 * (h2flow.calc_ht(t_hxt, p_cbt, v)-h2flow.calc_ht(t0, p0, v))/(h2flow.calc_ht(t_cbt, p_cbt, v)-h2flow.calc_ht(t_hxt, p_cbt, v))
@@ -283,7 +284,7 @@ def h2pump(params, t_cbt, t_hxt, p_cbt, pcc=True, filename="", v=v0, tolerance=t
             
             # apply injector pressure loss
             ff_cb.heat_exchanger(0, (h2flow.calc_pt(ff_cb.t, ff_cb.p, ff_cb.v)-dp_inj)/h2flow.calc_pt(ff_cb.t, ff_cb.p, ff_cb.v))
-            p_cba = h2flow.calc_pt(ff_main.t, ff_main.p, ff_main.v)
+            p_cba = h2flow.calc_pt(ff_cb.t, ff_cb.p, ff_cb.v)
             t_cba = ff_cb.t + ff_cb.v**2/(2*h2flow.h2.calc_H2_cp(ff_cb.t, ff_cb.p))
         
             
@@ -413,7 +414,7 @@ def h2after(params, t_cbt, t_hxt, p_cbt, pcc=True, filename="", v=v0, tolerance=
             
             # apply injector pressure loss
             ff_cb.heat_exchanger(0, (h2flow.calc_pt(ff_cb.t, ff_cb.p, ff_cb.v)-dp_inj)/h2flow.calc_pt(ff_cb.t, ff_cb.p, ff_cb.v))
-            p_cba = h2flow.calc_pt(ff_main.t, ff_main.p, ff_main.v)
+            p_cba = h2flow.calc_pt(ff_cb.t, ff_cb.p, ff_cb.v)
             t_cba = ff_cb.t + ff_cb.v**2/(2*h2flow.h2.calc_H2_cp(ff_cb.t, ff_cb.p))
             
             p_hpfp_old = p_hpfp
@@ -539,7 +540,7 @@ def h2dual(params, t_cbt, t_hxt, p_cbt, pcc=True, filename="", v=v0, tolerance=t
             
             # apply injector pressure loss
             ff_cb.heat_exchanger(0, (h2flow.calc_pt(ff_cb.t, ff_cb.p, ff_cb.v)-dp_inj)/h2flow.calc_pt(ff_cb.t, ff_cb.p, ff_cb.v))
-            p_cba = h2flow.calc_pt(ff_main.t, ff_main.p, ff_main.v)
+            p_cba = h2flow.calc_pt(ff_cb.t, ff_cb.p, ff_cb.v)
             t_cba = ff_cb.t + ff_cb.v**2/(2*h2flow.h2.calc_H2_cp(ff_cb.t, ff_cb.p))
             
             p_hpfp_old = p_hpfp
@@ -619,6 +620,11 @@ if __name__ == "__main__":
         "tpr_phc": tpr_phc, "dT": dT,"eta_r": eta_v, "eta_hpfp": eta_p, 
         "qm_cb0": qm_cb, "dp_l": dp_l, "dp_inj":dp_inj
     }
+    brewer_params = {
+        "p0": p0,"t0": t0, "Q_fohe": 0,"tpr_fohe": 1, 
+        "tpr_phc": 1, "dT": 0,"eta_r": 0.71, "eta_hpfp": 0.154, 
+        "qm_cb0": 0.166, "dp_l": 75.5e3, "dp_inj":168.9e3
+    }
     after_params = {
         "p0": p0,"t0": t0, "Q_fohe": Q_fohe,"tpr_fohe": tpr_fohe, 
         "tpr_phc": tpr_phc, "dT": dT,"eta_r": eta_v, "eta_hpfp": eta_v, 
@@ -632,17 +638,20 @@ if __name__ == "__main__":
     }
     
     
-    print("reference")
-    reference(ref_params, 399.15, p_bk, filename="ref.csv")
+    # print("reference")
+    # reference(ref_params, 399.15, p_bk, filename="ref.csv")
     
-    print("\nh2dual")
-    h2dual(dual_params, t_bk, t_wu, p_bk, pcc=True, filename="dual.csv")
+    # print("\nh2dual")
+    # h2dual(dual_params, t_bk, t_wu, p_bk, pcc=True, filename="dual.csv")
+    
+    # print("\nh2pump")
+    # h2pump(pump_params, t_bk, t_wu, p_bk, pcc=True, filename="pump.csv")
+    
+    # print("\nh2after")
+    # h2after(after_params, t_bk, t_wu, p_bk, pcc=True, filename="after.csv")
     
     print("\nh2pump")
-    h2pump(pump_params, t_bk, t_wu, p_bk, pcc=True, filename="pump.csv")
-    
-    print("\nh2after")
-    h2after(after_params, t_bk, t_wu, p_bk, pcc=True, filename="after.csv")
+    h2pump(brewer_params, 677, 200, 1516.2e3, pcc=True, corr=False, filename="brewer.csv")
     
 
 
