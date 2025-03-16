@@ -35,7 +35,7 @@ for subfolder in subfolders:
     with open(file_path) as jsonfile:
         data.update({name: json.load(jsonfile)})
 stylelist = ["-", ":", "--", "-."]
-colors = ["red", "cyan", "lawngreen", "navy", "orangered", "green"]
+colors = ["orangered", "navy", "red", "cyan"]
 
 ###############################################################################
 ######################## Leistungsbedarf Systemvergleich ######################
@@ -67,6 +67,85 @@ for t in t_list:
     fig.savefig(os.path.join(save_dir, 'arch_' + str(t) + '.png'), dpi=600, bbox_inches="tight")
     plt.show()
     
+
+###############################################################################
+######################## Powersplit - TW ######################
+###############################################################################
+
+
+for key, name in zip(data, systemnames):
+    data_i = data[key]
+    P_mfp = np.array(data_i["P_mfp"])
+    t_wu = np.array(data_i["t_wu"])
+    t_bk = np.array(data_i["t_bk"])
+    if "P_r" in data_i:
+        if np.array(data_i["P_r"]).size == P_mfp.size:
+            P_r = np.array(data_i["P_r"])
+    idx = t_bk == 300
+    t_wu1 = t_wu[idx]
+    P_mfp1 = P_mfp[idx]
+    t_bk1 = t_bk[idx]
+    P_r1 = P_r[idx]
+    if name == "Pumpe":
+        plt.plot(t_wu1, P_mfp1/1e3, label="HPFP", color=colors[0], linestyle=stylelist[0])
+    else:
+        plt.plot(t_wu1, P_mfp1/1e3, label="HPFC", color=colors[0], linestyle=stylelist[0])
+    plt.plot(t_wu1, P_r1/1e3, label="RV", color=colors[1], linestyle=stylelist[1])
+    
+    plt.legend(loc="best")
+    plt.xlabel("Wärmeübertrager-Eintrittstemperatur $T_{W}$ [K]")
+    plt.ylabel("Leistung $P_{i}$ [kW]")
+    plt.xlim(twu_lims)
+    plt.ylim([0,200])
+    fig = mpl.pyplot.gcf()
+    fig.set_size_inches(16/2.54, 8.5/2.54)
+    fig.savefig(os.path.join(save_dir, name+'_powersplit.png'), dpi=600, bbox_inches="tight")
+    plt.show()
+    
+###############################################################################
+######################## Powersplit - TW ######################
+###############################################################################
+
+fig, axs = plt.subplots(1,2, sharey=True)
+fig.subplots_adjust(wspace=0.12)
+for tbk, j in zip([300, 400], [0,1]):
+    for key, name, i in zip(data, systemnames, [0,1,2]):
+        data_i = data[key]
+        P_mfp = np.array(data_i["P_mfp"])
+        t_wu = np.array(data_i["t_wu"])
+        t_bk = np.array(data_i["t_bk"])
+        Q = np.array(data_i["Q"])
+        if "P_r" in data_i:
+            if np.array(data_i["P_r"]).size == P_mfp.size:
+                P_r = np.array(data_i["P_r"])
+        idx = t_bk == tbk
+        t_wu1 = t_wu[idx]
+        P_mfp1 = P_mfp[idx]
+        t_bk1 = t_bk[idx]
+        P_r1 = P_r[idx]
+        Q1 = Q[idx]
+        
+        if name == "Pumpe":
+            axs[j].plot(t_wu1, (P_mfp1+P_r1)/1e3, label=name, color=colors[i], linestyle=stylelist[i])
+        else:
+            axs[j].plot(t_wu1, (P_mfp1+P_r1)/1e3, label=name, color=colors[i], linestyle=stylelist[i])
+        #plt.plot(t_wu1, Q1/1e3, label="$Q$", color=colors[i], linestyle=stylelist[1])
+        axs[j].set_title("$T_{BK}=" + str(tbk)+ "$ K")
+        plt.ylim([0,200])
+handles, labels = plt.gca().get_legend_handles_labels()
+axs[1].legend(handles, labels, loc="upper right")
+fig = mpl.pyplot.gcf()
+fig.set_size_inches(16/2.54, 8.5/2.54)
+#fig.subplots_adjust(wspace=0.1, hspace=0.1)
+axs[0].set_ylabel("Leistung $P_{gsmt}$ [kW]")
+fig.add_subplot(111, frameon=False)
+axs[0].set_xlim([100,250])
+axs[1].set_xlim([100,250])
+plt.tick_params(labelcolor='none', which='both', top=False, bottom=False, left=False, right=False)
+plt.xlabel("Wärmeübertrager-Eintrittstemperatur $T_{W}$ [K]")
+#axs[0].legend(ncols=3, bbox_to_anchor=(0.5,1.2), loc="upper center")
+fig.savefig(os.path.join(save_dir, 'sunmary_powersplit.png'), dpi=600, bbox_inches="tight")
+plt.show()
 
 ###############################################################################
 ################# Leistungsbedarf Pumpe T_W Vergleich #########################
@@ -228,7 +307,7 @@ for subfolder,name in zip(subfolders, systemnames):
     else:
         plt.legend([p3, p4, p2, p1], ["$P_{HPFP}$", "$P_{R}$", "$\dot{Q}_{PHC}$", "$\dot{Q}_{FOHE}$"], loc="lower right", framealpha=1)
 
-    plt.xlabel("$T_{BK}$ [K]")
+    plt.xlabel("Brennkammer-Eintrittstemperatur $T_{BK}$ [K]")
     plt.ylabel("Leistung [kW]")
     plt.title("Architektur: " + name)
     plt.xlim([150, 320])
@@ -325,7 +404,7 @@ for subfolder,name in zip(subfolders, systemnames):
     else:
         plt.legend([p3, p4, p2, p1], ["$P_{HPFP}$", "$P_{R}$", "$\dot{Q}_{PHC}$", "$\dot{Q}_{FOHE}$"], loc="lower right", framealpha=1)
 
-    plt.xlabel("$T_{BK}$ [K]")
+    plt.xlabel("Brennkammer-Eintrittstemperatur $T_{BK}$ [K]")
     plt.ylabel("Leistung [kW]")
     plt.title("Architektur: " + name)
     plt.xlim([150, 320])
@@ -356,31 +435,47 @@ for subfolder,name in zip(subfolders, systemnames):
 
 
 t = 300
-
-for key, style, name, color in zip(data, stylelist, systemnames, colors):
+fig, ax1 = plt.subplots()
+ax2 = ax1.twinx()
+for key, name, color in zip(data, systemnames, colors):
     data_i = data[key]
     P_mfp = np.array(data_i["P_mfp"])
     t_bk = np.array(data_i["t_bk"])
     t_wu = np.array(data_i["t_wu"])
     qm_r = np.array(data_i["qm_r"])
+    qm_cb = np.array(data_i["qm_cb"])
+    qm_r = qm_r/qm_cb
     if "P_r" in data_i:
         if np.array(data_i["P_r"]).size == P_mfp.size:
             P_mfp += np.array(data_i["P_r"])
             RV_ratio = np.array(data_i["P_r"])/P_mfp
+    if "qm_v" in data_i:
+        if np.array(data_i["qm_v"]).size == P_mfp.size:
+            qm_r += np.array(data_i["qm_v"])
     idx = t_bk == t
     t_wu=t_wu[idx]
     qm_r = qm_r[idx]
     RV_ratio = RV_ratio[idx]
-    plt.plot(t-t_wu, RV_ratio, color=color, label=name)
-plt.legend()
-plt.xlabel("Temperaturdifferenz $T_{BK}-T_{W}$ [K]")
-plt.ylabel("$P_{RV}/P_{mech}$ [kW]")
+    ax1.plot(t-t_wu, RV_ratio, color=color, label="$P_{RV}/P_{mech}$ "+name, linestyle=stylelist[0])
+    ax2.plot(t-t_wu, qm_r, color=color, label="$\dot{m}_r/\dot{m}_{BK}$ "+name, linestyle=stylelist[1])
+h1, l1 = ax1.get_legend_handles_labels()
+h2, l2 = ax2.get_legend_handles_labels()
+legend = ax1.legend(h1,l1, loc="upper right", fontsize=8)
+legend2 = ax2.legend(h2, l2,loc="lower left", fontsize=8)
+
+
+
+ax1.set_xlabel("Temperaturdifferenz $T_{BK}-T_{W}$ [K]")
+ax1.set_ylabel("$P_{RV}/P_{mech}$ [-]")
+ax2.set_ylabel("$\dot{m}_r/\dot{m}_{BK}$")
 plt.xlim([20,200])
-plt.ylim([0,1])
+ax1.set_ylim([0,1])
+ax2.set_ylim([0,5])
 fig = mpl.pyplot.gcf()
 fig.set_size_inches(16/2.54, 10.5/2.54)
 fig.savefig(os.path.join(save_dir, 'rezirkulation.png'), dpi=600, bbox_inches="tight")
 plt.show()
+
 
 
 

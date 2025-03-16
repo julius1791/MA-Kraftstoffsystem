@@ -113,7 +113,7 @@ class H2Flow:
         
         pt0 = calc_pt(self.t, self.p, self.v)                           # Pa
         ht0 = calc_ht(self.t, self.p, self.v)                           # J/kg
-        t1 = sat_t(self.p) + 5
+        t1 = sat_t(self.p) + 3
         self.t = t1
         ht1 = calc_ht(t1, self.p, self.v)                               # J/kg
         pt1 = pt0 * tpr
