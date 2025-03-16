@@ -394,7 +394,7 @@ def h2after(params, t_cbt, t_hxt, p_cbt, pcc=True, filename="", v=v0, tolerance=
             ff_r = h2flow.H2Flow(qm_r, h2flow.calc_t(h_r, p_r, v, True), p_r, v, True)
             
             # calculate recirculation compression
-            P_r, _ = ff_r.pump_hydraulic(p_hpfp, eta_r)
+            P_r, t_r = ff_r.pump_hydraulic(p_hpfp, eta_r)
             
             # mix recirculation flow into main h2 flow
             t_hxa, _ = ff_main.mix_flows(ff_r)
@@ -424,6 +424,7 @@ def h2after(params, t_cbt, t_hxt, p_cbt, pcc=True, filename="", v=v0, tolerance=
             
             h_rold = h_r
             h_r = (1+qm_r/qm_cb)*ff_main.ht-qm_r/qm_cb*h_r
+            p_r = ff_main.p
             
             qm_r += qm_r0*(t_hxt-t_hxa) * rel_fac
             qm_r = max(0.001, qm_r)
@@ -523,7 +524,7 @@ def h2dual(params, t_cbt, t_hxt, p_cbt, pcc=True, filename="", v=v0, tolerance=t
             ff_r = h2flow.H2Flow(qm_r, h2flow.calc_t(h_r, p_r, v, True), p_r, v, True)
             
             # calculate recirculation compressor
-            P_r, _ = ff_r.pump_hydraulic(p_hpfp, eta_r)
+            P_r, t_r = ff_r.pump_hydraulic(p_hpfp, eta_r)
             
             # mix second recirculation
             t_hxa, _ = ff_main.mix_flows(ff_r)
@@ -596,8 +597,8 @@ def h2dual(params, t_cbt, t_hxt, p_cbt, pcc=True, filename="", v=v0, tolerance=t
 
 if __name__ == "__main__":
 
-    t_bk = 600  
-    t_wu = 100
+    t_bk = 300  
+    t_wu = 250
     
     p_bk = 1.33e6
     
@@ -643,17 +644,17 @@ if __name__ == "__main__":
     # print("reference")
     # reference(ref_params, 399.15, p_bk, filename="ref.csv")
     
-    # print("\nh2dual")
-    # h2dual(dual_params, t_bk, t_wu, p_bk, pcc=True, filename="dual.csv")
+    print("\nh2dual")
+    h2dual(dual_params, t_bk, t_wu, p_bk, pcc=True, filename="dual.csv")
     
     # print("\nh2pump")
     # h2pump(pump_params, t_bk, t_wu, p_bk, pcc=True, filename="pump.csv")
     
-    # print("\nh2after")
-    # h2after(after_params, t_bk, t_wu, p_bk, pcc=True, filename="after.csv")
+    print("\nh2after")
+    h2after(after_params, t_bk, t_wu, p_bk, pcc=True, filename="after.csv")
     
-    print("\nh2pump")
-    h2pump(brewer_params, 264, 200, 1516.2e3, pcc=False, corr=False, filename="brewer.csv")
+    # print("\nh2pump")
+    # h2pump(brewer_params, 264, 200, 1516.2e3, pcc=False, corr=False, filename="brewer.csv")
     
 
 
