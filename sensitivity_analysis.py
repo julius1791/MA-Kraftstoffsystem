@@ -8,7 +8,7 @@ import json
 import numpy as np
 from pathlib import Path
 
-func = "dual"
+func = "after"
 
 # results folder (!CHANGE IN fuelsystem2!!!)
 results_dir = "sensitivity"
@@ -28,7 +28,7 @@ eta_ps = 0.146
 eta_v = 0.71
 eta_vs = 0.67
 t0 = 25.2
-p0 = 4.2e5
+p0 = 3.45e5
 Q_fohe = 159e3
 Q_fohes = Q_fohe*0.95
 tpr_fohe = 0.95

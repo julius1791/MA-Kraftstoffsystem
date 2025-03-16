@@ -259,7 +259,7 @@ def h2pump(params, t_cbt, t_hxt, p_cbt, pcc=True, corr=True, filename="", v=v0, 
             ff_main = h2flow.H2Flow(qm_cb, t0, p0, v, False)
             
             # hpfp calculation
-            P_hpfp, _ = ff_main.pump_hydraulic(p_hpfp, eta_hpfp)
+            P_hpfp, t_mfp = ff_main.pump_hydraulic(p_hpfp, eta_hpfp)
             
             # initialise recirculation h2 flow
             ff_r =h2flow.H2Flow(qm_r, h2flow.calc_t(h_r, p_r, v, True), p_r, v, True)
@@ -293,6 +293,8 @@ def h2pump(params, t_cbt, t_hxt, p_cbt, pcc=True, corr=True, filename="", v=v0, 
             p_hpfp += (p_cbt - p_cba) * rel_fac_2
             
             p_r = ff_main.p
+            if not corr:
+                p_r = p_hpfp
             h_rold = h_r
             h_r = (1+qm_r/qm_cb)*ff_main.ht-qm_r/qm_cb*h_r
             
@@ -603,7 +605,7 @@ if __name__ == "__main__":
     eta_p = 0.154
     eta_v = 0.71
     t0 = 25.2
-    p0 = 4.2e5
+    p0 = 3.45e5
     Q_fohe = 159e3
     tpr_fohe = 0.95
     tpr_phc = 0.98
@@ -621,9 +623,9 @@ if __name__ == "__main__":
         "qm_cb0": qm_cb, "dp_l": dp_l, "dp_inj":dp_inj
     }
     brewer_params = {
-        "p0": p0,"t0": t0, "Q_fohe": 0,"tpr_fohe": 1, 
+        "p0": 344.7e3,"t0": t0, "Q_fohe": 0,"tpr_fohe": 1, 
         "tpr_phc": 1, "dT": 0,"eta_r": 0.71, "eta_hpfp": 0.154, 
-        "qm_cb0": 0.166, "dp_l": 75.5e3, "dp_inj":168.9e3
+        "qm_cb0": 0.166, "dp_l": 30e3, "dp_inj":168.9e3+45.5e3
     }
     after_params = {
         "p0": p0,"t0": t0, "Q_fohe": Q_fohe,"tpr_fohe": tpr_fohe, 
@@ -651,7 +653,7 @@ if __name__ == "__main__":
     # h2after(after_params, t_bk, t_wu, p_bk, pcc=True, filename="after.csv")
     
     print("\nh2pump")
-    h2pump(brewer_params, 677, 200, 1516.2e3, pcc=True, corr=False, filename="brewer.csv")
+    h2pump(brewer_params, 264, 200, 1516.2e3, pcc=False, corr=False, filename="brewer.csv")
     
 
 

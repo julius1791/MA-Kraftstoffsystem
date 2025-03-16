@@ -7,17 +7,17 @@ from gather_data import get_Data
 from pathlib import Path
 
 
-func = "after"
+func = "dual"
 
 # results folder
-results_dir = "results3"
+results_dir = "results"
 
 # subfolder
 folders = ["pump", "after", "dual"]
 
 
-t_bk_list = range(160, 620, 20)
-t_wu_list = range(100, 300, 20)
+t_bk_list = range(140, 610, 10)
+t_wu_list = range(100, 290, 10)
 
 p_bk = 1.33e6
 
@@ -25,7 +25,7 @@ qm_cb = 0.10998
 eta_p = 0.154
 eta_v = 0.71
 t0 = 25.2
-p0 = 4.2e5
+p0 = 3.45e5
 Q_fohe = 159e3
 tpr_fohe = 0.95
 tpr_phc = 0.98
