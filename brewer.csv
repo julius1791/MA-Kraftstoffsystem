@@ -1,0 +1,9 @@
+architecture,t_cbt,t_hxt,eta_hpfp,eta_r,p_cbt,qm_cb0,t0,p0,tpr_hx,Q_hx,pcc,v
+pump,264,200,0.154,0.71,1516200.0,0.166,25.2,344700.0,1,0,False,0
+P_hpfp,P_rv,p_hpfp
+23428.789272433463,0.0,1760600.0
+Q,Q_phc
+539835.6879681499,539835.6879681499
+qm_cb,qm_phc/qm_t,qm_r,qm_v,qm
+0.166,0.0,0.43915029869754485,0,0.166
+number of iterations,9,Execution time: ,1.307037591934204
