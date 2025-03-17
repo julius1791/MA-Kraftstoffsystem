@@ -21,6 +21,7 @@ def get_Data(folder, subfolder, write=True):
     qm_v = list()
     qm_cb = list()
     qm_phc = list()
+    qm_pot = list()
     Q = list()
     params = dict()
     for file in files:
@@ -46,6 +47,7 @@ def get_Data(folder, subfolder, write=True):
                 qm_r.append(float(qm_row[2]))
                 qm_cb.append(float(qm_row[0]))
                 qm_phc.append(float(qm_row[1]))
+                qm_pot.append(float(qm_row[5]))
                 if param_row[0] == "dual":
                     qm_v.append(float(qm_row[3]))
                 P_r.append(float(P_row[1]))
