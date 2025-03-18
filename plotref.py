@@ -52,11 +52,20 @@ save_dir = os.path.join(os.getcwd(), "diagrams")
 
 colors = ["darkred", "orangered", "navy", "cyan"]
 label_list = ["$P_{HPFP/C}$", "$P_{RV/LPFP}$", "$\dot{Q}_{FOHE}$", "$\dot{Q}_{PHC}$"]
+# # tw=250
+# data_list = np.array([
+#     [1713.758305, 663.9556996, 127e3, 0],
+#     [17415.53696, 140419.1372, 159e3, 176184.3309],
+#     [39300.28627, 114551.1699, 159e3, 180081.0622],
+#     [43978.56931, 127221.6915, 159e3, 162949.7701],
+# ])/1e3
+
+# tw=160
 data_list = np.array([
-    [1713.758302, 663.9537217, 127e3, 0],
-    [17104.04348, 137864.765, 159e3, 170232.0819],
-    [38613.0293, 112593.5955, 159e3, 174105.822],
-    [43131.6977, 124787.0186, 159e3, 156788.6055],
+    [1713.758305, 663.9556996, 127e3, 0],
+    [17347.81637, 36680.74905, 159e3, 278073.3287],
+    [39155.20789, 25198.42996, 159e3, 267759.2037],
+    [43819.02388, 27917.47608, 159e3, 260612.5962],
 ])/1e3
 
 
@@ -89,6 +98,26 @@ fig = mpl.pyplot.gcf()
 fig.set_size_inches(16/2.54, 9/2.54)
 
 
-fig.savefig(os.path.join(save_dir, 'refcomp.png'), dpi=600, bbox_inches="tight")
+fig.savefig(os.path.join(save_dir, 'refcomp.pdf'), dpi=600, bbox_inches="tight")
 plt.show()
-    
+
+
+H_h2 = 119.96 #MJ/kg
+H_jeta = 43.1 # MJ/kg
+
+energy = np.array([0.311338*H_jeta, 0.11155807*H_h2, 0.111560557*H_h2, 0.111614224*H_h2]) - np.array([0.311338*H_jeta, 0.311338*H_jeta, 0.311338*H_jeta, 0.311338*H_jeta])
+
+
+
+
+fig, ax = plt.subplots(1, 2, width_ratios=[1, 5])
+ax[1].bar(systemnames, energy, bottom=[0,0,0,0], width=0.5, color="navy")
+ax[1].set_ylabel("Energieverbrauch Differenz $\Delta \dot{H}_{ref}$ [MW]")
+ax[0].bar("Referenz", 0.311338*H_jeta, bottom=0, width=0.5, color="orangered")
+ax[0].set_ylabel("Energieverbrauch $\dot{H}$ [MW]")
+fig.set_size_inches(16/2.54, 9/2.54)
+ax[0].set_position([0, 0.05, 0.1, 0.9])
+ax[1].set_position([0.3, 0.05, 0.65, 0.9])
+fig.savefig(os.path.join(save_dir, 'refenergy.pdf'), dpi=600, bbox_inches="tight")
+plt.show()
+

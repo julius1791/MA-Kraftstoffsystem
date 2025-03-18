@@ -251,8 +251,9 @@ def h2pump(params, t_cbt, t_hxt, p_cbt, pcc=True, corr=True, filename="", v=v0, 
             
             # calculate h2 requirements of parallel combustion
             if pcc:
-                qm_cb_pot = (P_hpfp + P_r) / (eta_pot*(lhv_h2_200 - h2flow.h2.calc_H2_enthalpy(200, p_cbt) + h2flow.h2.calc_H2_enthalpy(t_cbt, p_cbt)))
-                qm_cb = qm_cb0 + parallel_combustion(max(0, dH-P_r-P_hpfp-Q_fohe), t_cbt, t_hx=t_phc+dT) + qm_cb_pot
+                qm_phc, P_z = parallel_combustion(max(0, dH-P_r-P_hpfp-Q_fohe), t_cbt, t_hx=t_phc+dT)
+                qm_cb_pot = (P_hpfp + P_r + P_z) / (eta_pot*(lhv_h2_200 - h2flow.h2.calc_H2_enthalpy(200, p_cbt) + h2flow.h2.calc_H2_enthalpy(t_cbt, p_cbt)))
+                qm_cb = qm_cb0 + qm_phc + qm_cb_pot
                 
                 dH = dH0 * qm_cb / qm_cb0
                 
@@ -380,8 +381,9 @@ def h2after(params, t_cbt, t_hxt, p_cbt, pcc=True, filename="", v=v0, tolerance=
         while condition_bool:
             # calculate h2 requirements of parallel combustion
             if pcc:
-                qm_cb_pot = (P_hpfp + P_r) / (eta_pot*(lhv_h2_200 - h2flow.h2.calc_H2_enthalpy(200, p_cbt) + h2flow.h2.calc_H2_enthalpy(t_cbt, p_cbt)))
-                qm_cb = qm_cb0 + parallel_combustion(max(0, dH-P_r-P_hpfp-Q_fohe), t_cbt, t_hx=t_phc+dT) + qm_cb_pot
+                qm_phc, P_z = parallel_combustion(max(0, dH-P_r-P_hpfp-Q_fohe), t_cbt, t_hx=t_phc+dT)
+                qm_cb_pot = (P_hpfp + P_r + P_z) / (eta_pot*(lhv_h2_200 - h2flow.h2.calc_H2_enthalpy(200, p_cbt) + h2flow.h2.calc_H2_enthalpy(t_cbt, p_cbt)))
+                qm_cb = qm_cb0 + qm_phc + qm_cb_pot
                 dH = dH0 * qm_cb / qm_cb0
             else:
                 qm_cb = qm_cb0
@@ -506,8 +508,9 @@ def h2dual(params, t_cbt, t_hxt, p_cbt, pcc=True, filename="", v=v0, tolerance=t
         while condition_bool:
             
             if pcc:
-                qm_cb_pot = (P_hpfp + P_r) / (eta_pot*(lhv_h2_200 - h2flow.h2.calc_H2_enthalpy(200, p_cbt) + h2flow.h2.calc_H2_enthalpy(t_cbt, p_cbt)))
-                qm_cb = qm_cb0 + parallel_combustion(max(0, dH-P_r-P_hpfp-Q_fohe), t_cbt, t_hx=t_phc+dT) + qm_cb_pot
+                qm_phc, P_z = parallel_combustion(max(0, dH-P_r-P_hpfp-Q_fohe), t_cbt, t_hx=t_phc+dT)
+                qm_cb_pot = (P_hpfp + P_r + P_z) / (eta_pot*(lhv_h2_200 - h2flow.h2.calc_H2_enthalpy(200, p_cbt) + h2flow.h2.calc_H2_enthalpy(t_cbt, p_cbt)))
+                qm_cb = qm_cb0 + qm_phc + qm_cb_pot
                 dH = dH0 * qm_cb / qm_cb0
             else:
                 qm_cb = qm_cb0
@@ -605,7 +608,7 @@ def h2dual(params, t_cbt, t_hxt, p_cbt, pcc=True, filename="", v=v0, tolerance=t
 if __name__ == "__main__":
 
     t_bk = 300  
-    t_wu = 250
+    t_wu = 160
     
     p_bk = 1.33e6
     
@@ -648,17 +651,17 @@ if __name__ == "__main__":
     }
     
     
-    print("reference")
-    reference(ref_params, 399.15, p_bk, filename="ref.csv")
+    # print("reference")
+    # reference(ref_params, 399.15, p_bk, filename="ref.csv")
     
-    print("\nh2dual")
-    h2dual(dual_params, t_bk, t_wu, p_bk, pcc=True, filename="dual.csv")
+    # print("\nh2dual")
+    # h2dual(dual_params, t_bk, t_wu, p_bk, pcc=True, filename="dual.csv")
     
     print("\nh2pump")
     h2pump(pump_params, t_bk, t_wu, p_bk, pcc=True, filename="pump.csv")
     
-    print("\nh2after")
-    h2after(after_params, t_bk, t_wu, p_bk, pcc=True, filename="after.csv")
+    # print("\nh2after")
+    # h2after(after_params, t_bk, t_wu, p_bk, pcc=True, filename="after.csv")
     
     # print("\nh2pump")
     # h2pump(brewer_params, 264, 200, 1516.2e3, pcc=False, corr=False, filename="brewer.csv")

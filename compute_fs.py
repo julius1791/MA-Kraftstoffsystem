@@ -7,7 +7,7 @@ from gather_data import get_Data
 from pathlib import Path
 
 
-func = "dual"
+func = "pump"
 
 # results folder
 results_dir = "results"
@@ -16,7 +16,7 @@ results_dir = "results"
 folders = ["pump", "after", "dual"]
 
 
-t_bk_list = range(150, 410, 10)
+t_bk_list = range(150, 510, 10)
 t_wu_list = range(100, 290, 10)
 
 p_bk = 1.33e6

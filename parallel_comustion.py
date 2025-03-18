@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+# component efficiencies
+eta_pot = 0.74
+eta_fgds = 0.997
+
 # heat capacities
 cp_o2=919.63           # J/kgK
 cp_n2=1041.3          # J/kgK
@@ -25,7 +29,7 @@ mr_o2_h2 = Mr_o2/(2*Mr_h2)
 # ratio of water produced
 mr_h2o_h2 = Mr_h2o/Mr_h2
 
-def parallel_combustion(Q, t_h2, t_air=272.63, t_hx=400, phi=0.3):
+def parallel_combustion(Q, t_h2, t_air=272.63, t_u =218.81, t_hx=400, phi=0.25):
     """
     Calculate the mass flow of hydrogen to a bleed air supplied 
     parallel combustion chamber required to supply the set amount of heat  
@@ -45,8 +49,11 @@ def parallel_combustion(Q, t_h2, t_air=272.63, t_hx=400, phi=0.3):
 
     Returns
     -------
-    qm_h2 : float
+    m_h2 : float
         hydrogen mass flow (kg/s)
+    P_z : float
+        additional (fan induced) turbine power due to bleed air extraction
+        
 
     """
     if phi > 1:
@@ -67,7 +74,15 @@ def parallel_combustion(Q, t_h2, t_air=272.63, t_hx=400, phi=0.3):
 
     m_h2 = Q/(dh2_n2+dh2_o2+dh2_o2b+dh2_h2-dh2_h2o)
     
-    return m_h2
+    # mass of air 
+    m_bo2 = m_h2 * mr_bo2_h2
+    m_n2 = m_h2*mr_n2_h2
+    m_o2 = m_h2*mr_o2_h2
+    mcp_air = (m_bo2*m_o2)*cp_o2 +m_n2*cp_n2
+    P_z = mcp_air*(t_air-t_u)/eta_pot/eta_fgds
+    
+    
+    return m_h2, P_z
 
 if __name__ == "__main__":
-    print(parallel_combustion(450e3, 400, phi=0.3))
+    print(parallel_combustion(450e3, 400, phi=0.2))

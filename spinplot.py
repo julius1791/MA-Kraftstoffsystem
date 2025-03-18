@@ -35,5 +35,5 @@ fig = mpl.pyplot.gcf()
 fig.set_size_inches(16/2.54, 9/2.54)
 
 
-fig.savefig(os.path.join(save_dir, 'spin.png'), dpi=600, bbox_inches="tight")
+fig.savefig(os.path.join(save_dir, 'spin.pdf'), dpi=600, bbox_inches="tight")
 plt.show()

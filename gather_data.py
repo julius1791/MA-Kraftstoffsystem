@@ -4,9 +4,9 @@ import pathlib
 import csv
 import json
 
-folder = os.path.join(os.getcwd(), "results2")
+folder = os.path.join(os.getcwd(), "results")
 
-subfolders = ["pump", "after", "pre", "dual"]
+subfolders = ["pump", "after", "dual"]
 
 def get_Data(folder, subfolder, write=True):  
     sf_path = os.path.join(folder, subfolder)
@@ -56,7 +56,7 @@ def get_Data(folder, subfolder, write=True):
                     if i in [1,2,6]:
                         continue
                     params.update({name: value})
-    content = {"Parameters": params, "t_bk": t_bk, "t_wu": t_wu, "P_mfp": P_mfp, "P_r": P_r, "Q": Q, "qm_cb": qm_cb, "qm_r": qm_r, "qm_v": qm_v, "qm_phc": qm_phc}
+    content = {"Parameters": params, "t_bk": t_bk, "t_wu": t_wu, "P_mfp": P_mfp, "P_r": P_r, "Q": Q, "qm_cb": qm_cb, "qm_r": qm_r, "qm_v": qm_v, "qm_phc": qm_phc, "qm_pot": qm_pot}
     json_object = json.dumps(content, indent=4)
     json_fn = os.path.join(folder, subfolder+".json")
     if write:

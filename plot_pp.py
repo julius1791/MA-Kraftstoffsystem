@@ -15,7 +15,7 @@ plt.rc('text', usetex=True)
 par = {'mathtext.default': 'regular'}
 plt.rcParams.update(par)
 
-tbk_lims = [150,400]
+tbk_lims = [150,500]
 twu_lims = [100,280]
 
 folder = os.path.join(os.getcwd(), "results")
@@ -98,7 +98,7 @@ plt.xlim([max(140,t+20), tbk_lims[1]])
 plt.ylim([0,120])
 fig = mpl.pyplot.gcf()
 fig.set_size_inches(16/2.54, 10.5/2.54)
-fig.savefig(os.path.join(save_dir, 'tbkcomp.png'), dpi=600, bbox_inches="tight")
+fig.savefig(os.path.join(save_dir, 'tbkcomp.pdf'), dpi=600, bbox_inches="tight")
 plt.show()
     
 
@@ -106,9 +106,46 @@ plt.show()
 ###############################################################################
 ######################## Powersplit - single - TW ######################
 ###############################################################################
-for tbk in [300, 400]:
-    fig, ax = plt.subplots()
-    for key, name, color in zip(data, systemnames, colors):
+# for tbk in [300, 400]:
+#     fig, ax = plt.subplots()
+#     for key, name, color in zip(data, systemnames, colors):
+#         data_i = data[key]
+#         P_mfp = np.array(data_i["P_mfp"])
+#         t_wu = np.array(data_i["t_wu"])
+#         t_bk = np.array(data_i["t_bk"])
+#         if "P_r" in data_i:
+#             if np.array(data_i["P_r"]).size == P_mfp.size:
+#                 P_r = np.array(data_i["P_r"])
+#         idx = t_bk == tbk
+#         t_wu1 = t_wu[idx]
+#         P_mfp1 = P_mfp[idx]
+#         t_bk1 = t_bk[idx]
+#         P_r1 = P_r[idx]
+#         if name == "Pumpe":
+#             plt.plot(t_wu1, P_mfp1/1e3, label="HPFP", color=colors[0], linestyle=stylelist[0])
+#         else:
+#             plt.plot(t_wu1, P_mfp1/1e3, label="HPFC", color=colors[0], linestyle=stylelist[0])
+#         plt.plot(t_wu1, P_r1/1e3, label="RV", color=colors[1], linestyle=stylelist[0])
+        
+#         plt.legend(loc="best")
+#         plt.xlabel("Wärmeübertrager-Eintrittstemperatur $T_{W}$ [K]")
+#         plt.ylabel("Leistung $P_{i}$ [kW]")
+#         plt.xlim(twu_lims)
+#         plt.ylim([0,200])
+#         fig = mpl.pyplot.gcf()
+#         fig.set_size_inches(12/2.54, 8.5/2.54)
+#         fig.savefig(os.path.join(save_dir, str(tbk)+name+'_powersplit.png'), dpi=600, bbox_inches="tight")
+#         plt.show()
+
+
+###############################################################################
+######################## Powersplit - single - 2TW ######################
+###############################################################################
+
+
+for key, name in zip(data, systemnames):
+    fig, ax = plt.subplots(1, 2, sharey=True)
+    for tbk, i in zip([300, 400], [0, 1]):
         data_i = data[key]
         P_mfp = np.array(data_i["P_mfp"])
         t_wu = np.array(data_i["t_wu"])
@@ -122,21 +159,24 @@ for tbk in [300, 400]:
         t_bk1 = t_bk[idx]
         P_r1 = P_r[idx]
         if name == "Pumpe":
-            plt.plot(t_wu1, P_mfp1/1e3, label="HPFP", color=colors[0], linestyle=stylelist[0])
+            ax[i].plot(t_wu1, P_mfp1/1e3, label="HPFP", color=colors[0], linestyle=stylelist[0])
         else:
-            plt.plot(t_wu1, P_mfp1/1e3, label="HPFC", color=colors[0], linestyle=stylelist[0])
-        plt.plot(t_wu1, P_r1/1e3, label="RV", color=colors[1], linestyle=stylelist[0])
+            ax[i].plot(t_wu1, P_mfp1/1e3, label="HPFC", color=colors[0], linestyle=stylelist[0])
+        ax[i].plot(t_wu1, P_r1/1e3, label="RV", color=colors[1], linestyle=stylelist[0])
         
         plt.legend(loc="best")
-        plt.xlabel("Wärmeübertrager-Eintrittstemperatur $T_{W}$ [K]")
-        plt.ylabel("Leistung $P_{i}$ [kW]")
-        plt.xlim(twu_lims)
-        plt.ylim([0,200])
-        fig = mpl.pyplot.gcf()
-        fig.set_size_inches(12/2.54, 8.5/2.54)
-        fig.savefig(os.path.join(save_dir, str(tbk)+name+'_powersplit.png'), dpi=600, bbox_inches="tight")
-        plt.show()
-
+        ax[i].set_title("$T_{BK}="+str(tbk)+"$ K")
+        
+        ax[i].set_xlim(twu_lims)
+        ax[i].set_ylim([0,200])
+        
+    fig.supxlabel("Wärmeübertrager-Eintrittstemperatur $T_{W}$ [K]", y=0.1, fontsize=12)
+    ax[0].set_ylabel("Leistung $P_{i}$ [kW]")
+    fig = mpl.pyplot.gcf()
+    fig.set_size_inches(16/2.54, 8.5/2.54)
+    plt.tight_layout()
+    fig.savefig(os.path.join(save_dir, name+'_powersplit.pdf'), dpi=600, bbox_inches="tight")
+    plt.show()
 
 ###############################################################################
 ######################## Powersplit - all - TW ######################
@@ -169,7 +209,7 @@ for tbk in [300, 400]:
     plt.ylim([0,200])
     fig = mpl.pyplot.gcf()
     fig.set_size_inches(16/2.54, 8.5/2.54)
-    fig.savefig(os.path.join(save_dir, str(tbk)+'summary_powersplit.png'), dpi=600, bbox_inches="tight")
+    fig.savefig(os.path.join(save_dir, str(tbk)+'summary_powersplit.pdf'), dpi=600, bbox_inches="tight")
     plt.show()
     
 ###############################################################################
@@ -214,7 +254,7 @@ axs[1].set_xlim([100,250])
 plt.tick_params(labelcolor='none', which='both', top=False, bottom=False, left=False, right=False)
 plt.xlabel("Wärmeübertrager-Eintrittstemperatur $T_{W}$ [K]")
 #axs[0].legend(ncols=3, bbox_to_anchor=(0.5,1.2), loc="upper center")
-fig.savefig(os.path.join(save_dir, 'summary_power.png'), dpi=600, bbox_inches="tight")
+fig.savefig(os.path.join(save_dir, 'summary_power.pdf'), dpi=600, bbox_inches="tight")
 plt.show()
 
 ###############################################################################
@@ -769,7 +809,7 @@ plt.legend([p3, p4, p2, p1], ["$P_{HPFC/P}$", "$P_{RV}$", "$\dot{Q}_{PHC}$", "$\
 
 fig = mpl.pyplot.gcf()
 fig.set_size_inches(16/2.54, 16/2.54)
-fig.savefig(os.path.join(save_dir, 'stackplot_summary.png'), dpi=600, bbox_inches="tight")
+fig.savefig(os.path.join(save_dir, 'stackplot_summary.pdf'), dpi=600, bbox_inches="tight")
 plt.show()
 
 
