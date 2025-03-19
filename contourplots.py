@@ -101,8 +101,8 @@ for arch, plot, name in zip(subfolders, [0,1,2], systemnames):
     #cb = plt.colorbar(cm.ScalarMappable(norm=norm, cmap="Reds"), orientation="horizontal", location="bottom", ax=ax, pad=0.08)
     #cb.set_label("$P_{mech}$ [kW]", rotation=0, labelpad=-50, loc="left")
     #clevs = [30, 40, 50, 60, 80, 100, 120, 160, 200, 250]
-    plt.ylabel("Wärmeübertrager-Eintrittstemperatur $T_{W}$ [K]", fontsize=12)
-    plt.xlabel("Brennkammer-Eintrittstemperatur $T_{BK}$ [K]")
+    plt.ylabel("Wärmeübertrager-Eintrittstemperatur $T_\mathrm{W}$ [K]", fontsize=12)
+    plt.xlabel("Brennkammer-Eintrittstemperatur $T_\mathrm{BK}$ [K]")
     
     fig = mpl.pyplot.gcf()
     fig.set_size_inches(16/2.54, 10.5/2.54)
@@ -260,8 +260,8 @@ for arch, name in zip(subfolders, systemnames):
     # for sp in ax[0:1]:
     #     sp.tick_params(labelbottom=False)
     # clevs = [120, 200, 300, 400, 500, 600, 700]
-    plt.ylabel("Wärmeübertrager-Eintrittstemperatur $T_{W}$ [K]", fontsize=12)
-    plt.xlabel("Brennkammer-Eintrittstemperatur $T_{BK}$ [K]")
+    plt.ylabel("Wärmeübertrager-Eintrittstemperatur $T_\mathrm{W}$ [K]", fontsize=12)
+    plt.xlabel("Brennkammer-Eintrittstemperatur $T_\mathrm{BK}$ [K]")
     
     fig = mpl.pyplot.gcf()
     fig.set_size_inches(16/2.54, 10.5/2.54)
@@ -397,8 +397,8 @@ for arch, plot, name in zip(subfolders, [0,1,2], systemnames):
     #cb = plt.colorbar(cm.ScalarMappable(norm=norm, cmap="Reds"), orientation="horizontal", location="bottom", ax=ax, pad=0.08)
     #cb.set_label("$P_{mech}$ [kW]", rotation=0, labelpad=-50, loc="left")
     #clevs = [30, 40, 50, 60, 80, 100, 120, 160, 200, 250]
-    plt.ylabel("Wärmeübertrager-Eintrittstemperatur $T_{W}$ [K]", fontsize=12)
-    plt.xlabel("Brennkammer-Eintrittstemperatur $T_{BK}$ [K]")
+    plt.ylabel("Wärmeübertrager-Eintrittstemperatur $T_\mathrm{W}$ [K]", fontsize=12)
+    plt.xlabel("Brennkammer-Eintrittstemperatur $T_\mathrm{BK}$ [K]")
     
     fig = mpl.pyplot.gcf()
     fig.set_size_inches(16/2.54, 10.5/2.54)

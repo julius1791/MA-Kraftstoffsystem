@@ -40,13 +40,13 @@ plt.xlabel("Leistung $\dot{H}$ [kW]")
 plt.ylabel("Temperatur $T$ [K]")
 ax.annotate('', xy=(0, 135), xytext=(H2-H1, 135), xycoords='data', textcoords='data',
             arrowprops={'arrowstyle': '|-|'})
-ax.annotate('$\dot{Q}_{Klima}$', xy=((H2-H1)/2, 115), ha='center', va='center')
+ax.annotate('$\dot{Q}_{\mathrm{Klima}}$', xy=((H2-H1)/2, 115), ha='center', va='center')
 ax.annotate('', xy=(H2-H1, 135), xytext=(H3-H1, 135), xycoords='data', textcoords='data',
             arrowprops={'arrowstyle': '|-|'})
-ax.annotate('$\dot{Q}_{FOHE}$', xy=((H2+H3-2*H1)/2, 115), ha='center', va='center')
+ax.annotate('$\dot{Q}_{\mathrm{FOHE}}$', xy=((H2+H3-2*H1)/2, 115), ha='center', va='center')
 ax.annotate('', xy=(H3-H1, 135), xytext=(H3-H1+60, 135), xycoords='data', textcoords='data',
             arrowprops={'arrowstyle': '|-|'})
-ax.annotate('$\dot{Q}_{PHC}$', xy=(H3-H1+30, 115), ha='center', va='center')
+ax.annotate('$\dot{Q}_{\mathrm{PHC}}$', xy=(H3-H1+30, 115), ha='center', va='center')
 
 #ax.arrow(H2-H1, t2, 0, 400-t2, length_includes_head=True, width=2, head_width=10, head_length=20, linestyle="--", fill=True, ec="none", fc="black")
 #ax.arrow(H2-H1, 400, 0, t2-400, length_includes_head=True, width=2, head_width=10, head_length=20, linestyle="--", fill=True, ec="none", fc="black")

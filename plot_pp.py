@@ -92,7 +92,7 @@ for key, style, name, color in zip(data, stylelist, systemnames, colors):
         plt.plot(t_bk1, P_mfp1/1e3, label=name+" HPFC", color=color, linestyle=stylelist[0])
     plt.plot(t_bk1, P_r1/1e3, label=name+" RV", color=color, linestyle=stylelist[1])
 plt.legend(loc="best")
-plt.xlabel("Brennkammer-Eintrittstemperatur $T_{BK}$ [K]")
+plt.xlabel("Brennkammer-Eintrittstemperatur $T_{\mathrm{BK}}$ [K]")
 plt.ylabel("Leistung $P_{i}$ [kW]")
 plt.xlim([max(140,t+20), tbk_lims[1]])
 plt.ylim([0,120])
@@ -165,12 +165,12 @@ for key, name in zip(data, systemnames):
         ax[i].plot(t_wu1, P_r1/1e3, label="RV", color=colors[1], linestyle=stylelist[0])
         
         plt.legend(loc="best")
-        ax[i].set_title("$T_{BK}="+str(tbk)+"$ K")
+        ax[i].set_title("$T_\mathrm{BK}="+str(tbk)+"$ K")
         
         ax[i].set_xlim(twu_lims)
         ax[i].set_ylim([0,200])
         
-    fig.supxlabel("Wärmeübertrager-Eintrittstemperatur $T_{W}$ [K]", y=0.1, fontsize=12)
+    fig.supxlabel("Wärmeübertrager-Eintrittstemperatur $T_\mathrm{W}$ [K]", y=0.1, fontsize=12)
     ax[0].set_ylabel("Leistung $P_{i}$ [kW]")
     fig = mpl.pyplot.gcf()
     fig.set_size_inches(16/2.54, 8.5/2.54)
@@ -203,7 +203,7 @@ for tbk in [300, 400]:
         plt.plot(t_wu1, P_r1/1e3, label=name+" RV", color=color, linestyle=stylelist[1])
         
     plt.legend(loc="best")
-    plt.xlabel("Wärmeübertrager-Eintrittstemperatur $T_{W}$ [K]")
+    plt.xlabel("Wärmeübertrager-Eintrittstemperatur $T_\mathrm{W}$ [K]")
     plt.ylabel("Leistung $P_{i}$ [kW]")
     plt.xlim(twu_lims)
     plt.ylim([0,200])
@@ -240,14 +240,14 @@ for tbk, j in zip([300, 400], [0,1]):
         else:
             axs[j].plot(t_wu1, (P_mfp1+P_r1)/1e3, label=name, color=colors[i], linestyle=stylelist[i])
         #plt.plot(t_wu1, Q1/1e3, label="$Q$", color=colors[i], linestyle=stylelist[1])
-        axs[j].set_title("$T_{BK}=" + str(tbk)+ "$ K")
+        axs[j].set_title("$T_\mathrm{BK}=" + str(tbk)+ "$ K")
         plt.ylim([0,200])
 handles, labels = plt.gca().get_legend_handles_labels()
 axs[1].legend(handles, labels, loc="upper right")
 fig = mpl.pyplot.gcf()
 fig.set_size_inches(16/2.54, 7.5/2.54)
 #fig.subplots_adjust(wspace=0.1, hspace=0.1)
-axs[0].set_ylabel("Leistung $P_{gsmt}$ [kW]")
+axs[0].set_ylabel("Leistung $P_\mathrm{gsmt}$ [kW]")
 fig.add_subplot(111, frameon=False)
 axs[0].set_xlim([100,250])
 axs[1].set_xlim([100,250])
@@ -652,9 +652,9 @@ for subfolder,name, p1 in zip(subfolders, systemnames, [0, 1, 2]):
     #sp3 = plt.stackplot(t_bk_200, 200, colors=['white'], baseline="zero", hatch=['//'], edgecolors=["black", "black"])
     spP = axs[p1,p2].stackplot(t_bk_200, Q_hx, Q_phc, P_r, P_fp_200, colors=['none', 'none', 'orangered', 'darkred'], baseline="zero", ec=["none"])
     
-    axs[2,0].set_xlabel("$T_{BK}$ [K]")
+    axs[2,0].set_xlabel("$T_\mathrm{BK}$ [K]")
     axs[1,0].set_ylabel("Leistung [kW]")
-    axs[p1,p2].set_title(name+" $T_W=160$ K")
+    axs[p1,p2].set_title(name+" $T_\mathrm{W}=160$ K")
     axs[p1,p2].set_xlim([180, 320])
     axs[p1,p2].set_ylim([0, 500])
     if p1 != 2:
@@ -721,8 +721,8 @@ for subfolder,name, p1 in zip(subfolders, systemnames, [0, 1, 2]):
     spP = axs[p1,p2].stackplot(t_bk_200, Q_hx, Q_phc, P_r, P_fp_200, colors=['none', 'none', 'orangered', 'darkred'], baseline="zero", ec=["none"])
     
     
-    axs[2,1].set_xlabel("$T_{BK}$ [K]")
-    axs[p1,p2].set_title(name+" $T_W=T_{BK}-40$ K")
+    axs[2,1].set_xlabel("$T_\mathrm{BK}$ [K]")
+    axs[p1,p2].set_title(name+" $T_\mathrm{W}=T_\mathrm{BK}-40$ K")
     axs[p1,p2].set_xlim([180, 320])
     axs[p1,p2].set_ylim([0, 500])
     axs[p1,p2].set_yticklabels([])
@@ -790,8 +790,8 @@ for subfolder,name, p1 in zip(subfolders, systemnames, [0, 1, 2]):
     #sp3 = plt.stackplot(t_bk_200, 200, colors=['white'], baseline="zero", hatch=['//'], edgecolors=["black", "black"])
     spP = axs[p1,p2].stackplot(t_wu_200, Q_hx, Q_phc, P_r, P_fp_200, colors=['none', 'none', 'orangered', 'darkred'], baseline="zero", ec=["none"])
     
-    axs[2,2].set_xlabel("$T_{W}$ [K]")
-    axs[p1,p2].set_title(name+" $T_{BK}=300$ K")
+    axs[2,2].set_xlabel("$T_\mathrm{W}$ [K]")
+    axs[p1,p2].set_title(name+" $T_\mathrm{BK}=300$ K")
     axs[p1,p2].set_xlim([100, 280])
     axs[p1,p2].set_ylim([0, 500])
     axs[p1,p2].set_yticklabels([])
@@ -804,7 +804,7 @@ p2 = Rectangle((0, 0), 1, 1, fc="cyan")
 p3 = Rectangle((0, 0), 1, 1, fc="darkred")
 p4 = Rectangle((0, 0), 1, 1, fc="orangered")
 
-plt.legend([p3, p4, p2, p1], ["$P_{HPFC/P}$", "$P_{RV}$", "$\dot{Q}_{PHC}$", "$\dot{Q}_{FOHE}$"], loc="lower left", framealpha=1)
+plt.legend([p3, p4, p2, p1], ["$P_\mathrm{HPFC/P}$", "$P_\mathrm{RV}$", "$\dot{Q}_\mathrm{PHC}$", "$\dot{Q}_\mathrm{FOHE}$"], loc="lower left", framealpha=1)
 
 
 fig = mpl.pyplot.gcf()
