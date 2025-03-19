@@ -51,7 +51,7 @@ save_dir = os.path.join(os.getcwd(), "diagrams")
 # }
 
 colors = ["darkred", "orangered", "navy", "cyan"]
-label_list = ["$P_{HPFP/C}$", "$P_{RV/LPFP}$", "$\dot{Q}_{FOHE}$", "$\dot{Q}_{PHC}$"]
+label_list = ["$P_\mathrm{HPFP/C}$", "$P_\mathrm{RV/LPFP}$", "$\dot{Q}_\mathrm{FOHE}$", "$\dot{Q}_\mathrm{PHC}$"]
 # # tw=250
 # data_list = np.array([
 #     [1713.758305, 663.9556996, 127e3, 0],
@@ -112,7 +112,7 @@ energy = np.array([0.311338*H_jeta, 0.11155807*H_h2, 0.111560557*H_h2, 0.1116142
 
 fig, ax = plt.subplots(1, 2, width_ratios=[1, 5])
 ax[1].bar(systemnames, energy, bottom=[0,0,0,0], width=0.5, color="navy")
-ax[1].set_ylabel("Energieverbrauch Differenz $\Delta \dot{H}_{ref}$ [MW]")
+ax[1].set_ylabel("Energieverbrauch Differenz $\Delta \dot{H}_\mathrm{ref}$ [MW]")
 ax[0].bar("Referenz", 0.311338*H_jeta, bottom=0, width=0.5, color="orangered")
 ax[0].set_ylabel("Energieverbrauch $\dot{H}$ [MW]")
 fig.set_size_inches(16/2.54, 9/2.54)
