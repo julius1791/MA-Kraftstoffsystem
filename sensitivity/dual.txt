@@ -1,0 +1,8 @@
+$\dot{Q}_\mathrm{FOHE}$ & \si{\kilo\W} & -14.455 & 0.117 & 0.118 & 0.118 \\ \hline 
+$\pi_\mathrm{FOHE}$ & - & -0.005 & 0.445 & 1.51 & 0.004 \\ \hline 
+$\pi_\mathrm{PHC}$ & - & -0.002 & 0.172 & 0.587 & 0.002 \\ \hline 
+$\eta_\mathrm{RV}$ & - & -0.065 & 0.015 & 6.516 & 0.015 \\ \hline 
+$\eta_\mathrm{HPFC}$ & - & -0.065 & 10.008 & -1.48 & 0.007 \\ \hline 
+$\dot{m}_\mathrm{BK,0}$ & \si{\kg\per\s} & 0.011 & 10.129 & 10.13 & 10.13 \\ \hline 
+$\Delta p_\mathrm{L}$ & \si{\kilo\Pa} & 26.0 & 1.24 & 4.14 & 0.011 \\ \hline 
+$\Delta p_\mathrm{inj}$ & \si{\kilo\Pa} & 16.89 & 0.799 & -0.604 & -0.001 \\ \hline 

@@ -143,10 +143,10 @@ class H2Flow:
             final static temperature (K)
         """     
         # function is meant for pumping into the supercritical state
-        if p1 < p_crit:
-            raise ValueError(
-                "Expected supercritical final pressure. Got p1 = " + str(p1)
-            )
+        # if p1 < p_crit:
+        #     raise ValueError(
+        #         "Expected supercritical final pressure. Got p1 = " + str(p1)
+        #     )
         
         # calculate initial specific entropy and specific total enthalpy
         s = h2.calc_H2_entropy(self.t, self.p)
@@ -167,10 +167,11 @@ class H2Flow:
         # set attributes
         self.p = p1
         self.ht = ht_1
-        self.vap = True
+        if p1 > p_crit:
+            self.vap = True
         
         # find final static temperature
-        t1 = calc_t(ht_1, p1, self.v, True)
+        t1 = calc_t(ht_1, p1, self.v, self.vap)
         self.t = t1
         
         # calculate compressor power
@@ -308,7 +309,7 @@ def find_t_for_s(s, p, t):
         t1 = t0*math.exp((s-s_a)/h2.calc_H2_cp(t0, p))
         t1 = 0.6*t1 + 0.4*t0
         s_a = h2.calc_H2_entropy(t1, p)
-        condition_bool = not abs(s_a-s)/(s_a+s) < tolerance
+        condition_bool = not abs(s_a-s)/abs(s) < tolerance
         if i > max_iter:
             raise Exception("Exceeded number of iterations")
     return t1
