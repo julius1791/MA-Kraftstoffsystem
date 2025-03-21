@@ -5,7 +5,7 @@ import math
 
 
 # modelling parameters
-tolerance = 1e-6    # -
+tolerance = 1e-1    # -
 max_iter = 100       # -
 
 # hydrogen critical pressure and temerature
@@ -309,7 +309,7 @@ def find_t_for_s(s, p, t):
         t1 = t0*math.exp((s-s_a)/h2.calc_H2_cp(t0, p))
         t1 = 0.6*t1 + 0.4*t0
         s_a = h2.calc_H2_entropy(t1, p)
-        condition_bool = not abs(s_a-s)/abs(s) < tolerance
+        condition_bool = not abs(s_a-s) < tolerance
         if i > max_iter:
             raise Exception("Exceeded number of iterations")
     return t1
@@ -354,8 +354,8 @@ def apply_total_pressure(pt, ht, t1, v):
         t1 += (ht-ht_a)/min(h2.calc_H2_cp(t0, p0), 8e3) / 8
         t1 = max(16, t1)
         condition_bool = not (
-            abs(ht-ht_a)/(ht+ht_a) < tolerance
-            and abs(pt-pt_a)/(pt+pt_a) < tolerance
+            abs(ht-ht_a) < tolerance
+            and abs(pt-pt_a) < tolerance
             )
         if i > max_iter:
             raise Exception("Exceeded number of iterations")
@@ -387,7 +387,7 @@ def calc_t(ht, p, v, vap):
         t1 = loop_check_bounds(t1, tmax, tmin)
         
         condition_bool = not (
-            abs(ht-ht_a)/(ht+ht_a) < tolerance
+            abs(ht-ht_a) < tolerance
         )
         if i > max_iter:
             raise Exception("Exceeded number of iterations")
@@ -413,8 +413,8 @@ def calc_tp(ht, pt, v, vap):
         t1 = loop_check_bounds(t1, tmax, tmin)
         
         condition_bool = not (
-            abs(ht-ht_a)/(ht+ht_a) < tolerance
-            and abs(pt-pt_a)/(pt+pt_a) < tolerance
+            abs(ht-ht_a) < tolerance
+            and abs(pt-pt_a) < tolerance
         )
         if i > max_iter:
             raise Exception("Exceeded number of iterations")

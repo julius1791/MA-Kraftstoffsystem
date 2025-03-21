@@ -3,7 +3,7 @@ import jeta_properties as jeta
 import math
 
 # modelling parameters
-tolerance = 1e-3    # -
+tolerance = 1e-1    # -
 max_iter = 100      # -
 
 def antoine():
@@ -219,7 +219,7 @@ class JetaFlow:
         ps1 = self.p
         condition_bool = True
         i = 0
-        while condition_bool > tolerance:
+        while condition_bool:
             i+=1
             ts0 = ts1
             ts1 = [
@@ -269,7 +269,7 @@ def find_t_for_s(s, p, t):
         s_a = jeta.calc_jeta_entropy(t0, p)
         t1 = t0*math.exp((s-s_a)/jeta.calc_jeta_cp(t0, p))
         s_a = jeta.calc_jeta_entropy(t1, p)
-        condition_bool = not abs(s_a-s) < tolerance
+        condition_bool = abs(s_a-s) > tolerance
         if i > max_iter:
             raise Exception("Exceeded number of iterations")
     return t1
@@ -313,8 +313,8 @@ def apply_total_pressure(pt, ht, t1, v):
         p1 += pt - pt_a
         t1 += (ht-ht_a)/min(jeta.calc_jeta_cp(t0, p0), 8e3) / 4
         condition_bool = not (
-            abs(ht-ht_a) < tolerance *1e1
-            and abs(pt-pt_a) < tolerance *1e1
+            abs(ht-ht_a) < tolerance
+            and abs(pt-pt_a) < tolerance
             )
         if i > max_iter:
             raise Exception("Exceeded number of iterations")
