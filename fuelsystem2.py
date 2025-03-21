@@ -8,7 +8,7 @@ import time
 from operator import itemgetter
 
 # modelling parameters
-tolerance = 1e-1
+tolerance = 1
 max_iter = 100
 rel_fac = 1/250
 rel_fac_2 = 3/4
@@ -33,7 +33,7 @@ def save_results(
         filename, arch, t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0,
         tpr_hx, 
         Q_hx, pcc, v, P_hpfp, P_r, Q, Q_phc, qm_cb, qm_pch, qm_r, qm_v, p_hpfp,
-        qm_pot, i, duration
+        m_z, i, duration
     ):
     with open(filename, "w", newline='') as f:
         filewriter = csv.writer(f)
@@ -49,8 +49,8 @@ def save_results(
         filewriter.writerow([P_hpfp, P_r, p_hpfp])
         filewriter.writerow(["Q", "Q_phc"])
         filewriter.writerow([Q, Q_phc])
-        filewriter.writerow(["qm_cb", "qm_phc/qm_t", "qm_r", "qm_v", "qm", "qm_pot"])
-        filewriter.writerow([qm_cb0, qm_pch, qm_r, qm_v, qm_cb0+qm_pch, qm_pot])
+        filewriter.writerow(["qm_cb", "qm_phc/qm_t", "qm_r", "qm_v", "qm", "m_z"])
+        filewriter.writerow([qm_cb0, qm_pch, qm_r, qm_v, qm_cb0+qm_pch, m_z])
         filewriter.writerow([
             "number of iterations", i, "Execution time: ", duration
             ])
@@ -69,7 +69,7 @@ def save_failed(
             filewriter.writerow([exception])
     return
 
-def reference(params, t_cbt, p_cbt, filename="", v=v0, tolerance=tolerance):
+def reference(params, t_cbt, p_cbt, corr=False, filename="", v=v0, tolerance=tolerance):
     # unpack params dict
     p0, t0 = itemgetter("p0","t0")(params)
     Q_fohe, tpr_fohe, Q_idg = itemgetter("Q_fohe","tpr_fohe", "Q_idg")(params)
@@ -85,7 +85,9 @@ def reference(params, t_cbt, p_cbt, filename="", v=v0, tolerance=tolerance):
         + jetaflow.jeta.calc_jeta_enthalpy(t_cbt, p_cbt) 
         - jetaflow.jeta.calc_jeta_enthalpy(288, p_cbt)
     )
-    qm_cb0 = qm_cb0 * (lhv_jeta_288 / lhv_tcbt)
+    
+    if corr:
+        qm_cb0 = qm_cb0 * (lhv_jeta_288 / lhv_tcbt)
     
     # calculate intitial values for independent variables
     h_r = jetaflow.calc_ht(t_cbt, p_cbt, v)
@@ -213,7 +215,7 @@ def get_dh(qm_cb, t_cb, p_cb, t0, p0, v):
     dH = qm_cb * (h2flow.calc_ht(t_cb, p_cb, 0) - h2flow.calc_ht(t0, p0, v))
     return dH
 
-def h2pump(params, t_cbt, t_hxt, p_cbt, pcc=True, corr=True, filename="", v=v0, tolerance=tolerance):
+def h2pump(params, t_cbt, t_hxt, p_cbt, pcc=True, corr=False, filename="", v=v0, tolerance=tolerance):
     # unpack params dict
     p0, t0 = itemgetter("p0","t0")(params)
     Q_fohe, tpr_fohe, tpr_phc, dT = itemgetter("Q_fohe","tpr_fohe", "tpr_phc", "dT")(params)
@@ -251,12 +253,9 @@ def h2pump(params, t_cbt, t_hxt, p_cbt, pcc=True, corr=True, filename="", v=v0, 
             
             # calculate h2 requirements of parallel combustion
             if pcc:
-                qm_phc, P_z = parallel_combustion(max(0, dH-P_r-P_hpfp-Q_fohe), t_cbt, t_hx=t_phc+dT)
-                qm_cb_pot = (P_hpfp + P_r + P_z) / (eta_pot*(lhv_h2_200 - h2flow.h2.calc_H2_enthalpy(200, p_cbt) + h2flow.h2.calc_H2_enthalpy(t_cbt, p_cbt)))
-                qm_cb = qm_cb0 + qm_phc + qm_cb_pot
-                
+                qm_phc, m_z = parallel_combustion(max(0, dH-P_r-P_hpfp-Q_fohe), t_hx=t_phc+dT)
+                qm_cb = qm_cb0 + qm_phc
                 dH = dH0 * qm_cb / qm_cb0
-                
             else:
                 qm_cb = qm_cb0
                 dH = dH0
@@ -335,7 +334,7 @@ def h2pump(params, t_cbt, t_hxt, p_cbt, pcc=True, corr=True, filename="", v=v0, 
             save_results(
                 filename, "pump", t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0,
                 t0, p0, tpr_fohe, Q_fohe, pcc, v, P_hpfp, P_r, dH-P_hpfp-P_r,
-                dH-P_hpfp-P_r-Q_fohe, qm_cb, qm_cb-qm_cb0-qm_cb_pot, qm_r, 0, p_hpfp, qm_cb_pot, i,
+                dH-P_hpfp-P_r-Q_fohe, qm_cb, qm_cb-qm_cb0, qm_r, 0, p_hpfp, m_z, i,
                 stop-start
             )
     except Exception as e:
@@ -345,7 +344,7 @@ def h2pump(params, t_cbt, t_hxt, p_cbt, pcc=True, corr=True, filename="", v=v0, 
         return
     return
 
-def h2after(params, t_cbt, t_hxt, p_cbt, pcc=True, filename="", v=v0, tolerance=tolerance):
+def h2after(params, t_cbt, t_hxt, p_cbt, pcc=True, corr=False, filename="", v=v0, tolerance=tolerance):
     # unpack params dict
     p0, t0 = itemgetter("p0","t0")(params)
     Q_fohe, tpr_fohe, tpr_phc, dT = itemgetter("Q_fohe","tpr_fohe", "tpr_phc", "dT")(params)
@@ -356,8 +355,9 @@ def h2after(params, t_cbt, t_hxt, p_cbt, pcc=True, filename="", v=v0, tolerance=
     
     start = time.time()
     
-    # correct combustion chamber fuel mass flow for temperature
-    qm_cb0 = qm_cb0 * lhv_h2_200 / (lhv_h2_200 - h2flow.h2.calc_H2_enthalpy(200, 1e6) + h2flow.h2.calc_H2_enthalpy(t_cbt, 1e6))
+    if corr:
+        # correct combustion chamber fuel mass flow for temperature
+        qm_cb0 = qm_cb0 * lhv_h2_200 / (lhv_h2_200 - h2flow.h2.calc_H2_enthalpy(200, 1e6) + h2flow.h2.calc_H2_enthalpy(t_cbt, 1e6))
     
     # initial guess for independent variables
     qm_r = qm_cb0 * (h2flow.calc_ht(t_hxt, p_cbt, v)-h2flow.calc_ht(t0, p0, v))/(h2flow.calc_ht(t_cbt, p_cbt, v)-h2flow.calc_ht(t_hxt, p_cbt, v))
@@ -381,9 +381,8 @@ def h2after(params, t_cbt, t_hxt, p_cbt, pcc=True, filename="", v=v0, tolerance=
         while condition_bool:
             # calculate h2 requirements of parallel combustion
             if pcc:
-                qm_phc, P_z = parallel_combustion(max(0, dH-P_r-P_hpfp-Q_fohe), t_cbt, t_hx=t_phc+dT)
-                qm_cb_pot = (P_hpfp + P_r + P_z) / (eta_pot*(lhv_h2_200 - h2flow.h2.calc_H2_enthalpy(200, p_cbt) + h2flow.h2.calc_H2_enthalpy(t_cbt, p_cbt)))
-                qm_cb = qm_cb0 + qm_phc + qm_cb_pot
+                qm_phc, m_z = parallel_combustion(max(0, dH-P_r-P_hpfp-Q_fohe), t_hx=t_phc+dT)
+                qm_cb = qm_cb0 + qm_phc
                 dH = dH0 * qm_cb / qm_cb0
             else:
                 qm_cb = qm_cb0
@@ -461,7 +460,7 @@ def h2after(params, t_cbt, t_hxt, p_cbt, pcc=True, filename="", v=v0, tolerance=
             save_results(
                 filename, "after", t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0,
                 t0, p0, tpr_fohe, Q_fohe, pcc, v, P_hpfp, P_r, dH-P_hpfp-P_r,
-                dH-P_hpfp-P_r-Q_fohe, qm_cb, qm_cb-qm_cb0-qm_cb_pot, qm_r, 0, p_hpfp, qm_cb_pot, i,
+                dH-P_hpfp-P_r-Q_fohe, qm_cb, qm_cb-qm_cb0, qm_r, 0, p_hpfp, m_z, i,
                 stop-start
             )
     except Exception as e:
@@ -471,7 +470,7 @@ def h2after(params, t_cbt, t_hxt, p_cbt, pcc=True, filename="", v=v0, tolerance=
         return
     return
 
-def h2dual(params, t_cbt, t_hxt, p_cbt, pcc=True, filename="", v=v0, tolerance=tolerance):
+def h2dual(params, t_cbt, t_hxt, p_cbt, pcc=True, corr=False, filename="", v=v0, tolerance=tolerance):
     # unpack params dict
     p0, t0 = itemgetter("p0","t0")(params)
     Q_fohe, tpr_fohe, tpr_phc, dT = itemgetter("Q_fohe","tpr_fohe", "tpr_phc", "dT")(params)
@@ -481,8 +480,9 @@ def h2dual(params, t_cbt, t_hxt, p_cbt, pcc=True, filename="", v=v0, tolerance=t
     
     start = time.time()
     
-    # correct combustion chamber fuel flow for temperature
-    qm_cb0 = qm_cb0 * lhv_h2_200 / (lhv_h2_200 - h2flow.h2.calc_H2_enthalpy(200, p_cbt) + h2flow.h2.calc_H2_enthalpy(t_cbt, p_cbt))
+    if corr:
+        # correct combustion chamber fuel flow for temperature
+        qm_cb0 = qm_cb0 * lhv_h2_200 / (lhv_h2_200 - h2flow.h2.calc_H2_enthalpy(200, p_cbt) + h2flow.h2.calc_H2_enthalpy(t_cbt, p_cbt))
     
     # guess inital values for independent variables
     qm_v = qm_cb0 * (h2flow.calc_ht(h2flow.sat_t(p0)+10, p0, v)-h2flow.calc_ht(t0, p0, v))/(h2flow.calc_ht(t_cbt, p_cbt, v)-h2flow.calc_ht(h2flow.sat_t(p0)+10, p0, v))
@@ -508,9 +508,8 @@ def h2dual(params, t_cbt, t_hxt, p_cbt, pcc=True, filename="", v=v0, tolerance=t
         while condition_bool:
             
             if pcc:
-                qm_phc, P_z = parallel_combustion(max(0, dH-P_r-P_hpfp-Q_fohe), t_cbt, t_hx=t_phc+dT)
-                qm_cb_pot = (P_hpfp + P_r + P_z) / (eta_pot*(lhv_h2_200 - h2flow.h2.calc_H2_enthalpy(200, p_cbt) + h2flow.h2.calc_H2_enthalpy(t_cbt, p_cbt)))
-                qm_cb = qm_cb0 + qm_phc + qm_cb_pot
+                qm_phc, m_z = parallel_combustion(max(0, dH-P_r-P_hpfp-Q_fohe), t_hx=t_phc+dT)
+                qm_cb = qm_cb0 + qm_phc
                 dH = dH0 * qm_cb / qm_cb0
             else:
                 qm_cb = qm_cb0
@@ -591,7 +590,7 @@ def h2dual(params, t_cbt, t_hxt, p_cbt, pcc=True, filename="", v=v0, tolerance=t
             save_results(
                 filename, "dual", t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0,
                 t0, p0, tpr_fohe, Q_fohe, pcc, v, P_hpfp, P_r, dH-P_hpfp-P_r,
-                dH-P_hpfp-P_r-Q_fohe, qm_cb, qm_cb-qm_cb0-qm_cb_pot, qm_r, qm_v, p_hpfp, qm_cb_pot, i,
+                dH-P_hpfp-P_r-Q_fohe, qm_cb, qm_cb-qm_cb0, qm_r, qm_v, p_hpfp, m_z, i,
                 stop-start
             )
     except Exception as e:
@@ -607,8 +606,8 @@ def h2dual(params, t_cbt, t_hxt, p_cbt, pcc=True, filename="", v=v0, tolerance=t
 
 if __name__ == "__main__":
 
-    t_bk = 300  
-    t_wu = 160
+    t_bk = 600  
+    t_wu = 280
     
     p_bk = 1.33e6
     
@@ -654,14 +653,14 @@ if __name__ == "__main__":
     # print("reference")
     # reference(ref_params, 399.15, p_bk, filename="ref.csv")
     
-    # print("\nh2dual")
-    # h2dual(dual_params, t_bk, t_wu, p_bk, pcc=True, filename="dual.csv")
+    print("\nh2dual")
+    h2dual(dual_params, t_bk, t_wu, p_bk, pcc=True, filename="dual.csv")
     
     print("\nh2pump")
     h2pump(pump_params, t_bk, t_wu, p_bk, pcc=True, filename="pump.csv")
     
-    # print("\nh2after")
-    # h2after(after_params, t_bk, t_wu, p_bk, pcc=True, filename="after.csv")
+    print("\nh2after")
+    h2after(after_params, t_bk, t_wu, p_bk, pcc=True, filename="after.csv")
     
     # print("\nh2pump")
     # h2pump(brewer_params, 264, 200, 1516.2e3, pcc=False, corr=False, filename="brewer.csv")
