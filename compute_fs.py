@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import fuelsystem2
+import fuelsystem
 import os
 from joblib import Parallel, delayed
 import time
@@ -64,7 +64,9 @@ def create_param_combs(t_bk_list, t_wu_list, folder, results_dir):
             filename = str(t_bk) + str(t_wu) + ".csv"
             path = os.path.join(results_dir, folder, filename)
             param_combinations.append([t_bk, t_wu, path])
+    print("calculating # datapoints: " + str(len(param_combinations)))
     return param_combinations
+
 
 
 
@@ -73,19 +75,19 @@ if func == "pump":
     folder = folders[0]
     param_combinations = create_param_combs(t_bk_list, t_wu_list, folders[0], results_dir)
     Parallel(n_jobs=20)(
-        delayed(fuelsystem2.h2pump)(pump_params, t_bk, t_wu, p_bk, filename=path) for t_bk, t_wu, path in param_combinations
+        delayed(fuelsystem.h2pump)(pump_params, t_bk, t_wu, p_bk, filename=path) for t_bk, t_wu, path in param_combinations
     )
 elif func == "after":
     folder = folders[1]
     param_combinations = create_param_combs(t_bk_list, t_wu_list, folders[1], results_dir)
     Parallel(n_jobs=20)(
-        delayed(fuelsystem2.h2after)(after_params, t_bk, t_wu, p_bk, filename=path) for t_bk, t_wu, path in param_combinations
+        delayed(fuelsystem.h2after)(after_params, t_bk, t_wu, p_bk, filename=path) for t_bk, t_wu, path in param_combinations
     )
 elif func == "dual":
     folder = folders[2]
     param_combinations = create_param_combs(t_bk_list, t_wu_list, folders[2], results_dir)
     Parallel(n_jobs=20)(
-        delayed(fuelsystem2.h2dual)(dual_params, t_bk, t_wu, p_bk, filename=path) for t_bk, t_wu, path in param_combinations
+        delayed(fuelsystem.h2dual)(dual_params, t_bk, t_wu, p_bk, filename=path) for t_bk, t_wu, path in param_combinations
     )
 
         

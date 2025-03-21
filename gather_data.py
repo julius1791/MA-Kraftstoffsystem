@@ -21,7 +21,7 @@ def get_Data(folder, subfolder, write=True):
     qm_v = list()
     qm_cb = list()
     qm_phc = list()
-    qm_pot = list()
+    m_z = list()
     Q = list()
     params = dict()
     for file in files:
@@ -47,7 +47,7 @@ def get_Data(folder, subfolder, write=True):
                 qm_r.append(float(qm_row[2]))
                 qm_cb.append(float(qm_row[0]))
                 qm_phc.append(float(qm_row[1]))
-                qm_pot.append(float(qm_row[5]))
+                m_z.append(float(qm_row[5]))
                 if param_row[0] == "dual":
                     qm_v.append(float(qm_row[3]))
                 P_r.append(float(P_row[1]))
@@ -56,7 +56,7 @@ def get_Data(folder, subfolder, write=True):
                     if i in [1,2,6]:
                         continue
                     params.update({name: value})
-    content = {"Parameters": params, "t_bk": t_bk, "t_wu": t_wu, "P_mfp": P_mfp, "P_r": P_r, "Q": Q, "qm_cb": qm_cb, "qm_r": qm_r, "qm_v": qm_v, "qm_phc": qm_phc, "qm_pot": qm_pot}
+    content = {"Parameters": params, "t_bk": t_bk, "t_wu": t_wu, "P_mfp": P_mfp, "P_r": P_r, "Q": Q, "qm_cb": qm_cb, "qm_r": qm_r, "qm_v": qm_v, "qm_phc": qm_phc, "m_z": m_z}
     json_object = json.dumps(content, indent=4)
     json_fn = os.path.join(folder, subfolder+".json")
     if write:

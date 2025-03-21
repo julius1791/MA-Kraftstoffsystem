@@ -1,16 +1,17 @@
 import os
-import pathlib
 import json
 import pandas as pd
 import math
 
 # global variables
-prop_dir = "material properties"
 R = 8.3145                                                          # Jmol-1K
 
+# fluid props folder
+fluid_dir = os.path.join(os.getcwd(), "fluid_properties")
+
 # find files in target directory
-files = [f for f in os.listdir(os.path.join(pathlib.Path().resolve(), prop_dir)) if os.path.isfile(
-    os.path.join(pathlib.Path().resolve(), prop_dir, f))]
+files = [f for f in os.listdir(fluid_dir) if os.path.isfile(
+    os.path.join(fluid_dir, f))]
 # init dictionary for tpp
 tpp = dict()
 # iterate list of files
@@ -20,12 +21,12 @@ for file in files:
         # use filename as index (without extension)
         name = file.split(".")[0]
         # feed file contents into pandas dataframe
-        content = pd.read_csv(os.path.join(pathlib.Path().resolve(), prop_dir, file), delimiter=",")
+        content = pd.read_csv(os.path.join(fluid_dir, file), delimiter=",")
         tpp.update({name: content})
 
 # import data from json
 with open(os.path.join(
-        pathlib.Path().resolve(), prop_dir, "jeta.json")) as f:
+        fluid_dir, "jeta.json")) as f:
     jeta_props = json.load(f)
 M_jeta = float(jeta_props["molecular_weight"])                  # gmol-1
 R_jeta = R/M_jeta                                               # kJ/kgK  

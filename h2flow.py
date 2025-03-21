@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import h2_properties_para as h2
+import fluid_properties.h2_properties_para as h2
 import math
 
 
 # modelling parameters
-tolerance = 1e-1    # -
+tolerance = 1      # -
 max_iter = 100       # -
 
 # hydrogen critical pressure and temerature

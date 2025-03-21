@@ -8,7 +8,7 @@ import time
 from operator import itemgetter
 
 # modelling parameters
-tolerance = 1
+tolerance = 1e-1
 max_iter = 100
 rel_fac = 1/250
 rel_fac_2 = 3/4
@@ -298,8 +298,7 @@ def h2pump(params, t_cbt, t_hxt, p_cbt, pcc=True, corr=False, filename="", v=v0,
             p_hpfp += (p_cbt - p_cba) * rel_fac_2
             
             p_r = ff_main.p
-            if not corr:
-                p_r = p_hpfp
+
             h_rold = h_r
             h_r = (1+qm_r/qm_cb)*ff_main.ht-qm_r/qm_cb*h_r
             
@@ -650,17 +649,17 @@ if __name__ == "__main__":
     }
     
     
-    # print("reference")
-    # reference(ref_params, 399.15, p_bk, filename="ref.csv")
+    print("reference")
+    reference(ref_params, 399.15, p_bk, filename="ref.csv")
     
-    print("\nh2dual")
-    h2dual(dual_params, t_bk, t_wu, p_bk, pcc=True, filename="dual.csv")
+    # print("\nh2dual")
+    # h2dual(dual_params, t_bk, t_wu, p_bk, pcc=True, filename="dual.csv")
     
-    print("\nh2pump")
-    h2pump(pump_params, t_bk, t_wu, p_bk, pcc=True, filename="pump.csv")
+    # print("\nh2pump")
+    # h2pump(pump_params, t_bk, t_wu, p_bk, pcc=True, filename="pump.csv")
     
-    print("\nh2after")
-    h2after(after_params, t_bk, t_wu, p_bk, pcc=True, filename="after.csv")
+    # print("\nh2after")
+    # h2after(after_params, t_bk, t_wu, p_bk, pcc=True, filename="after.csv")
     
     # print("\nh2pump")
     # h2pump(brewer_params, 264, 200, 1516.2e3, pcc=False, corr=False, filename="brewer.csv")

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import jeta_properties as jeta
+import fluid_properties.jeta_properties as jeta
 import math
 
 # modelling parameters
