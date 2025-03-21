@@ -10,8 +10,10 @@ plt.rc('text', usetex=True)
 par = {'mathtext.default': 'regular'}
 plt.rcParams.update(par)
 
-save_dir = os.path.join(os.getcwd(), "diagrams")
-csv_dir = os.path.join(os.getcwd(), "material properties", "h2spin.csv")
+parent_folder = os.path.dirname(os.getcwd())
+
+save_dir = os.path.join(parent_folder, "diagrams")
+csv_dir = os.path.join(os.path.dirname(os.getcwd()), "fluid_properties", "h2spin.csv")
 
 data = np.genfromtxt(csv_dir, delimiter=",")
 T = data[0]

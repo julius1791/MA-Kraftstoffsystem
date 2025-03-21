@@ -9,6 +9,9 @@ from matplotlib.patches import Rectangle
 from matplotlib.lines import Line2D
 import matplotlib.cm as cm
 
+cwd = os.getcwd()
+os.chdir(os.path.dirname(cwd))
+
 csfont = {'family': "serif", "serif": ["lmr"], "size": 12}
 plt.rc('font',**csfont)
 plt.rc('text', usetex=True)
@@ -102,22 +105,22 @@ fig.savefig(os.path.join(save_dir, 'refcomp.pdf'), dpi=600, bbox_inches="tight")
 plt.show()
 
 
-H_h2 = 119.96 #MJ/kg
-H_jeta = 43.1 # MJ/kg
+# H_h2 = 119.96 #MJ/kg
+# H_jeta = 43.1 # MJ/kg
 
-energy = np.array([0.311338*H_jeta, 0.11155807*H_h2, 0.111560557*H_h2, 0.111614224*H_h2]) - np.array([0.311338*H_jeta, 0.311338*H_jeta, 0.311338*H_jeta, 0.311338*H_jeta])
-
-
+# energy = np.array([0.311338*H_jeta, 0.11155807*H_h2, 0.111560557*H_h2, 0.111614224*H_h2]) - np.array([0.311338*H_jeta, 0.311338*H_jeta, 0.311338*H_jeta, 0.311338*H_jeta])
 
 
-fig, ax = plt.subplots(1, 2, width_ratios=[1, 5])
-ax[1].bar(systemnames, energy, bottom=[0,0,0,0], width=0.5, color="navy")
-ax[1].set_ylabel("Energieverbrauch Differenz $\Delta \dot{H}_\mathrm{ref}$ [MW]")
-ax[0].bar("Referenz", 0.311338*H_jeta, bottom=0, width=0.5, color="orangered")
-ax[0].set_ylabel("Energieverbrauch $\dot{H}$ [MW]")
-fig.set_size_inches(16/2.54, 9/2.54)
-ax[0].set_position([0, 0.05, 0.1, 0.9])
-ax[1].set_position([0.3, 0.05, 0.65, 0.9])
-fig.savefig(os.path.join(save_dir, 'refenergy.pdf'), dpi=600, bbox_inches="tight")
-plt.show()
+
+
+# fig, ax = plt.subplots(1, 2, width_ratios=[1, 5])
+# ax[1].bar(systemnames, energy, bottom=[0,0,0,0], width=0.5, color="navy")
+# ax[1].set_ylabel("Energieverbrauch Differenz $\Delta \dot{H}_\mathrm{ref}$ [MW]")
+# ax[0].bar("Referenz", 0.311338*H_jeta, bottom=0, width=0.5, color="orangered")
+# ax[0].set_ylabel("Energieverbrauch $\dot{H}$ [MW]")
+# fig.set_size_inches(16/2.54, 9/2.54)
+# ax[0].set_position([0, 0.05, 0.1, 0.9])
+# ax[1].set_position([0.3, 0.05, 0.65, 0.9])
+# fig.savefig(os.path.join(save_dir, 'refenergy.pdf'), dpi=600, bbox_inches="tight")
+# plt.show()
 

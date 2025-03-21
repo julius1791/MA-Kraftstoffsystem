@@ -9,6 +9,9 @@ from matplotlib.patches import Rectangle
 from matplotlib.lines import Line2D
 import matplotlib.cm as cm
 
+cwd = os.getcwd()
+os.chdir(os.path.dirname(cwd))
+
 csfont = {'family': "serif", "serif": ["lmr"], "size": 12}
 plt.rc('font',**csfont)
 plt.rc('text', usetex=True)

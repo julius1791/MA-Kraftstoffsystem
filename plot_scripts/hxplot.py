@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 import matplotlib.pyplot as plt
 import os
-import h2_properties as h2
+cwd = os.getcwd()
+os.chdir(os.path.dirname(cwd))
 import h2flow
+
 csfont = {'family': "serif", "serif": ["lmr"], "size": 12}
 plt.rc('font',**csfont)
 plt.rc('text', usetex=True)
