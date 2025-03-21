@@ -567,7 +567,7 @@ def calc_H2_enthalpy(T_ZP, p_ZP):
     a_r_t = alpha_r_tau_calc(delta_neu, tau, para_hydrogen)
     a_r_d = alpha_r_delta_calc(delta_neu, tau, para_hydrogen)
 
-    h = R * T_ZP * (1 + tau * (a_0_t + a_r_t) + delta_neu * a_r_d)
+    h = R * T_ZP * (1 + tau * (a_0_t + a_r_t) + delta_neu * a_r_d) - 522e3
 
     return h
 
