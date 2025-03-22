@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
-import fuelsystem2
+import fuelsystem
 import os
 from joblib import Parallel, delayed
 import csv
@@ -8,47 +8,58 @@ import json
 import numpy as np
 from pathlib import Path
 
-func = "pump"
+func = "reference"
 
 # results folder (!CHANGE IN fuelsystem2!!!)
 results_dir = "sensitivity"
 
 # subfolder
-folders = ["pump", "after", "dual"]
+folders = ["pump", "after", "dual", "reference"]
 fac = 1.1
 
-t_bk = 270
-t_wu = 220
+t_bk = 300
+t_wu = 160
 p_bk = 1.33e6
+t_bk_jeta = 399.15
 
 qm_cb = 0.10998
-qm_cbs = qm_cb*fac
+qm_cbs = qm_cb
 eta_p = 0.154
-eta_ps = eta_p/fac
+eta_ps = eta_p*0.95
 eta_v = 0.71
-eta_vs = eta_v/fac
+eta_vs = eta_v*0.95
 t0 = 25.2
 p0 = 3.45e5
 Q_fohe = 159e3
-Q_fohes = Q_fohe/fac
+Q_fohes = 140e3
 tpr_fohe = 0.95
-tpr_fohes = 1-(1-tpr_fohe)*fac
+tpr_fohes = 1-(1-tpr_fohe)*1.2
 tpr_phc = 0.98
-tpr_phcs = 1-(1-tpr_phc)*fac
+tpr_phcs = 1-(1-tpr_phc)*1.2
 dT = 20
 dp_l = 260e3
-dp_ls = dp_l*fac
+dp_ls = dp_l*1.2
 dp_inj = 168.9e3
-dp_injs = dp_inj*fac
+dp_injs = dp_inj*1.1
 tpr_vhps = 0.99
 tpr_vlps = 0.995
 
 
 
-
+if func == "reference":
+    folder = folders[3]
+    par_hr_list = ["$\dot{Q}_\mathrm{FOHE}$", "$1-\pi_\mathrm{FOHE}$", "$\p_\mathrm{LPFP}$", "$\eta_\mathrm{RV}$", "$\eta_\mathrm{HPFP}$", "$\Delta p_\mathrm{L}$", "$\Delta p_\mathrm{inj}$"]
+    par_name_list = ["Q_fohe", "tpr_fohe", "p_lpfp", "eta_lpfp", "eta_hpfp", "dp_l", "dp_inj"]
+    par_unit_list = ["\si{\kilo\W}", "-", "-", "-", "-", "\si{\kilo\Pa}", "\si{\kilo\Pa}"]
+    par_value_list = [103e3, tpr_fohes, 930e3/1.1, 0.6/1.05, 0.73/1.05, 68e3*1.2, 300e3*1.1]
+    params = {
+        "p0": 180e3,"t0": 270, "Q_fohe": 122e3,"tpr_fohe": 0.95, "Q_idg": 5e3,
+        "eta_lpfp": 0.6, "eta_hpfp": 0.73, "p_lpfp": 930e3, "qm_hpfp": 1.113,
+        "qm_cb0": 0.31305, "dp_l": 68e3, "dp_inj":300e3
+    }
 if func == "pump":
     folder = folders[0]
-    par_hr_list = ["$\dot{Q}_\mathrm{FOHE}$", "$\pi_\mathrm{FOHE}$", "$\pi_\mathrm{PHC}$", "$\eta_\mathrm{RV}$", "$\eta_\mathrm{HPFP}$", "$\dot{m}_\mathrm{BK,0}$", "$\Delta p_\mathrm{L}$", "$\Delta p_\mathrm{inj}$"]
+    par_hr_list = ["$\dot{Q}_\mathrm{FOHE}$", "$1-\pi_\mathrm{FOHE}$", "$1-\pi_\mathrm{PHC}$", "$\eta_\mathrm{RV}$", "$\eta_\mathrm{HPFP}$", "$\dot{m}_\mathrm{BK,0}$", "$\Delta p_\mathrm{L}$", "$\Delta p_\mathrm{inj}$"]
     par_name_list = ["Q_fohe", "tpr_fohe", "tpr_phc", "eta_r", "eta_hpfp", "qm_cb0", "dp_l", "dp_inj"]
     par_unit_list = ["\si{\kilo\W}", "-", "-", "-", "-", "\si{\kg\per\s}", "\si{\kilo\Pa}", "\si{\kilo\Pa}"]
     par_value_list = [Q_fohes, tpr_fohes, tpr_phcs, eta_vs, eta_ps, qm_cbs, dp_ls, dp_injs]
@@ -59,7 +70,7 @@ if func == "pump":
     }
 elif func == "after":
     folder = folders[1]
-    par_hr_list = ["$\dot{Q}_\mathrm{FOHE}$", "$\pi_\mathrm{FOHE}$", "$\pi_\mathrm{PHC}$", "$\eta_\mathrm{RV}$", "$\eta_\mathrm{HPFC}$", "$\dot{m}_\mathrm{BK,0}$", "$\Delta p_\mathrm{L}$", "$\Delta p_\mathrm{inj}$", "$\pi_\mathrm{V, HP}$", "$\pi_\mathrm{V, LP}$"]
+    par_hr_list = ["$\dot{Q}_\mathrm{FOHE}$", "$1-\pi_\mathrm{FOHE}$", "$1-\pi_\mathrm{PHC}$", "$\eta_\mathrm{RV}$", "$\eta_\mathrm{HPFC}$", "$\dot{m}_\mathrm{BK,0}$", "$\Delta p_\mathrm{L}$", "$\Delta p_\mathrm{inj}$", "$1-\pi_\mathrm{V, HP}$", "$1-\pi_\mathrm{V, LP}$"]
     par_name_list = ["Q_fohe", "tpr_fohe", "tpr_phc", "eta_r", "eta_hpfp", "qm_cb0", "dp_l", "dp_inj", "tpr_vhp", "tpr_vlp"]
     par_unit_list = ["\si{\kilo\W}", "-", "-", "-", "-", "\si{\kg\per\s}", "\si{\kilo\Pa}", "\si{\kilo\Pa}", "-", "-"]
     par_value_list = [Q_fohes, tpr_fohes, tpr_phcs, eta_vs, eta_vs, qm_cbs, dp_ls, dp_injs, tpr_vhps, tpr_vlps]
@@ -71,7 +82,7 @@ elif func == "after":
     }
 elif func == "dual":
     folder = folders[2]
-    par_hr_list = ["$\dot{Q}_\mathrm{FOHE}$", "$\pi_\mathrm{FOHE}$", "$\pi_\mathrm{PHC}$", "$\eta_\mathrm{RV}$", "$\eta_\mathrm{HPFC}$", "$\dot{m}_\mathrm{BK,0}$", "$\Delta p_\mathrm{L}$", "$\Delta p_\mathrm{inj}$"]
+    par_hr_list = ["$\dot{Q}_\mathrm{FOHE}$", "$1-\pi_\mathrm{FOHE}$", "$1-\pi_\mathrm{PHC}$", "$\eta_\mathrm{RV}$", "$\eta_\mathrm{HPFC}$", "$\dot{m}_\mathrm{BK,0}$", "$\Delta p_\mathrm{L}$", "$\Delta p_\mathrm{inj}$"]
     par_name_list = ["Q_fohe", "tpr_fohe", "tpr_phc", "eta_r", "eta_hpfp", "qm_cb0", "dp_l", "dp_inj"]
     par_unit_list = ["\si{\kilo\W}", "-", "-", "-", "-", "\si{\kg\per\s}", "\si{\kilo\Pa}", "\si{\kilo\Pa}"]
     par_value_list = [Q_fohes, tpr_fohes, tpr_phcs, eta_vs, eta_vs, qm_cbs, dp_ls, dp_injs]
@@ -89,6 +100,7 @@ Path(foldername).mkdir(parents=True, exist_ok=True)
 param_comb_list = []
 path_list = []
 step_size = []
+rel_step_size = []
 defname = os.path.join(foldername, "default.csv")
 
 for i in range(len(par_name_list)):
@@ -99,18 +111,29 @@ for i in range(len(par_name_list)):
     param_comb[par_name_list[i]] = par_value_list[i]
     param_comb_list.append(param_comb)
     path_list.append(path)
-    step_size.append(par_value_list[i]-params[par_name_list[i]])
+    if not "pi" in par_hr_list[i]:
+        step_size.append(par_value_list[i]-params[par_name_list[i]])
+        rel_step_size.append(step_size[i]/params[par_name_list[i]])
+        print(par_name_list[i])
+    elif not "V," in par_hr_list[i]:
+        step_size.append(-par_value_list[i]+params[par_name_list[i]])
+        rel_step_size.append(step_size[i]/(1-params[par_name_list[i]]))
+    else:
+        step_size.append(-par_value_list[i]+params[par_name_list[i]])
+        rel_step_size.append(float("inf"))
+param_comb_list.append(params)
+path_list.append(defname)
 
-if False:
+
+if True:
+    if func == "reference":
+        Parallel(n_jobs=i+1)(delayed(fuelsystem.reference)(pc, t_bk_jeta, p_bk, filename=path) for pc, path in zip(param_comb_list, path_list))
     if func == "pump":
-        Parallel(n_jobs=i)(delayed(fuelsystem2.h2pump)(pc, t_bk, t_wu, p_bk, filename=path) for pc, path in zip(param_comb_list, path_list))
-        fuelsystem2.h2pump(params, t_bk, t_wu, p_bk, filename=defname)
+        Parallel(n_jobs=i+1)(delayed(fuelsystem.h2pump)(pc, t_bk, t_wu, p_bk, filename=path) for pc, path in zip(param_comb_list, path_list))
     elif func == "after":
-        Parallel(n_jobs=i)(delayed(fuelsystem2.h2after)(pc, t_bk, t_wu, p_bk, filename=path) for pc, path in zip(param_comb_list, path_list))
-        fuelsystem2.h2after(params, t_bk, t_wu, p_bk, filename=defname)
+        Parallel(n_jobs=i+1)(delayed(fuelsystem.h2after)(pc, t_bk, t_wu, p_bk, filename=path) for pc, path in zip(param_comb_list, path_list))
     elif func == "dual":
-        Parallel(n_jobs=i)(delayed(fuelsystem2.h2dual)(pc, t_bk, t_wu, p_bk, filename=path) for pc, path in zip(param_comb_list, path_list))
-        fuelsystem2.h2dual(params, t_bk, t_wu, p_bk, filename=defname)
+        Parallel(n_jobs=i+1)(delayed(fuelsystem.h2dual)(pc, t_bk, t_wu, p_bk, filename=path) for pc, path in zip(param_comb_list, path_list))
 
 with open(defname, newline='') as def_file:
     data_def = csv.reader(def_file)
@@ -120,12 +143,9 @@ with open(defname, newline='') as def_file:
     P_row = next(data_def)
     _ = next(data_def)
     Q_row = next(data_def)
-    _ = next(data_def)
-    qm_row = next(data_def)
 P_m0 = float(P_row[0])
 Q0 = float(Q_row[0])
 P_r0 = float(P_row[1])
-qm0 = float(qm_row[4])+float(qm_row[5])
     
 
 jacobian = np.zeros([len(par_name_list), 3])
@@ -133,7 +153,8 @@ absolute_difference = np.zeros([len(par_name_list), 3])
 relative_difference = np.zeros([len(par_name_list), 3])
 deltaHP = []
 deltaRV = []
-deltaqm = []
+deltaQ = []
+deltaP = []
 for i in range(len(par_name_list)):
     filename = str(i)+ ".csv"
     path = os.path.join(foldername, filename)
@@ -145,8 +166,6 @@ for i in range(len(par_name_list)):
         P_row = next(data_f)
         _ = next(data_f)
         Q_row = next(data_f)
-        _ = next(data_f)
-        qm_row = next(data_f)
 
     P_mu = float(P_row[0])
     Qu = float(Q_row[0])
@@ -155,7 +174,7 @@ for i in range(len(par_name_list)):
     dQ = Qu-Q0
     dP_m = P_mu - P_m0
     dP_r = P_ru - P_r0
-    dqm = float(qm_row[4]) + float(qm_row[5]) - qm0
+    
     if abs(step_size[i]) > 1e3:
         step_size[i] = step_size[i]/1e3
     # gQ = dQ/step_size[i]
@@ -168,11 +187,12 @@ for i in range(len(par_name_list)):
     absolute_difference[i, 1] = dP_r
     absolute_difference[i, 2] = dQ
     relative_difference[i, 0] = dP_m/P_m0
-    print(par_name_list[i], dP_m, dP_r, P_m0, P_r0)
-    print(round(dP_m/P_m0*100, 3), round(dP_r/P_r0*100, 3))
+    # print(par_name_list[i], dP_m, dP_r, P_m0, P_r0)
+    # print(round(dP_m/P_m0*100, 3), round(dP_r/P_r0*100, 3))
     deltaHP.append(round(dP_m/P_m0*100, 3))
     deltaRV.append(round(dP_r/P_r0*100, 3))
-    deltaqm.append(round(dqm*1e6, 3))
+    deltaQ.append(round(dQ/Q0*100, 3))
+    deltaP.append(round((dP_m+dP_r)/(P_m0+P_r0)*100, 3))
     
 
     
@@ -182,26 +202,29 @@ for i in range(len(par_name_list)):
         #pre init
         pass
     relative_difference[i, 2] = dQ/Q0
-print(deltaHP, deltaRV)
 params = dict()
 for i, name, value in zip(range(len(par_names)), par_names, par_vals):
     params.update({name: value})
 content = {"Parameters": params, "Absolute Differences": absolute_difference.tolist(), "Jacobian": jacobian.tolist(), "Parameter step": step_size, "Parameter names": par_name_list}
-jsonfn = os.path.join(results_dir, folder + ".json")
-csvfn = os.path.join(results_dir, folder + ".csv")
-with open(jsonfn, "w") as jsonout:
-    jsonout.write(json.dumps(content, indent=4))
-with open(csvfn, 'w', newline="") as csvout:
-    csvwriter = csv.writer(csvout)
-    csvwriter.writerow(["Variable", "Einheit", "Schrittweite", "dP_mfp/P_mfp [%]", "dP_r/P_r [%]", "dQ/Q [%]"])
-    for i in range(len(par_name_list)):
-        csvwriter.writerow([par_name_list[i], par_unit_list[i], step_size[i], relative_difference[i, 0]*1e2, relative_difference[i, 1]*1e2, relative_difference[i, 2]*1e2])
+# jsonfn = os.path.join(results_dir, folder + ".json")
+# csvfn = os.path.join(results_dir, folder + ".csv")
+# with open(jsonfn, "w") as jsonout:
+#     jsonout.write(json.dumps(content, indent=4))
+# with open(csvfn, 'w', newline="") as csvout:
+#     csvwriter = csv.writer(csvout)
+#     csvwriter.writerow(["Variable", "Einheit", "Schrittweite", "dP_mfp/P_mfp [%]", "dP_r/P_r [%]", "dQ/Q [%]"])
+#     for i in range(len(par_name_list)):
+#         csvwriter.writerow([par_name_list[i], par_unit_list[i], step_size[i], relative_difference[i, 0]*1e2, relative_difference[i, 1]*1e2, relative_difference[i, 2]*1e2])
 
 
 txtfn = os.path.join(results_dir, folder + ".txt")
 with open(txtfn, "w") as f:
     for i in range(len(par_name_list)):
-        f.write(par_hr_list[i] + " & " + par_unit_list[i] + " & " + str(round(step_size[i], 3)) + " & " + str(deltaHP[i]) + " & " + str(deltaRV[i]) + " & " + str(deltaqm[i]) + " \\\ \hline \n")
+        sz_string = str(round(step_size[i], 3)) if step_size[i] < 0 else "+" + str(round(step_size[i], 3))
+        rsz_string = str(round(rel_step_size[i], 3)*100) if rel_step_size[i] < 0 else "+" + str(round(rel_step_size[i], 3)*100)
+        dP_string = str(round(deltaP[i], 3)) if deltaP[i] < 0 else "+" + str(round(deltaP[i], 3))
+        dQ_string = str(round(deltaQ[i], 3)) if deltaQ[i] < 0 else "+" + str(round(deltaQ[i], 3))
+        f.write((par_hr_list[i] + " & " + par_unit_list[i] + " & " + sz_string + " & " + rsz_string + " & " + dP_string + " & " + dQ_string + " \\\ \hline \n").replace(".", ",").replace("inf", "$\infty$"))
         
     
     

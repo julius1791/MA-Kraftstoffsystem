@@ -161,7 +161,7 @@ def reference(params, t_cbt, p_cbt, corr=False, filename="", v=v0, tolerance=tol
         p_hpfp_old = p_hpfp
         p_hpfp += (p_cbt - p_cba) * rel_fac_2
         
-        qm_t += qm_t0 * (t_cba - t_cbt) * rel_fac * 4
+        qm_t += qm_t0 * (t_cba - t_cbt) * rel_fac * 1.5
         qm_t = max(0, qm_t)
         qm_t = min(qm_t, 0.7)
         
@@ -171,7 +171,7 @@ def reference(params, t_cbt, p_cbt, corr=False, filename="", v=v0, tolerance=tol
             p_hpfp = 0.9*p_hpfp_old 
             
             
-        
+        # print(qm_t)
         # print(i, t_cbt - t_cba, p_cbt - p_cba, h_r - h_rold)
         
         
