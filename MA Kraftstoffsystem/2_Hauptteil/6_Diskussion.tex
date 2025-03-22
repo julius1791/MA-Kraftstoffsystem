@@ -1,0 +1,74 @@
+%==============================================================================
+\chapter{Diskussion} \label{chap:disk}
+%==============================================================================
+
+\section{Sensitivitätsanalyse}
+
+Aufgrund der Unsicherheiten bei der Bestimmung der Modellparameter der Wasserstoff-Kraftstoffsysteme wird eine Sensitivitätsanalyse durchgeführt, um deren Auswirkungen zu bewerten. Die Ergebnisse der Sensitivitätsanalyse für das Kraftstoffsystem mit Pumpe sind in Tabelle \ref{Tab:senspump} zusammengefasst.
+
+\begin{table}[ht]
+    \centering
+	\caption{Sensitivitätsanalyse der Architektur mit Pumpe}
+	\begin{tabular} {|l|c|c|c|c|c|} \hline%
+		Parameter & Einheit & Schrittweite & $ \Delta P_\mathrm{HPFP}$ [\%] & $ \Delta P_\mathrm{RV}$ [\%] & $ \Delta \dot{m}$ [\textperthousand] \\ \hline\hline%
+$\dot{Q}_\mathrm{FOHE}$ & \si{\kilo\W} & -14.455 & 0.117 & 0.118 & 131.303 \\ \hline 
+$\pi_\mathrm{FOHE}$ & - & -0.005 & 0.643 & 1.532 & 4.893 \\ \hline 
+$\pi_\mathrm{PHC}$ & - & -0.002 & 0.249 & 0.596 & 1.901 \\ \hline 
+$\eta_\mathrm{RV}$ & - & -0.065 & 0.018 & 6.533 & 19.697 \\ \hline 
+$\eta_\mathrm{HPFP}$ & - & -0.014 & 10.003 & -0.512 & 3.149 \\ \hline 
+$\dot{m}_\mathrm{BK,0}$ & \si{\kg\per\s} & 0.011 & 10.129 & 10.13 & 11327.714 \\ \hline 
+$\Delta p_\mathrm{L}$ & \si{\kilo\Pa} & 26.0 & 1.798 & 4.205 & 13.429 \\ \hline 
+$\Delta p_\mathrm{inj}$ & \si{\kilo\Pa} & 16.89 & 1.159 & -0.546 & -1.105 \\ \hline 
+
+	\end{tabular}	
+    \label{Tab:senspump}%
+\end{table}
+\FloatBarrier 
+
+Ein Anstieg des Brennkammer-Kraftstoffmassenstroms $\dot{m}_{BK,0}$ wirkt sich direkt proportional auf die Leistungs- und Wärmebedarfe aus. Eine Reduktion der Pumpen- und Verdichterwirkungsgrade verursacht in erster Linie eine erhöhte Leistung der betroffenen Komponente.
+
+
+\begin{table}[ht]
+    \centering
+	\caption{Sensitivitätsanalyse der Architektur mit Verdampfer}
+	\begin{tabular} {|l|c|c|c|c|c|} \hline%
+		Parameter & Einheit & Schrittweite & $ \Delta P_\mathrm{HPFP}$ [\%] & $ \Delta P_\mathrm{RV}$ [\%] & $ \Delta \dot{m}$ [\textperthousand] \\ \hline\hline%
+$\dot{Q}_\mathrm{FOHE}$ & \si{\kilo\W} & -14.455 & 0.116 & 0.117 & 0.116 \\ \hline 
+$\pi_\mathrm{FOHE}$ & - & -0.005 & 0.445 & 1.495 & 0.004 \\ \hline 
+$\pi_\mathrm{PHC}$ & - & -0.002 & 0.172 & 0.582 & 0.001 \\ \hline 
+$\eta_\mathrm{RV}$ & - & -0.065 & 0.014 & 6.532 & 0.014 \\ \hline 
+$\eta_\mathrm{HPFC}$ & - & -0.065 & 10.007 & -1.471 & 0.006 \\ \hline 
+$\dot{m}_\mathrm{BK,0}$ & \si{\kg\per\s} & 0.011 & 10.128 & 10.129 & 10.128 \\ \hline 
+$\Delta p_\mathrm{L}$ & \si{\kilo\Pa} & 26.0 & 1.239 & 4.101 & 0.01 \\ \hline 
+$\Delta p_\mathrm{inj}$ & \si{\kilo\Pa} & 16.89 & 0.799 & -0.602 & -0.001 \\ \hline 
+$\pi_\mathrm{V, HP}$ & - & -0.01 & 0.848 & 2.827 & 0.007 \\ \hline 
+$\pi_\mathrm{V, LP}$ & - & -0.005 & 0.398 & -0.059 & 0.0 \\ \hline 
+
+
+	\end{tabular}	
+    \label{Tab:sensafter}%
+\end{table}
+\FloatBarrier 
+
+
+
+\begin{table}[ht]
+    \centering
+	\caption{Sensitivitätsanalyse der Architektur mit Vormischung}
+	\begin{tabular} {|l|c|c|c|c|c|} \hline%
+		Parameter & Einheit & Schrittweite & $ \Delta P_\mathrm{HPFP}$ [\%] & $ \Delta P_\mathrm{RV}$ [\%] & $ \Delta \dot{m}$ [\textperthousand] \\ \hline\hline%
+$\dot{Q}_\mathrm{FOHE}$ & \si{\kilo\W} & -14.455 & 0.117 & 0.118 & 0.118 \\ \hline 
+$\pi_\mathrm{FOHE}$ & - & -0.005 & 0.445 & 1.51 & 0.004 \\ \hline 
+$\pi_\mathrm{PHC}$ & - & -0.002 & 0.172 & 0.587 & 0.002 \\ \hline 
+$\eta_\mathrm{RV}$ & - & -0.065 & 0.015 & 6.516 & 0.015 \\ \hline 
+$\eta_\mathrm{HPFC}$ & - & -0.065 & 10.008 & -1.48 & 0.007 \\ \hline 
+$\dot{m}_\mathrm{BK,0}$ & \si{\kg\per\s} & 0.011 & 10.129 & 10.13 & 10.13 \\ \hline 
+$\Delta p_\mathrm{L}$ & \si{\kilo\Pa} & 26.0 & 1.24 & 4.14 & 0.011 \\ \hline 
+$\Delta p_\mathrm{inj}$ & \si{\kilo\Pa} & 16.89 & 0.799 & -0.604 & -0.001 \\ \hline 
+
+
+	\end{tabular}	
+    \label{Tab:sensdual}%
+\end{table}
+\FloatBarrier 
+

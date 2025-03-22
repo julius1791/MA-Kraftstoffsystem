@@ -1,0 +1,72 @@
+\babel@toc {ngerman}{}\relax 
+\contentsline {chapter}{Abbildungsverzeichnis}{iii}{chapter*.2}%
+\contentsline {chapter}{Tabellenverzeichnis}{v}{chapter*.3}%
+\contentsline {chapter}{Symbolverzeichnis}{vii}{chapter*.4}%
+\contentsline {chapter}{\numberline {1}Einleitung}{1}{chapter.1}%
+\contentsline {chapter}{\numberline {2}Stand der Technik der Kraftstoffsysteme von Fluggasturbinen}{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Konventionelle Kraftstoffsysteme}{3}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Kraftstoffpumpen und Regelung}{3}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Wärmeübertrager}{4}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}Wärmemanagementsystem}{4}{subsection.2.1.3}%
+\contentsline {subsection}{\numberline {2.1.4}Anordnung der Kraftstoffsystemkomponenten}{5}{subsection.2.1.4}%
+\contentsline {section}{\numberline {2.2}Wasserstoff-Kraftstoffsysteme}{6}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Kraftstoffpumpen}{7}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Wärmeübertrager}{8}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}Wärmemanagementsystem}{8}{subsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.2.4}Anordnung der Kraftstoffsystemkomponenten}{9}{subsection.2.2.4}%
+\contentsline {chapter}{\numberline {3}Methodik}{11}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Annahmen und Vereinfachungen}{11}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Mathematische Formulierung}{12}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Referenz-Kraftstoffsystem}{13}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Systemarchitektur}{14}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Variablen und Parameter}{15}{subsection.3.3.2}%
+\contentsline {section}{\numberline {3.4}Wasserstoff-Kraftstoffsystemarchitekturen}{16}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Architektur mit Hochdruckpumpe}{16}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Architektur mit Verdampfer}{18}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}Architektur mit Vormischung}{19}{subsection.3.4.3}%
+\contentsline {subsection}{\numberline {3.4.4}Variablen und Parameter}{19}{subsection.3.4.4}%
+\contentsline {section}{\numberline {3.5}Modellierung der Komponenten}{20}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Pumpen und Verdichter}{20}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}Wärmeübertrager}{22}{subsection.3.5.2}%
+\contentsline {subsection}{\numberline {3.5.3}Kraftstoffmischung}{23}{subsection.3.5.3}%
+\contentsline {subsection}{\numberline {3.5.4}Parallele Wasserstoffverbrennung}{23}{subsection.3.5.4}%
+\contentsline {subsection}{\numberline {3.5.5}Korrektur des Kraftstoffmassenstroms}{26}{subsection.3.5.5}%
+\contentsline {section}{\numberline {3.6}Stoffmodelle}{27}{section.3.6}%
+\contentsline {subsection}{\numberline {3.6.1}Wasserstoff Stoffmodell}{27}{subsection.3.6.1}%
+\contentsline {subsection}{\numberline {3.6.2}Kerosin Stoffmodell}{29}{subsection.3.6.2}%
+\contentsline {chapter}{\numberline {4}Parametrierung}{31}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Triebwerkszyklus}{31}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Eintrittsbedingungen}{32}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Abwärmequellen}{33}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Wellenlager}{33}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Fan-Getriebe}{34}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Hilfsgeräteträger}{34}{subsection.4.3.3}%
+\contentsline {subsection}{\numberline {4.3.4}Abwärme}{34}{subsection.4.3.4}%
+\contentsline {section}{\numberline {4.4}Pumpen und Verdichter}{35}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Kreiselpumpen}{35}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}Zahnradpumpen}{35}{subsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.4.3}Wasserstoff-Verdichter}{36}{subsection.4.4.3}%
+\contentsline {section}{\numberline {4.5}Wärmeübertrager Druckverluste}{36}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}Referenzkraftstoffsystem}{36}{subsection.4.5.1}%
+\contentsline {subsection}{\numberline {4.5.2}Wasserstoffkraftstoffsysteme}{37}{subsection.4.5.2}%
+\contentsline {section}{\numberline {4.6}Leitungs- und Injektordruckverluste}{38}{section.4.6}%
+\contentsline {subsection}{\numberline {4.6.1}Referenzkraftstoffsystem}{38}{subsection.4.6.1}%
+\contentsline {subsection}{\numberline {4.6.2}Wasserstoff-Kraftstoffsysteme}{38}{subsection.4.6.2}%
+\contentsline {section}{\numberline {4.7}Parallele Wasserstoffverbrennung}{38}{section.4.7}%
+\contentsline {section}{\numberline {4.8}Korrektur des Kraftstoffmassenstroms}{39}{section.4.8}%
+\contentsline {section}{\numberline {4.9}Zusammenfassung}{39}{section.4.9}%
+\contentsline {section}{\numberline {4.10}Brennkammereintrittsbedingungen}{41}{section.4.10}%
+\contentsline {subsection}{\numberline {4.10.1}Brennkammereintrittsdruck}{42}{subsection.4.10.1}%
+\contentsline {subsection}{\numberline {4.10.2}Brennkammer-Eintrittstemperatur Referenzkraftstoffsystem}{42}{subsection.4.10.2}%
+\contentsline {subsection}{\numberline {4.10.3}Temperaturen Wasserstoff-Kraftstoffsysteme}{42}{subsection.4.10.3}%
+\contentsline {chapter}{\numberline {5}Ergebnisse}{45}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Validierung}{45}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Parameterstudie}{46}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}Architektur mit Hochdruckpumpe}{47}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}Vergleich der Wasserstoff-Kraftstoffsysteme}{49}{subsection.5.2.2}%
+\contentsline {section}{\numberline {5.3}Vergleich mit dem Referenzmodell}{53}{section.5.3}%
+\contentsline {chapter}{\numberline {6}Diskussion}{55}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Sensitivitätsanalyse}{55}{section.6.1}%
+\contentsline {chapter}{\numberline {7}Zusammenfassung und Ausblick}{57}{chapter.7}%
+\contentsline {chapter}{Literatur}{63}{chapter*.47}%
+\providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

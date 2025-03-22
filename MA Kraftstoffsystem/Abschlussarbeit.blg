@@ -1,0 +1,74 @@
+This is BibTeX, Version 0.99d
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: Abschlussarbeit.aux
+Reallocating 'name_of_file' (item size: 1) to 27 items.
+A level-1 auxiliary file: 1_Praeambel/Titelseite.aux
+Reallocating 'name_of_file' (item size: 1) to 34 items.
+A level-1 auxiliary file: 1_Praeambel/Symbolverzeichnis.aux
+Reallocating 'name_of_file' (item size: 1) to 29 items.
+A level-1 auxiliary file: 2_Hauptteil/1_Einleitung.aux
+Reallocating 'name_of_file' (item size: 1) to 29 items.
+A level-1 auxiliary file: 2_Hauptteil/2_Grundlagen.aux
+Reallocating 'name_of_file' (item size: 1) to 27 items.
+A level-1 auxiliary file: 2_Hauptteil/3_Methodik.aux
+Reallocating 'name_of_file' (item size: 1) to 33 items.
+A level-1 auxiliary file: 2_Hauptteil/4_Parametrierung.aux
+Reallocating 'name_of_file' (item size: 1) to 29 items.
+A level-1 auxiliary file: 2_Hauptteil/5_Ergebnisse.aux
+Reallocating 'name_of_file' (item size: 1) to 29 items.
+A level-1 auxiliary file: 2_Hauptteil/6_Diskussion.aux
+Reallocating 'name_of_file' (item size: 1) to 34 items.
+A level-1 auxiliary file: 2_Hauptteil/7_Zusammenfassung.aux
+Reallocating 'name_of_file' (item size: 1) to 7 items.
+The style file: natdin.bst
+Reallocating 'name_of_file' (item size: 1) to 10 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'wiz_functions' (item size: 4) to 6000 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Database file #1: Literatur.bib
+Warning--there's a number but no series in BacicMarkoCoullJohn.2024
+Warning--there's a number but no series in PalmerChloeJWhurrJohnR.2024
+You've used 47 entries,
+            4728 wiz_defined-function locations,
+            1240 strings with 17386 characters,
+and the built_in function-call counts, 40911 in all, are:
+= -- 4184
+> -- 1206
+< -- 1107
++ -- 1341
+- -- 416
+* -- 3355
+:= -- 6908
+add.period$ -- 87
+call.type$ -- 47
+change.case$ -- 273
+chr.to.int$ -- 46
+cite$ -- 49
+duplicate$ -- 1005
+empty$ -- 2796
+format.name$ -- 715
+if$ -- 8027
+int.to.chr$ -- 2
+int.to.str$ -- 1
+missing$ -- 231
+newline$ -- 331
+num.names$ -- 188
+pop$ -- 394
+preamble$ -- 1
+purify$ -- 367
+quote$ -- 0
+skip$ -- 1793
+stack$ -- 0
+substring$ -- 3906
+swap$ -- 261
+text.length$ -- 192
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 568
+warning$ -- 2
+while$ -- 342
+width$ -- 0
+write$ -- 770
+(There were 2 warnings)

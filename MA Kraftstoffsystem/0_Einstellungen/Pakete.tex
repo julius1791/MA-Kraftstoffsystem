@@ -1,0 +1,72 @@
+%	1.) Pakete	
+%		a) Sprache, Zeichen, Symbole	
+%		b) Bilder	
+%		c) Tabellen	
+%		d) Formatierung
+%		e) Sonstige	
+
+
+%%%%%% -----------------------------------------------------------------
+%%%%%% 1.) Pakete
+
+%%% a) Sprache, Zeichen, Symbole
+\usepackage[ngerman]{babel}					             					%% BABEL -> deutsch | letztgenannte Sprache ist Hauptsprache im Dokument;Sprachwechsel im Dokument: \selectlanguage{ngerman}
+\usepackage[utf8]{inputenc}                      							%% ISO-Text mit Umlauten
+\usepackage[T1]{fontenc}                         							%% Zeichensatz mit Umlauten
+\usepackage{amssymb}                            							%% Symbole und Umgebungen aus AMSTeX
+\usepackage{amsmath} 														%% AMS-Mathematik
+\usepackage{textcomp}														%% Zusätzliche Symbolzeichen, u.a. für Copyleft Zeichen
+\usepackage{eurosym} 														%% Eurosymbol einfügen
+\usepackage{bbding}															%% Zusätzliche Sonderzeichen
+\usepackage{xfrac}															%% Andere Darstellung für Brüche. Befehl: \sfrac{}{}
+\usepackage{lmodern}														%% Verhindert verpixelte Schrift und sorgt für eine bessere Darstellung von Schrift mit inputenc
+\usepackage{siunitx}														%% Bessere Darstellung von Einheiten
+% \usepackage[none]{hyphenat}
+
+
+
+%%% b) Bilder
+\usepackage{subfigure}														%% 
+\usepackage{lscape}															%% Ermöglicht gedrehte Bilder
+
+
+
+%%% c) Tabellen
+\usepackage{multirow}                            							%% Tabellen
+\usepackage{booktabs}														%% Ermöglicht die Gestaltung von horizontalen linien in Tabellen
+\usepackage{dcolumn}														%% Ermöglicht Gestaltung von Tabellen
+\usepackage{tabularx}														%% Gestaltung von Tabellen; u.a. feste Zeilenbreite und automatischer Zeilenumbruch in Tabellen
+
+
+
+%%% d) Formatierung
+\usepackage[hang,bf, labelformat=simple]{caption} 		                						%% Formatierung von Abbildungs- und Tabellenbeschriftungen
+\usepackage{capt-of}														%% Ermöglicht das Erstellen einer Caption
+\usepackage{color}                             				  				%% Textfarbe
+\usepackage{url} 															%% URLs einfügen
+\usepackage[pdfpagelabels]{hyperref} 										%% pdf-Optionen (sehr gutes Paket für Verwendung des pdf-Dokuments)
+\usepackage{psfrag}															%% Beschriftung von Abbildungen durch Ersetzen von Platzhaltern
+\usepackage{paralist}														%% Ermöglicht kompakte Aufzählungen
+\usepackage{array}															%% Ermöglicht eine genauere Positionierung von Objekten
+\usepackage{rotating}														%% Drehen von Objekten; z.B. Bilder inkl. Beschriftung
+\usepackage{shortvrb}														%% kürzere Form der \verb Funktion die es ermöglicht Latexbefehle in bestimmten Bereichen zu ignorieren
+\usepackage{xcolor}															%% Zum einfärben von minipages mittels (Bsp.:) \fcolorbox{red}{gray}{...}
+\usepackage{icomma}															%% Keine Lücke hinter Komma in Matheumgebung
+
+
+%%% e) Sonstige
+\usepackage[numbers]{natbib}												%% Einstellungen für Bibtex
+\usepackage{import}															%% Notwendig um Unterordner mit \import für *.pdf_tex (aus InkScape) Dateien aufzurufen
+\usepackage[textsize=scriptsize, german]{todonotes}							%% Ermöglicht des erstellen von Notizen. Mit [..., disable] werden alle Notizen ausgeblendet. \listoftodos erstellt eine Übersicht der todos
+\usepackage{pdfpages}														%% 
+\usepackage{makeidx}	%% 
+
+\usepackage[skip=0pt]{caption}
+\usepackage{placeins} % put this in your pre-amble
+\usepackage{flafter}  % put this in your pre-amble
+\usepackage{annotate-equations}
+\usepackage{mathtools}
+\usepackage[makeroom]{cancel}
+\usepackage{esvect}
+\usepackage{graphicx}
+

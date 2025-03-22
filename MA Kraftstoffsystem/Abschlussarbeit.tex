@@ -1,0 +1,92 @@
+% ==========================
+%  IST LaTeX Vorlage
+%  Version: 1.02 - 2023/01
+% ==========================
+% Info: Bisher scheint die Erstellung nur direkt mit "LaTeX --> PDF" zu funktionieren
+
+% Übersicht																		 
+%
+%	1) Pakete --> In "Pakete.tex"
+%	2) Einstellungen --> In "Einstellungen.tex"																									  
+%	3) Dokument							  
+%		a) Titelseite & Verzeichnisse						  
+%		b) Hauptteil													  
+%		c) Literaturverzeichnis												  
+%		d) Anhang
+%		e) ToDo-Notes
+
+
+\documentclass[12pt,a4paper,headinclude,headsepline,parskip,twoside]{scrbook}	% Weitere Dokumentklassen: scrreprt
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% 1) Pakete
+\input{0_Einstellungen/Pakete}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% 2) Einstellungen
+\input{0_Einstellungen/Einstellungen}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% 3) Dokument
+\begin{document}
+
+%%% a) Titelseite & Verzeichnisse
+% Titelseite
+\include{1_Praeambel/Titelseite}
+\cleardoublepage
+\renewcommand{\baselinestretch}{0.85}
+\small\normalsize
+\pagenumbering{roman}\setcounter{page}{1}
+
+% Inhaltsverzeichnis
+\tableofcontents
+
+% Abbildungsverzeichnis															
+\listoffigures
+\addcontentsline{toc}{chapter}{Abbildungsverzeichnis}
+
+% Tabellenverzeichnis
+\listoftables
+\addcontentsline{toc}{chapter}{Tabellenverzeichnis}
+
+% Symbolverzeichnis
+\include{1_Praeambel/Symbolverzeichnis}
+\cleardoublepage
+
+
+%%% b) Hauptteil
+\renewcommand{\baselinestretch}{1.00}\normalsize
+\pagenumbering{arabic}\setcounter{page}{1}
+\include{2_Hauptteil/1_Einleitung}
+\include{2_Hauptteil/2_Grundlagen}
+\include{2_Hauptteil/3_Methodik}								
+\include{2_Hauptteil/4_Parametrierung}						
+\include{2_Hauptteil/5_Ergebnisse}
+\include{2_Hauptteil/6_Diskussion}
+\include{2_Hauptteil/7_Zusammenfassung}
+
+
+
+%%% c) Literaturverzeichnis																					
+\renewcommand{\baselinestretch}{0.90}\normalsize
+\urlstyle{same}
+\bibliographystyle{natdin}
+\bibliography{Literatur}
+\addcontentsline{toc}{chapter}{Literatur}
+
+
+
+
+%%% d) Anhang
+\renewcommand{\baselinestretch}{1.00}\normalsize
+\appendix
+
+
+
+
+%%% d) ToDo-Notes
+\listoftodos																%% Erstellt Liste mit Aufgaben. Zum deaktivieren in der Datei Pakete.tex zwischen den eckigen Klammern disable hinzufügen
+
+\end{document}

@@ -1,0 +1,86 @@
+%	2.) Einstellungen
+%		a) Anzeigestil der Seiten														
+%		b) Eigene Befehle																
+%		c) Seiten-Layout	  
+%		d) Trennungskorrekturen für automatischen Zeilenumbruch														  
+%		e) Links im pdf-Dokument erstellen										  
+
+
+
+%%%%%% -----------------------------------------------------------------
+%%%%%% 2.) Einstellungen
+
+%%% a) Anzeigestil der Seiten
+\pagestyle{headings}														%% Verwendet den Standard-Seitenstil der Koma-Klasse
+\renewcommand*{\chapterheadstartvskip}{\vspace*{.4\baselineskip}}			%% Verringert 
+
+
+
+%%% b) Eigene Befehle
+\newcommand{\abs}[1]{\ensuremath{\left\vert#1\right\vert}}					%% Fügt den Befehl \abs hinzu, der vertikale Striche um das Argument von \abs ergänzt
+
+
+
+%%% c) Seiten-Layout
+\oddsidemargin   0.0cm                           							%%
+\evensidemargin  0.0cm                           							%%
+\topmargin      -1.0cm         												%%
+\textheight     24.0cm         												%%
+\textwidth      16.0cm         												%%
+
+
+\sloppy
+
+
+%%% d) Trennungskorrekturen für automatischen Zeilenumbruch
+\hyphenation{Glei-chung}													%% Zeigt Latex, dass das angegebene Wort an den Stellen mit "-" beim Zeilenumbruch geteilt werden darf
+\hyphenation{Geo-me-trie}
+\hyphenation{Mo-dell}
+\hyphenation{Profil-änderung}
+\hyphenation{zeit-genaue}
+\hyphenation{Um-ge-bung}
+\hyphenation{Kraft-stoff}
+\hyphenation{Marge}
+\hyphenation{üblicher-weise}
+\hyphenation{Verdränger-pumpe}
+\hyphenation{Sättigungs-dampf-druck}
+\hyphenation{gewähr-leisten}
+\hyphenation{höherem}
+\hyphenation{gehört}
+\hyphenation{Kraftstoff-system}
+\hyphenation{Kraftstoff-systeme}
+\hyphenation{Eintritts-temperaturen}
+\hyphenation{Eintritts-temperatur}
+\hyphenation{GasTurb}
+\hyphenation{einer}
+\hyphenation{Nieder-druck-system Nieder-druck-systems erfolgt sonstiger abge-kühlt Schmal-rumpf-verkehrs-flugzeuge}
+
+\global\righthyphenmin=10
+\global\lefthyphenmin=10
+
+
+%%% e) Links im pdf-Dokument erstellen
+\hypersetup{
+	urlcolor = {black},
+	plainpages = {false}, 													%% Verwendet nur arabische Seiten-Label
+	breaklinks = {true},													%% Erlaubt Zeilenumbrüche in Links
+	colorlinks = {true},													%% Benutze farbige Links
+	linkcolor = {black}, 													%% Farbe der Links im Dokument
+	citecolor = {black},													%% Linkfarbe im PDF schwarz machen. Für elektronische Version ändern.
+	bookmarksnumbered = {true}, 											%% Einträge im Verzeichnis nummerieren
+	pdftitle = {Abschlussarbeit Vorname Nachmane}, 							%% Titel der Arbeit
+	pdfsubject = {Titel der Abschlussarbeit},								%% Thema der Arbeit
+	pdfauthor = {Vorname Nachname},											%% Autor der Arbeit
+	%pdfkeywords = {}, 														%% Stichwörter zur Arbeit
+	pdfproducer = {pdfLatex}, 												%% Erzeugt durch
+	pdfcreator = {LaTeX (MikTex mit TexnicCenter)} 							%% Erstellt mit
+}
+
+%%% Darstellung von Einheiten
+\sisetup{per-mode=symbol}
+\sisetup{group-separator = {.}}
+\sisetup{output-decimal-marker = {,}}
+
+\makeatletter
+\newcommand*{\rom}[1]{\expandafter\@slowromancap\romannumeral #1@}
+\makeatother
