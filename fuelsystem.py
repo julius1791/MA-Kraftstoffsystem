@@ -103,8 +103,7 @@ def reference(params, t_cbt, p_cbt, corr=False, filename="", v=v0, tolerance=tol
     P_lpfp = 0
     
     while condition_bool:
-        qm_cb_pot = (P_hpfp + P_lpfp) / (eta_pot*(lhv_jeta_288 + jetaflow.jeta.calc_jeta_enthalpy(t_cbt, p_cbt) - jetaflow.jeta.calc_jeta_enthalpy(288, p_cbt)))
-        qm_cb = qm_cb0+qm_cb_pot
+        qm_cb = qm_cb0
         # fuel from boost pump
         ff_main = jetaflow.JetaFlow(qm_cb+qm_t, t0, p0, v)
         
@@ -204,7 +203,147 @@ def reference(params, t_cbt, p_cbt, corr=False, filename="", v=v0, tolerance=tol
         filename, "reference", t_cbt, float("nan"), eta_hpfp, eta_lpfp, p_cbt, 
         qm_cb, t0, p0, tpr_fohe, float("nan"), float("nan"), v, 
         P_hpfp, P_lpfp, Q_idg + Q_fohe, 0, qm_cb, qm_t, qm_r,
-        0, p_hpfp, qm_cb_pot, i,
+        0, p_hpfp, 0, i,
+        stop-start
+    )
+    return
+
+
+def reference2(params, t_cbt, p_cbt, corr=False, filename="", v=v0, tolerance=tolerance):
+    # unpack params dict
+    p0, t0 = itemgetter("p0","t0")(params)
+    tpr_fohe, Q_idg = itemgetter("tpr_fohe", "Q_idg")(params)
+    p_lpfp, eta_lpfp, eta_hpfp = itemgetter("p_lpfp", "eta_lpfp", "eta_hpfp")(params)
+    qm_cb0, qm_hpfp = itemgetter("qm_cb0", "qm_hpfp")(params)
+    dp_l, dp_inj = itemgetter("dp_l", "dp_inj")(params)
+    
+    start = time.time()
+    
+    # correct combustion chamber fuel mass flow for temperature
+    lhv_tcbt = (
+        lhv_jeta_288 
+        + jetaflow.jeta.calc_jeta_enthalpy(t_cbt, p_cbt) 
+        - jetaflow.jeta.calc_jeta_enthalpy(288, p_cbt)
+    )
+    
+    if corr:
+        qm_cb0 = qm_cb0 * (lhv_jeta_288 / lhv_tcbt)
+    
+    # calculate intitial values for independent variables
+    h_r = jetaflow.calc_ht(t_cbt, p_cbt, v)
+    
+    qm_t = 0
+    
+    p_hpfp = p_cbt/tpr_fohe + dp_l + dp_inj
+    
+    # init loop variables
+    i = 0
+    condition_bool = True
+    P_hpfp = 0
+    P_lpfp = 0
+    
+    DH = qm_cb0*(jetaflow.jeta.calc_jeta_enthalpy(t_cbt, p_cbt)-jetaflow.jeta.calc_jeta_enthalpy(t0, p0))
+    
+    
+    while condition_bool:
+        qm_cb = qm_cb0
+        Q_fohe = DH-P_hpfp-P_lpfp-Q_idg
+        # fuel from boost pump
+        ff_main = jetaflow.JetaFlow(qm_cb+qm_t, t0, p0, v)
+        
+        # calculation of lp fuel pump
+        P_lpfp, _ = ff_main.pump_hydraulic(p_lpfp, eta_lpfp)
+        
+        # detect negative mass flow and stop calculation
+        if qm_cb + qm_t > qm_hpfp:
+            raise ValueError("Mass flow exceeds HPFP limit. QM_T: " + str(qm_t))
+            
+        # initialise recirculation fuel flow
+        ff_r = jetaflow.JetaFlow(qm_hpfp-qm_t-qm_cb,
+            jetaflow.calc_t(h_r, ff_main.p, v), ff_main.p, v
+        )
+        
+        # mix recirculation flow into main flow
+        ff_main.mix_flows(ff_r)
+        
+        # primary heat exchanger
+        ff_main.heat_exchanger(Q_fohe, tpr_fohe)
+        
+        # saturation pressure and static pressure at hp pump inlet
+        # p_sat_pi = jetaflow.sat_p(ff_main.t)
+        # p_pi = ff_main.p
+        
+        # calculation of hp fuel pump
+        P_hpfp, _ = ff_main.pump_hydraulic(p_hpfp, eta_hpfp)
+        
+        # apply pressure loss
+        ff_main.heat_exchanger(0, (jetaflow.calc_pt(ff_main.t, ff_main.p, ff_main.v)-dp_l)/jetaflow.calc_pt(ff_main.t, ff_main.p, ff_main.v))
+        
+        # split off combustion chamber flow
+        ff_cb = ff_main.split_flows(qm_cb)
+        
+        # apply injector pressure loss
+        ff_cb.heat_exchanger(0, (jetaflow.calc_pt(ff_main.t, ff_main.p, ff_main.v)-dp_inj)/jetaflow.calc_pt(ff_main.t, ff_main.p, ff_main.v))
+        
+        # vapour pressure at injector
+        # p_sat_cb = jetaflow.sat_p(ff_cb.t)
+        
+        # stagnation pressure at injector
+        t_cba = ff_cb.t+ff_cb.v**2/(2*jetaflow.jeta.calc_jeta_cp(ff_cb.t, ff_cb.p))
+        p_cba = jetaflow.calc_pt(ff_cb.t, ff_cb.p, ff_cb.v)
+        
+        # idg heat exchanger
+        ff_main.heat_exchanger(Q_idg, 1)
+        
+        # calculate recirculated mass flow
+        qm_r = qm_hpfp - qm_t - qm_cb
+        
+        # calculate independent variables for next iteration
+        h_rold = h_r
+        h_r = (1+qm_r/qm_cb)*ff_main.ht-qm_r/qm_cb*h_r
+        
+        p_hpfp_old = p_hpfp
+        p_hpfp += (p_cbt - p_cba) * rel_fac_2
+        
+        if p_hpfp > 1.1 * p_hpfp_old :
+            p_hpfp = 1.1*p_hpfp_old
+        elif p_hpfp < 0.9 * p_hpfp_old:
+            p_hpfp = 0.9*p_hpfp_old 
+            
+            
+        
+        # print(i, t_cbt - t_cba, p_cbt - p_cba, h_r - h_rold)
+        
+        
+        # check for convergence
+        condition_bool = not (
+            abs(t_cbt - t_cba) < tolerance 
+            and abs(p_cbt - p_cba) < tolerance 
+            and abs(h_r - h_rold) < tolerance
+        )
+        
+        # advance counter and check for iteration limit
+        i+=1
+        if i > max_iter:
+            print("failed to converge")
+            return
+    
+    
+    
+    # print("saturation margin hpp inlet [bar]: " + str((p_pi - p_sat_pi)/1e5))
+    # print("saturation margin injector [bar]: " + str((ff_cb.p - p_sat_cb - dp_inj)/1e5))
+   
+    stop = time.time()
+    
+    # filter negative mass flows
+    if qm_r < 0 or qm_t < 0:
+        raise ValueError("Solution includes negative mass flow")
+        
+    save_results(
+        filename, "reference", t_cbt, float("nan"), eta_hpfp, eta_lpfp, p_cbt, 
+        qm_cb, t0, p0, tpr_fohe, float("nan"), float("nan"), v, 
+        P_hpfp, P_lpfp, Q_idg + Q_fohe, 0, qm_cb, qm_t, qm_r,
+        0, p_hpfp, 0, i,
         stop-start
     )
     return
@@ -648,14 +787,16 @@ if __name__ == "__main__":
     }
     
     
-    # print("reference")
-    # reference(ref_params, 399.15, p_bk, filename="ref.csv")
+    print("reference")
+    reference(ref_params, 399.15, p_bk, filename="ref.csv")
+    print("reference2")
+    reference2(ref_params, 399.15, p_bk, filename="ref2.csv")
     
-    print("\nh2dual")
-    h2dual(dual_params, t_bk, t_wu, p_bk, pcc=True, filename="dual.csv")
+    # print("\nh2dual")
+    # h2dual(dual_params, t_bk, t_wu, p_bk, pcc=True, filename="dual.csv")
     
-    print("\nh2pump")
-    h2pump(pump_params, t_bk, t_wu, p_bk, pcc=True, filename="pump.csv")
+    # print("\nh2pump")
+    # h2pump(pump_params, t_bk, t_wu, p_bk, pcc=True, filename="pump.csv")
     
     # print("\nh2after")
     # h2after(after_params, t_bk, t_wu, p_bk, pcc=True, filename="after.csv")
