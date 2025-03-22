@@ -10,8 +10,8 @@ from operator import itemgetter
 # modelling parameters
 tolerance = 1e-1
 max_iter = 100
-rel_fac = 1/250
-rel_fac_2 = 3/4
+rel_fac = 1/100
+rel_fac_2 = 0.95
 
 # global velocity setting
 v0 = 0
@@ -27,7 +27,6 @@ lhv_h2_200 = (
 lhv_jeta_288 = 43.10e6  # J/kg
 
 eta_pot = 0.74
-
 
 def save_results(
         filename, arch, t_cbt, t_hxt, eta_hpfp, eta_r, p_cbt, qm_cb0, t0, p0,
@@ -605,7 +604,7 @@ def h2dual(params, t_cbt, t_hxt, p_cbt, pcc=True, corr=False, filename="", v=v0,
 
 if __name__ == "__main__":
 
-    t_bk = 600  
+    t_bk = 300  
     t_wu = 280
     
     p_bk = 1.33e6
@@ -649,14 +648,14 @@ if __name__ == "__main__":
     }
     
     
-    print("reference")
-    reference(ref_params, 399.15, p_bk, filename="ref.csv")
+    # print("reference")
+    # reference(ref_params, 399.15, p_bk, filename="ref.csv")
     
-    # print("\nh2dual")
-    # h2dual(dual_params, t_bk, t_wu, p_bk, pcc=True, filename="dual.csv")
+    print("\nh2dual")
+    h2dual(dual_params, t_bk, t_wu, p_bk, pcc=True, filename="dual.csv")
     
-    # print("\nh2pump")
-    # h2pump(pump_params, t_bk, t_wu, p_bk, pcc=True, filename="pump.csv")
+    print("\nh2pump")
+    h2pump(pump_params, t_bk, t_wu, p_bk, pcc=True, filename="pump.csv")
     
     # print("\nh2after")
     # h2after(after_params, t_bk, t_wu, p_bk, pcc=True, filename="after.csv")
