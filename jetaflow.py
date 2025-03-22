@@ -212,25 +212,6 @@ class JetaFlow:
         
         return JetaFlow(qm, self.t, self.p, self.v)
     
-    
-    def calc_static(self, tolerance=tolerance, max_iter=max_iter):
-        """"calculate static temperature and pressure of fuel flow"""
-        ts1 = self.t
-        ps1 = self.p
-        condition_bool = True
-        i = 0
-        while condition_bool:
-            i+=1
-            ts0 = ts1
-            ts1 = [
-                ts1*0.1 
-                + 0.9*(self.t - self.v**2/(2*jeta.calc_jeta_cp(ts0, ps1)))
-            ]
-            ps1 = self.p - jeta.calc_jeta_density(ts0, ps1)*self.v**2/2
-            condition_bool = abs(ts0-ts1) > tolerance
-            if i > max_iter:
-                raise ValueError("calc_static did not converge")
-        return ts1, ps1
 
     
 
