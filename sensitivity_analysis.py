@@ -7,6 +7,7 @@ import csv
 import json
 import numpy as np
 from pathlib import Path
+import math
 
 func = "reference"
 
@@ -31,7 +32,7 @@ eta_vs = eta_v*0.95
 t0 = 25.2
 p0 = 3.45e5
 Q_fohe = 159e3
-Q_fohes = 140e3
+Q_fohes = Q_fohe*0.95
 tpr_fohe = 0.95
 tpr_fohes = 1-(1-tpr_fohe)*1.2
 tpr_phc = 0.98
@@ -40,18 +41,53 @@ dT = 20
 dp_l = 260e3
 dp_ls = dp_l*1.2
 dp_inj = 168.9e3
-dp_injs = dp_inj*1.1
+dp_injs = dp_inj*1.05
 tpr_vhps = 0.99
 tpr_vlps = 0.995
+
+
+def sigfig(num, sigfigs):
+    """round number to specified significant figures"""
+    # filter math range error if num == 0
+    if num == float("inf"):
+        return num
+    if num != 0:
+        power = math.ceil(math.log(abs(num), 10))
+        rounded = round(num/10**power, sigfigs)*10**power
+    else:
+        rounded = 0
+    return rounded
+
+def fixfloat(string):
+    if string == "+inf":
+        return string
+    sep_index = string.find(".")
+    string = string[:sep_index] + string[sep_index+1:]
+    if "99999" in string:
+        index = string.find("99999")
+        string = string[:index-1] + str(int(string[index-1])+1)
+    if "00000" in string:
+        index = string.find("00000")
+        string = string[:index]
+    if len(string) < sep_index+1:
+        while len(string) < sep_index:
+            string += "0"
+    else:
+        string = string[:sep_index] + "." + string[sep_index:]
+    while len(string) < 5:
+        string += "0"
+    if string[1] == "0" and len(string) == 5 and string[2] == ".":
+        string += "0"
+    return string
 
 
 
 if func == "reference":
     folder = folders[3]
-    par_hr_list = ["$\dot{Q}_\mathrm{FOHE}$", "$1-\pi_\mathrm{FOHE}$", "$\p_\mathrm{LPFP}$", "$\eta_\mathrm{RV}$", "$\eta_\mathrm{HPFP}$", "$\Delta p_\mathrm{L}$", "$\Delta p_\mathrm{inj}$"]
+    par_hr_list = ["$\dot{Q}_\mathrm{FOHE}$", "$1-\pi_\mathrm{FOHE}$", "$p_\mathrm{LPFP}$", "$\eta_\mathrm{LPFP}$", "$\eta_\mathrm{HPFP}$", "$\Delta p_\mathrm{L}$", "$\Delta p_\mathrm{inj}$"]
     par_name_list = ["Q_fohe", "tpr_fohe", "p_lpfp", "eta_lpfp", "eta_hpfp", "dp_l", "dp_inj"]
     par_unit_list = ["\si{\kilo\W}", "-", "-", "-", "-", "\si{\kilo\Pa}", "\si{\kilo\Pa}"]
-    par_value_list = [103e3, tpr_fohes, 930e3/1.1, 0.6/1.05, 0.73/1.05, 68e3*1.2, 300e3*1.1]
+    par_value_list = [122e3-127e3*0.05, tpr_fohes, 930e3*0.9, 0.6*0.95, 0.73*0.95, 68e3*1.2, 300e3*1.1]
     params = {
         "p0": 180e3,"t0": 270, "Q_fohe": 122e3,"tpr_fohe": 0.95, "Q_idg": 5e3,
         "eta_lpfp": 0.6, "eta_hpfp": 0.73, "p_lpfp": 930e3, "qm_hpfp": 1.113,
@@ -125,7 +161,7 @@ param_comb_list.append(params)
 path_list.append(defname)
 
 
-if True:
+if False:
     if func == "reference":
         Parallel(n_jobs=i+1)(delayed(fuelsystem.reference)(pc, t_bk_jeta, p_bk, filename=path) for pc, path in zip(param_comb_list, path_list))
     if func == "pump":
@@ -144,7 +180,9 @@ with open(defname, newline='') as def_file:
     _ = next(data_def)
     Q_row = next(data_def)
 P_m0 = float(P_row[0])
-Q0 = float(Q_row[0])
+Q0 = float(Q_row[1])
+if Q0 == 0:
+    Q0 = 1e3
 P_r0 = float(P_row[1])
     
 
@@ -168,7 +206,7 @@ for i in range(len(par_name_list)):
         Q_row = next(data_f)
 
     P_mu = float(P_row[0])
-    Qu = float(Q_row[0])
+    Qu = float(Q_row[1])
     P_ru = float(P_row[1])
         
     dQ = Qu-Q0
@@ -189,12 +227,10 @@ for i in range(len(par_name_list)):
     relative_difference[i, 0] = dP_m/P_m0
     # print(par_name_list[i], dP_m, dP_r, P_m0, P_r0)
     # print(round(dP_m/P_m0*100, 3), round(dP_r/P_r0*100, 3))
-    deltaHP.append(round(dP_m/P_m0*100, 3))
-    deltaRV.append(round(dP_r/P_r0*100, 3))
-    deltaQ.append(round(dQ/Q0*100, 3))
-    deltaP.append(round((dP_m+dP_r)/(P_m0+P_r0)*100, 3))
-    
-
+    deltaHP.append(sigfig(dP_m/P_m0*100, 3))
+    deltaRV.append(sigfig(dP_r/P_r0*100, 3))
+    deltaQ.append(sigfig(dQ/Q0*100, 3))
+    deltaP.append(sigfig((dP_m+dP_r)/(P_m0+P_r0)*100, 3))
     
     try:
         relative_difference[i, 1] = dP_r/P_r0
@@ -220,11 +256,18 @@ content = {"Parameters": params, "Absolute Differences": absolute_difference.tol
 txtfn = os.path.join(results_dir, folder + ".txt")
 with open(txtfn, "w") as f:
     for i in range(len(par_name_list)):
-        sz_string = str(round(step_size[i], 3)) if step_size[i] < 0 else "+" + str(round(step_size[i], 3))
-        rsz_string = str(round(rel_step_size[i], 3)*100) if rel_step_size[i] < 0 else "+" + str(round(rel_step_size[i], 3)*100)
-        dP_string = str(round(deltaP[i], 3)) if deltaP[i] < 0 else "+" + str(round(deltaP[i], 3))
-        dQ_string = str(round(deltaQ[i], 3)) if deltaQ[i] < 0 else "+" + str(round(deltaQ[i], 3))
-        f.write((par_hr_list[i] + " & " + par_unit_list[i] + " & " + sz_string + " & " + rsz_string + " & " + dP_string + " & " + dQ_string + " \\\ \hline \n").replace(".", ",").replace("inf", "$\infty$"))
+        if par_name_list[i] == "qm_cb0":
+            continue
+        sz_string = str(sigfig(step_size[i], 3)) if step_size[i] < 0 else "+" + str(sigfig(step_size[i], 3))
+        rsz_string = str(sigfig(rel_step_size[i], 3)*100) if rel_step_size[i] < 0 else "+" + str(sigfig(rel_step_size[i], 3)*100)
+        dP_string = str(sigfig(deltaP[i], 3)) if deltaP[i] < 0 else "+" + str(sigfig(deltaP[i], 3))
+        dQ_string = str(sigfig(deltaQ[i], 3)) if deltaQ[i] < 0 else "+" + str(sigfig(deltaQ[i], 3))
+        rsz_string = fixfloat(rsz_string)
+        sz_string = fixfloat(sz_string)
+        dP_string = fixfloat(dP_string)
+        dQ_string = fixfloat(dQ_string)
+        
+        f.write((par_hr_list[i] + " & " + par_unit_list[i] + " & " + sz_string + " & " + rsz_string + " & " + dP_string + " \\\ \hline \n").replace(".", ",").replace("+inf", "-"))
         
     
     

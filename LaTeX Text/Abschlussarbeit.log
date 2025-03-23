@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.3) (preloaded format=pdflatex 2025.3.22)  22 MAR 2025 19:30
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.3) (preloaded format=pdflatex 2025.3.22)  23 MAR 2025 03:40
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1258,7 +1258,7 @@ File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 (1_Praeambel/Symbolverzeichnis.aux) (2_Hauptteil/1_Einleitung.aux)
 (2_Hauptteil/2_Grundlagen.aux) (2_Hauptteil/3_Methodik.aux)
 (2_Hauptteil/4_Parametrierung.aux) (2_Hauptteil/5_Ergebnisse.aux)
-(2_Hauptteil/6_Diskussion.aux) (2_Hauptteil/7_Zusammenfassung.aux))
+(2_Hauptteil/7_Zusammenfassung.aux))
 \openout1 = `Abschlussarbeit.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 33.
@@ -1533,7 +1533,7 @@ ck-mar-ge zum
 
 [4]
 <4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/CFM56 Kraftstoffsystem 
-2.pdf, id=342, 455.2441pt x 213.39565pt>
+2.pdf, id=346, 455.2441pt x 213.39565pt>
 File: 4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/CFM56 Kraftstoffsy
 stem 2.pdf Graphic file (type pdf)
 <use 4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/CFM56 Kraftstoffsys
@@ -1545,7 +1545,7 @@ Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen
 
 [5 <./4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/CFM56 Kraftstoffsy
 stem 2.pdf>]
-<4_Abbildungen/2_Hauptteil/Advanced Cycles.png, id=376, 1505.625pt x 552.0625pt
+<4_Abbildungen/2_Hauptteil/Advanced Cycles.png, id=380, 1505.625pt x 552.0625pt
 >
 File: 4_Abbildungen/2_Hauptteil/Advanced Cycles.png Graphic file (type png)
 <use 4_Abbildungen/2_Hauptteil/Advanced Cycles.png>
@@ -1565,7 +1565,7 @@ z für Wasserstoff-
 
 
 [8]
-<4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/brewer.pdf, id=421, 455
+<4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/brewer.pdf, id=425, 455
 .2441pt x 227.62209pt>
 File: 4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/brewer.pdf Graphic
  file (type pdf)
@@ -1599,7 +1599,7 @@ ie Mo-del-lie-rung von
 
 [11{C:/Users/Julius/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-mathsy.
 enc}]
-<4_Abbildungen/2_Hauptteil/solver.pdf, id=468, 455.2441pt x 441.01773pt>
+<4_Abbildungen/2_Hauptteil/solver.pdf, id=472, 455.2441pt x 441.01773pt>
 File: 4_Abbildungen/2_Hauptteil/solver.pdf Graphic file (type pdf)
 <use 4_Abbildungen/2_Hauptteil/solver.pdf>
 Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/solver.pdf  used on input li
@@ -1610,7 +1610,7 @@ ne 39.
 [12]
 
 [13 <./4_Abbildungen/2_Hauptteil/solver.pdf>]
-<4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/Referenz.pdf, id=504, 4
+<4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/Referenz.pdf, id=508, 4
 55.2441pt x 213.39565pt>
 File: 4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/Referenz.pdf Graph
 ic file (type pdf)
@@ -1637,7 +1637,7 @@ Underfull \hbox (badness 1184) in paragraph at lines 109--110
  bei der Wasserstoff-
  []
 
-<4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/pump.pdf, id=529, 455.2
+<4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/pump.pdf, id=533, 455.2
 441pt x 184.94295pt>
 File: 4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/pump.pdf Graphic f
 ile (type pdf)
@@ -1650,7 +1650,7 @@ Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen
 [16]
 
 [17 <./4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/pump.pdf>]
-<4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/after.pdf, id=562, 455.
+<4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/after.pdf, id=566, 455.
 2441pt x 241.84845pt>
 File: 4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/after.pdf Graphic 
 file (type pdf)
@@ -1661,7 +1661,7 @@ Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen
 
 
 [18 <./4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/after.pdf>]
-<4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/dual.pdf, id=588, 455.2
+<4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/dual.pdf, id=592, 455.2
 441pt x 213.39565pt>
 File: 4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/dual.pdf Graphic f
 ile (type pdf)
@@ -1677,7 +1677,7 @@ Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen
 
 [21{C:/Users/Julius/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-mathex.
 enc}]
-<4_Abbildungen/2_Hauptteil/hx.pdf, id=633, 466.57901pt x 291.47073pt>
+<4_Abbildungen/2_Hauptteil/hx.pdf, id=637, 466.57901pt x 291.47073pt>
 File: 4_Abbildungen/2_Hauptteil/hx.pdf Graphic file (type pdf)
 <use 4_Abbildungen/2_Hauptteil/hx.pdf>
 Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/hx.pdf  used on input line 2
@@ -1723,7 +1723,7 @@ Underfull \vbox (badness 1052) has occurred while \output is active []
 
 
 [26]
-<4_Abbildungen/2_Hauptteil/spin.pdf, id=697, 415.41328pt x 249.50613pt>
+<4_Abbildungen/2_Hauptteil/spin.pdf, id=701, 415.41328pt x 249.50613pt>
 File: 4_Abbildungen/2_Hauptteil/spin.pdf Graphic file (type pdf)
 <use 4_Abbildungen/2_Hauptteil/spin.pdf>
 Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/spin.pdf  used on input line
@@ -1756,7 +1756,7 @@ Underfull \vbox (badness 3780) has occurred while \output is active []
 
 
 [32]
-<4_Abbildungen/2_Hauptteil/sankey.pdf, id=773, 455.2441pt x 256.0748pt>
+<4_Abbildungen/2_Hauptteil/sankey.pdf, id=777, 455.2441pt x 256.0748pt>
 File: 4_Abbildungen/2_Hauptteil/sankey.pdf Graphic file (type pdf)
 <use 4_Abbildungen/2_Hauptteil/sankey.pdf>
 Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/sankey.pdf  used on input li
@@ -1854,198 +1854,205 @@ chapter 5.
 
 
 [45]
-Underfull \hbox (badness 2088) in paragraph at lines 58--59
+Underfull \hbox (badness 1117) in paragraph at lines 48--49
+[]\T1/lmr/m/n/12 Mit ei-nem An-stieg der Leis-tun-gen um $\OT1/lmr/m/n/12 +5\OM
+L/lmm/m/it/12 ;\OT1/lmr/m/n/12 39 %$ \T1/lmr/m/n/12 hat die Er-hö-hung der Leit
+ungs-
+ []
+
+
+Underfull \hbox (badness 1694) in paragraph at lines 48--49
+\T1/lmr/m/n/12 Druckverluste bei Wei-tem die gröÿ-te Aus-wir-kung auf die Mo-de
+l-lie-rung des H$[]$-
+ []
+
+
+
+[46]
+
+[47]
+Underfull \hbox (badness 2165) in paragraph at lines 116--117
+\T1/lmr/m/n/12 tungs-be-darf der Pum-pen. Im Ver-gleich ha-ben die Va-ria-ti-on
+ der Leitungs- und
+ []
+
+
+
+[48]
+Underfull \hbox (badness 2088) in paragraph at lines 171--172
 \T1/lmr/m/n/12 Um die Wech-sel-wir-kung zwi-schen Wärmeübertrager- und Brennkam
 mer-Eintritts-
  []
 
 
 
-[46]
-<4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpepowercontour.pdf, id=953, 416.74666p
+[49]
+<4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpepowercontour.pdf, id=976, 416.74666p
 t x 282.36908pt>
 File: 4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpepowercontour.pdf Graphic file (
 type pdf)
 <use 4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpepowercontour.pdf>
 Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpepowercontour
-.pdf  used on input line 66.
+.pdf  used on input line 179.
 (pdftex.def)             Requested size: 409.71689pt x 277.6203pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 72--73
+Underfull \hbox (badness 10000) in paragraph at lines 185--186
 []\T1/lmr/m/n/12 Der Ge-samt-leis-tungs-be-darf steigt mit zu-neh-men-der Wärme
 übertrager-
  []
 
-<4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpe_powersplit.pdf, id=955, 443.68091pt
+<4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpe_powersplit.pdf, id=978, 443.68091pt
  x 219.10898pt>
 File: 4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpe_powersplit.pdf Graphic file (t
 ype pdf)
 <use 4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpe_powersplit.pdf>
 Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpe_powersplit.
-pdf  used on input line 76.
+pdf  used on input line 189.
 (pdftex.def)             Requested size: 409.71689pt x 202.34497pt.
 
 
-[47 <./4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpepowercontour.pdf>]
-<4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpeheatcontour.pdf, id=976, 416.74666pt
+[50 <./4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpepowercontour.pdf>]
+<4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpeheatcontour.pdf, id=999, 416.74666pt
  x 282.36908pt>
 File: 4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpeheatcontour.pdf Graphic file (t
 ype pdf)
 <use 4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpeheatcontour.pdf>
 Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpeheatcontour.
-pdf  used on input line 86.
+pdf  used on input line 199.
 (pdftex.def)             Requested size: 409.71689pt x 277.6203pt.
-<4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpemassflowcontour.pdf, id=978, 416.746
-66pt x 282.36908pt>
+<4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpemassflowcontour.pdf, id=1001, 416.74
+666pt x 282.36908pt>
 File: 4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpemassflowcontour.pdf Graphic fil
 e (type pdf)
 <use 4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpemassflowcontour.pdf>
 Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpemassflowcont
-our.pdf  used on input line 96.
+our.pdf  used on input line 209.
 (pdftex.def)             Requested size: 409.71689pt x 277.6203pt.
 
 
-[48 <./4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpe_powersplit.pdf> <./4_Abbildun
+[51 <./4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpe_powersplit.pdf> <./4_Abbildun
 gen/2_Hauptteil/Ergebnisse/Pumpeheatcontour.pdf>]
-Underfull \hbox (badness 2913) in paragraph at lines 102--103
+Underfull \hbox (badness 2913) in paragraph at lines 215--216
 []\T1/lmr/m/n/12 Die Leis-tung des Re-zir-ku-la-ti-ons-ver-dich-ters bei ho-hen
  Wärmeübertrager-Eintritts-
  []
 
 
-Underfull \hbox (badness 2035) in paragraph at lines 107--108
+Underfull \hbox (badness 2035) in paragraph at lines 220--221
 \T1/lmr/m/n/12 Im Fol-gen-den wer-den die Er-geb-nis-se der Pa-ra-me-ter-stu-di
 e für die ver-schie-de-nen
  []
 
-<4_Abbildungen/2_Hauptteil/Ergebnisse/summary_power.pdf, id=1015, 417.1022pt x 
+<4_Abbildungen/2_Hauptteil/Ergebnisse/summary_power.pdf, id=1038, 417.1022pt x 
 228.49902pt>
 File: 4_Abbildungen/2_Hauptteil/Ergebnisse/summary_power.pdf Graphic file (type
  pdf)
 <use 4_Abbildungen/2_Hauptteil/Ergebnisse/summary_power.pdf>
 Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/Ergebnisse/summary_power.pdf
-  used on input line 111.
+  used on input line 224.
 (pdftex.def)             Requested size: 409.71689pt x 224.45396pt.
 
 
-[49 <./4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpemassflowcontour.pdf>]
-<4_Abbildungen/2_Hauptteil/Ergebnisse/300summary_powersplit.pdf, id=1040, 416.7
+[52 <./4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpemassflowcontour.pdf>]
+<4_Abbildungen/2_Hauptteil/Ergebnisse/300summary_powersplit.pdf, id=1062, 416.7
 4666pt x 238.55182pt>
 File: 4_Abbildungen/2_Hauptteil/Ergebnisse/300summary_powersplit.pdf Graphic fi
 le (type pdf)
 <use 4_Abbildungen/2_Hauptteil/Ergebnisse/300summary_powersplit.pdf>
 Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/Ergebnisse/300summary_powers
-plit.pdf  used on input line 121.
+plit.pdf  used on input line 234.
 (pdftex.def)             Requested size: 409.71689pt x 234.53993pt.
 
 
-[50 <./4_Abbildungen/2_Hauptteil/Ergebnisse/summary_power.pdf> <./4_Abbildungen
+[53 <./4_Abbildungen/2_Hauptteil/Ergebnisse/summary_power.pdf> <./4_Abbildungen
 /2_Hauptteil/Ergebnisse/300summary_powersplit.pdf>]
-<4_Abbildungen/2_Hauptteil/Ergebnisse/tbkcomp.pdf, id=1072, 416.74666pt x 282.3
+<4_Abbildungen/2_Hauptteil/Ergebnisse/tbkcomp.pdf, id=1094, 416.74666pt x 282.3
 6908pt>
 File: 4_Abbildungen/2_Hauptteil/Ergebnisse/tbkcomp.pdf Graphic file (type pdf)
 <use 4_Abbildungen/2_Hauptteil/Ergebnisse/tbkcomp.pdf>
 Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/Ergebnisse/tbkcomp.pdf  used
- on input line 131.
+ on input line 244.
 (pdftex.def)             Requested size: 318.66946pt x 215.92976pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 139--140
+Underfull \hbox (badness 10000) in paragraph at lines 252--253
 []\T1/lmr/m/n/12 Abbildung [][]5.8[][] gibt einen Über-blick der Leis-tungs-an-
 tei-le der Wasserstoff-
  []
 
 
-Underfull \hbox (badness 3460) in paragraph at lines 139--140
+Underfull \hbox (badness 3460) in paragraph at lines 252--253
 \T1/lmr/m/n/12 dar-ge-stellt. Die mitt-le-re Spal-te zeigt die Leis-tungs-an-te
 i-le in Ab-hän-gig-keit der
  []
 
-<4_Abbildungen/2_Hauptteil/Ergebnisse/stackplot_summary.pdf, id=1074, 402.48816
+<4_Abbildungen/2_Hauptteil/Ergebnisse/stackplot_summary.pdf, id=1096, 402.48816
 pt x 403.83348pt>
 File: 4_Abbildungen/2_Hauptteil/Ergebnisse/stackplot_summary.pdf Graphic file (
 type pdf)
 <use 4_Abbildungen/2_Hauptteil/Ergebnisse/stackplot_summary.pdf>
 Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/Ergebnisse/stackplot_summary
-.pdf  used on input line 143.
+.pdf  used on input line 256.
 (pdftex.def)             Requested size: 455.24408pt x 456.7825pt.
 
 
-[51 <./4_Abbildungen/2_Hauptteil/Ergebnisse/tbkcomp.pdf>]
-Underfull \hbox (badness 1924) in paragraph at lines 151--152
+[54 <./4_Abbildungen/2_Hauptteil/Ergebnisse/tbkcomp.pdf>]
+Underfull \hbox (badness 1924) in paragraph at lines 264--265
 []\T1/lmr/m/n/12 Eine di-rek-te Emp-feh-lung spe-zi-fi-scher Eintritts-temperat
 uren lässt sich aus die-sen
  []
 
 
 
-[52 <./4_Abbildungen/2_Hauptteil/Ergebnisse/stackplot_summary.pdf>]
-Underfull \hbox (badness 2393) in paragraph at lines 155--156
+[55 <./4_Abbildungen/2_Hauptteil/Ergebnisse/stackplot_summary.pdf>]
+Underfull \hbox (badness 2393) in paragraph at lines 268--269
 \T1/lmr/m/n/12 sys-tem ver-gli-chen. Ab-bil-dung [][]5.9[][] zeigt den Be-trieb
 s-mit-tel-be-darf der ver-schie-de-
  []
 
-<4_Abbildungen/2_Hauptteil/Ergebnisse/refcomp.pdf, id=1129, 505.76123pt x 266.7
+<4_Abbildungen/2_Hauptteil/Ergebnisse/refcomp.pdf, id=1152, 505.76123pt x 266.7
 8087pt>
 File: 4_Abbildungen/2_Hauptteil/Ergebnisse/refcomp.pdf Graphic file (type pdf)
 <use 4_Abbildungen/2_Hauptteil/Ergebnisse/refcomp.pdf>
 Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/Ergebnisse/refcomp.pdf  used
- on input line 159.
+ on input line 272.
 (pdftex.def)             Requested size: 455.24408pt x 240.13718pt.
-<4_Abbildungen/2_Hauptteil/Ergebnisse/refenergy.pdf, id=1131, 484.05492pt x 266
+<4_Abbildungen/2_Hauptteil/Ergebnisse/refenergy.pdf, id=1154, 484.05492pt x 266
 .78087pt>
 File: 4_Abbildungen/2_Hauptteil/Ergebnisse/refenergy.pdf Graphic file (type pdf
 )
 <use 4_Abbildungen/2_Hauptteil/Ergebnisse/refenergy.pdf>
 Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/Ergebnisse/refenergy.pdf  us
-ed on input line 172.
+ed on input line 285.
 (pdftex.def)             Requested size: 455.24408pt x 250.91243pt.
 
 
-[53 <./4_Abbildungen/2_Hauptteil/Ergebnisse/refcomp.pdf>])
-Underfull \hbox (badness 10000) in paragraph at lines 178--66
+[56 <./4_Abbildungen/2_Hauptteil/Ergebnisse/refcomp.pdf>])
+Underfull \hbox (badness 10000) in paragraph at lines 291--66
 []\T1/lmr/m/n/12 Trotz des zu-sätz-li-chen Be-triebs-mit-tel-be-darfs ver-brau-
 chen die Wasserstoff-
  []
 
 
 
-[54 <./4_Abbildungen/2_Hauptteil/Ergebnisse/refenergy.pdf>]
-\openout2 = `2_Hauptteil/6_Diskussion.aux'.
-
-
-(2_Hauptteil/6_Diskussion.tex
-chapter 6.
-LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 1
-3.
-(C:\Users\Julius\AppData\Local\Programs\MiKTeX\tex/latex/lm\ts1lmr.fd
-File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-
-[55
-
-
-
-
-
-{C:/Users/Julius/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ts1.enc}])
-
-
-[56]
+[57 <./4_Abbildungen/2_Hauptteil/Ergebnisse/refenergy.pdf>]
 \openout2 = `2_Hauptteil/7_Zusammenfassung.aux'.
 
- (2_Hauptteil/7_Zusammenfassung.tex
-chapter 7.
-)
 
-[57
-
-
-
-
-
-] (Abschlussarbeit.bbl
+(2_Hauptteil/7_Zusammenfassung.tex
 
 [58
+
+
+
+
+
+]
+chapter 6.
+)
+
+[59] (Abschlussarbeit.bbl
+
+[60
 
 
 
@@ -2106,9 +2113,9 @@ mps / documents /
 
 
 
-[59]
+[61]
 
-[60]
+[62]
 Underfull \hbox (badness 2990) in paragraph at lines 317--322
 []\T1/lmr/m/sc/12 Patrao\T1/lmr/m/n/12 , Alex-and-re C. ; \T1/lmr/m/sc/12 Xi-st
 o\T1/lmr/m/n/12 , Car-los ; \T1/lmr/m/sc/12 Jons-son\T1/lmr/m/n/12 , Isak ; \T1
@@ -2129,7 +2136,7 @@ ch / participants / documents / downloadPublic ?
 
 
 
-[61]
+[63]
 Underfull \hbox (badness 1596) in paragraph at lines 388--394
 []\T1/lmr/m/sc/12 Shaffer\T1/lmr/m/n/12 , Bry-ce:  \T1/lmr/m/it/12 Air Squa-red
  De-ve-lops World's First Small-Scale Po-si-ti-ve
@@ -2143,11 +2150,11 @@ acement _ cryogenic _ pump /
 
 
 
-[62])
+[64])
 
-[63]
+[65]
 
-[64
+[66
 
 
 ] (Abschlussarbeit.tdo)
@@ -2156,11 +2163,11 @@ acement _ cryogenic _ pump /
 
 
 
-[65] (Abschlussarbeit.aux (1_Praeambel/Titelseite.aux)
+[67] (Abschlussarbeit.aux (1_Praeambel/Titelseite.aux)
 (1_Praeambel/Symbolverzeichnis.aux) (2_Hauptteil/1_Einleitung.aux)
 (2_Hauptteil/2_Grundlagen.aux) (2_Hauptteil/3_Methodik.aux)
 (2_Hauptteil/4_Parametrierung.aux) (2_Hauptteil/5_Ergebnisse.aux)
-(2_Hauptteil/6_Diskussion.aux) (2_Hauptteil/7_Zusammenfassung.aux))
+(2_Hauptteil/7_Zusammenfassung.aux))
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -2169,11 +2176,11 @@ Package rerunfilecheck Info: File `Abschlussarbeit.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 37798 strings out of 473523
- 817082 string characters out of 5714146
- 1311572 words of memory out of 5000000
- 59979 multiletter control sequences out of 15000+600000
- 623286 words of font info for 75 fonts, out of 8000000 for 9000
+ 37744 strings out of 473523
+ 814717 string characters out of 5714146
+ 1310571 words of memory out of 5000000
+ 59933 multiletter control sequences out of 15000+600000
+ 622911 words of font info for 74 fonts, out of 8000000 for 9000
  1167 hyphenation exceptions out of 8191
  108i,14n,109p,10912b,1263s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/Julius/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm
@@ -2208,9 +2215,9 @@ Local/Programs/MiKTeX/fonts/type1/public/lm/lmssbx10.pfb><C:/Users/Julius/AppDa
 ta/Local/Programs/MiKTeX/fonts/type1/public/lm/lmsy10.pfb><C:/Users/Julius/AppD
 ata/Local/Programs/MiKTeX/fonts/type1/public/lm/lmsy6.pfb><C:/Users/Julius/AppD
 ata/Local/Programs/MiKTeX/fonts/type1/public/lm/lmsy8.pfb>
-Output written on Abschlussarbeit.pdf (77 pages, 12664270 bytes).
+Output written on Abschlussarbeit.pdf (79 pages, 12671079 bytes).
 PDF statistics:
- 1654 PDF objects out of 1728 (max. 8388607)
- 274 named destinations out of 1000 (max. 500000)
- 683 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1672 PDF objects out of 1728 (max. 8388607)
+ 278 named destinations out of 1000 (max. 500000)
+ 691 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -2,13 +2,126 @@
 \chapter{Ergebnisse} \label{chap:ergebnis}
 %==============================================================================
 
-In diesem Kapitel werden mit der vorgeschlagenen Modellierung von Kraftstoffsystemen für Fluggasturbinen berechnete Ergebnisse analysiert. Dabei steht insbesondere die Frage im Fokus, ob die Modellierung den Leistungs- und Wärmebedarf der Kraftstoffsysteme akkurat vorhersagen kann. Zunächst wird eine Sensitivitäts-Analyse durchgeführt, um die Auswirkung der in Kapitel \  Danach wird die Methodik dieser Arbeit daher mit Daten aus der Literatur validiert. Anschließend wird im Rahmen einer Parameterstudie analysiert, wie sich die Eintrittstemperaturen des Kraftstoffs in den Wärmeübertrager und die Brennkammer auf die Modellierungen der Wasserstoff-Kraftstoffsysteme auswirkt. Abschließend erfolgt ein Vergleich des Betriebsmittelbedarfs der Wasserstoff-Kraftstoffsysteme untereinander und mit dem Referenzkraftstoffsystem anhand eines ausgewählten Betriebspunkts.
+In diesem Kapitel werden mit der vorgeschlagenen Modellierung von Kraftstoffsystemen für Fluggasturbinen berechnete Ergebnisse analysiert. Dabei steht insbesondere die Frage im Fokus, ob die Modellierung den Leistungs- und Wärmebedarf der Kraftstoffsysteme akkurat vorhersagen kann. Zunächst wird in einer Sensitivitätsanalyse die Auswirkung von Unsicherheiten der in Kapitel \ref{chap:param} bestimmten Parametern auf das Modellverhalten untersucht. Danach wird die Methodik dieser Arbeit daher mit Daten aus der Literatur validiert. Anschließend wird im Rahmen einer Parameterstudie analysiert, wie sich die Eintrittstemperaturen des Kraftstoffs in den Wärmeübertrager und die Brennkammer auf die Modellierungen der Wasserstoff-Kraftstoffsysteme auswirkt. Abschließend erfolgt ein Vergleich des Betriebsmittelbedarfs der H$_2$-Kraftstoffsysteme untereinander und mit dem Referenzkraftstoffsystem anhand eines ausgewählten Betriebspunkts.
+
+\section{Sensitivitätsanalyse}
+
+Im Folgenden wird eine Sensitivitätsanalyse durchgeführt und ausgewertet, um die für das Modellverhalten maßgeblichen Parameter zu identifizieren. Zunächst werden hierfür die Unsicherheiten der Parameter geschätzt. Anschließend werden die mit Unsicherheit behafteten Parameter in die Modellierungen der Kraftstoffsysteme eingesetzt, um die Abweichungen Leistungsbedarfe zu berechnen.
+
+\subsection{Bestimmung der Schrittweiten}
+
+Da die statistische Verteilung der Parameterwerte nicht bekannt ist, werden die Schrittweiten für die Variation der Parameter geschätzt. Die Schrittweiten werden so gewählt, dass die Abweichung der Pumpenleistung des H$_2$-Kraftstoffsystems mit Verdampfer stets ein positives Vorzeichen aufweist.
+
+Der Austrittsdruck der Niederdruckpumpe $p_\mathrm{LPFP}$ des kerosinbetriebenen Kraftstoffsystems ist stets höher als der Öldruck im Wärmeübertrager des Hauptölsystems und somit von diesem abhängig. Der Öldruck ist eine Funktion der Druckverlust des Ölsystems. Aus diesem Grund wird eine moderate Schrittweite von $-10\,\%$ gewählt.
+
+Da die Druckverluste von Wärmeübertragern und Leitungen ein Auslegungsziel darstellen, sind sie nicht direkt mit Unsicherheit behaftet. Jedoch können abweichende Anforderungen an das Gewicht dieser Komponenten eine Aufweichung der Auslegungsziele erfordern. Um diesen Effekt zu berücksichtigen werden der Leitungsdruckverlust $\Delta p_L$ und die Druckverluste $1-\pi_i$ der Wärmeübertrager mit einer Schrittweite von $+20\,\%$ variiert. 
+
+Die Druckverluste des Verdampfers $1-\pi_{\mathrm{V}, i}$ werden in der Modellierung des Kraftstoffsystems vernachlässigt. Da auf der Hochdruckseite zwar geringe, jedoch im Verhältnis zur Niederdruckseite höhere Druckverluste zu erwarten sind (Siehe Kapitel \ref{chap:param}), werden absolute Schrittweiten von $+0,01$ auf der Hochdruckseite und $+0,005$ auf der Niederdruckseite verwendet. 
+
+Die Unsicherheiten der Wirkungsgrade von Pumpen und Verdichtern $\eta$, der verfügbaren Abwärme $\dot{Q}_\mathrm{FOHE}$  und den Injektor-Druckverlusten $\Delta p_\mathrm{inj}$ werden als gering eingeschätzt. Aus diesem Grund wird für diese Parameter eine Schrittweite von $\pm 5\,\%$ ausgewählt.
+
+\subsection{Auswertung der Sensitivitätsanalyse}
+
+Auf Basis der zuvor bestimmten Schrittweiten wird im Folgenden die Sensitivität der Kraftstoffsysteme untersucht und ausgewertet. Zunächst werden die Ergebnisse der Modellierung des H$_2$-Kraftstoffsystems mit Verdampfer präsentiert. Daraufhin werden die Ergebnisse der Sensitivitätsanalysen der H$_2$-Kraftstoffsysteme miteinander verglichen. Abschließend werden die Ergebnisse der Sensitivitätsanalyse für das kerosinbetriebene Kraftstoffsystem diskutiert.
+
+Die Ergebnisse der Sensitivitätsanalyse für das H$_2$-Kraftstoffsystem mit Verdampfer sind in Tabelle \ref{Tab:sensjeta} dargestellt.
+
+\begin{table}[ht]
+	\centering
+	\caption{Sensitivitätsanalyse des H$_2$-Kraftstoffsystems mit Verdampfer}
+	\begin{tabular} {|l|c|c|c|c|c|} \hline%
+		Parameter & Einheit & Schrittweite & Schrittweite [\%] & $ \Delta \sum P_i$ [\%] \\ \hline\hline%
+		$\Delta p_\mathrm{L}$ & \si{\kilo\Pa} & +52,0 & +20,0 & +5,39 \\ \hline 
+		$1-\pi_\mathrm{FOHE}$ & - & +0,010 & +20,0 & +1,98 \\ \hline 
+		$1-\pi_\mathrm{PHC}$ & - & +0,004 & +20,0 & +0,768 \\ \hline
+		$\eta_\mathrm{HPFC}$ & - & -0,0355 & -5,00 & +2,68 \\ \hline  
+		$\eta_\mathrm{RV}$ & - & -0,0355 & -5,00 & +1,71 \\ \hline 
+		$\dot{Q}_\mathrm{FOHE}$ & \si{\kilo\W} & -7,95 & -5,00 & +0,0541 \\ \hline 
+		$\Delta p_\mathrm{inj}$ & \si{\kilo\Pa} & +8,45 & +5,00 & +0,0829 \\ \hline 
+		$1-\pi_\mathrm{V, HP}$ & - & +0,010 & - & +1,88 \\ \hline 
+		$1-\pi_\mathrm{V, LP}$ & - & +0,005 & - & +0,202 \\ \hline 
+	\end{tabular}	
+	\label{Tab:sensafter}%
+\end{table}
+\FloatBarrier 
+
+Mit einem Anstieg der Leistungen um  $+5,39\,\%$ hat die Erhöhung der Leitungs-Druckverluste bei Weitem die größte Auswirkung auf die Modellierung des H$_2$-Kraftstoffsystems mit Verdampfer. Die Reduktionen der Wirkungsgrade der Verdichter haben mit $+2,68\,\%$ (Hochdruckverdichter) beziehungsweise $+1,71\,\%$ (Rezirkulationsverdichter) nur eine moderate Auswirkung auf die Verdichterleistungen. 
+
+Die Erhöhungen der Druckverluste des Ölsystem-Wärmeübertragers und der Hochdruckseite des Verdampfers führen mit $1,98\,\%$ und $1,88\,\%$ ebenfalls zu moderaten anstiegen der Leistungen. Hingegen hat der Anstieg der Druckverluste des PHC-Wärmeübertragers und der Niederdruckseite des Verdampfers nur geringen Einfluss auf die Leistungen. 
+
+Ein Anstieg der Injektor-Druckverluste hat nur geringe Auswirkungen auf die Verdichter-Leistungen.
+
+
+Die Tabellen \ref{Tab:senspump} und \ref{Tab:sensdual} zeigen die Ergebnisse der Sensitivitätsanalysen für die H$_2$-Kraftstoffsysteme mit Hochdruckpumpe und Vormischung.
+
+\begin{table}[ht]
+	\centering
+	\caption{Sensitivitätsanalyse des H$_2$-Kraftstoffsystems mit Pumpe}
+	\begin{tabular} {|l|c|c|c|c|c|} \hline%
+		Parameter & Einheit & Schrittweite & Schrittweite [\%] & $ \Delta \sum P_i$ [\%] \\ \hline\hline%
+		$\Delta p_\mathrm{L}$ & \si{\kilo\Pa} & +52,0 & +20,0 & +8,19 \\ \hline 
+		$1-\pi_\mathrm{FOHE}$ & - & +0,010 & +20,0 & +3,01 \\ \hline 
+		$1-\pi_\mathrm{PHC}$ & - & +0,004 & +20,0 & +1,17 \\ \hline
+		$\eta_\mathrm{HPFP}$ & - & -0,0077 & -5,00 & +1,41 \\ \hline  
+		$\eta_\mathrm{RV}$ & - & -0,0355 & -5,00 & +2,96 \\ \hline 
+		$\dot{Q}_\mathrm{FOHE}$ & \si{\kilo\W} & -7,95 & -5,00 & +0,055 \\ \hline 
+		$\Delta p_\mathrm{inj}$ & \si{\kilo\Pa} & +8,45 & +5,00 & -0,0523 \\ \hline 
+	\end{tabular}	
+	\label{Tab:senspump}%
+\end{table}
+\FloatBarrier 
+
+\begin{table}[ht]
+	\centering
+	\caption{Sensitivitätsanalyse des H$_2$-Kraftstoffsystems mit Vormischung}
+	\begin{tabular} {|l|c|c|c|c|c|} \hline%
+		Parameter & Einheit & Schrittweite & Schrittweite [\%] & $ \Delta \sum P_i$ [\%] \\ \hline\hline%
+		$\Delta p_\mathrm{L}$ & \si{\kilo\Pa} & +52,0 & +20,0 & +5,38 \\ \hline 
+		$1-\pi_\mathrm{FOHE}$ & - & +0,010 & +20,0 & +1,97 \\ \hline 
+		$1-\pi_\mathrm{PHC}$ & - & +0,004 & +20,0 & +0,766 \\ \hline
+		$\eta_\mathrm{HPFC}$ & - & -0,0355 & -5,00 & +2,68 \\ \hline  
+		$\eta_\mathrm{RV}$ & - & -0,0355 & -5,00 & +1,70 \\ \hline 
+		$\dot{Q}_\mathrm{FOHE}$ & \si{\kilo\W} & -7,95 & -5,00 & +0,0551 \\ \hline 
+		$\Delta p_\mathrm{inj}$ & \si{\kilo\Pa} & +8,45 & +5,00 & +0,0838 \\ \hline 
+	\end{tabular}	
+	\label{Tab:sensdual}%
+\end{table}
+\FloatBarrier 
+
+Die H$_2$-Kraftstoffsysteme weisen nur geringfügige Unterschiede in ihren Sensitivitäten auf. Das H$_2$-Kraftstoffsystem mit Hochdruckpumpe zeigt mit $+8,19\,\%$ eine besonders hohe Sensitivität gegenüber Variationen der Leitungs-Druckverluste. Auch Änderungen der Druckverluste in den Wärmeübertragern haben einen stärkeren Einfluss auf dieses System. Die Ergebnisse des H$_2$-Kraftstoffsystems mit Vormischung weichen nur minimal von denen des H$_2$-Kraftstoffsystems mit Verdampfer ab.
+
+Die Ergebnisse der Sensitivitätsanalyse für das kerosinbetriebene Kraftstoffsystem sind in Tabelle \ref{Tab:sensjeta} zusammengefasst.
+
+\begin{table}[ht]
+	\centering
+	\caption{Sensitivitätsanalyse des kerosinbetriebenen Kraftstoffsystems}
+	\begin{tabular} {|l|c|c|c|c|} \hline%
+		Parameter & Einheit & Schrittweite & Schrittweite [\%] & $ \Delta \sum P_i$ [\%] \\ \hline\hline%
+		$p_\mathrm{LPFP}$ & - & -93,0 & -10,0 & +4,38 \\ \hline 
+		$\Delta p_\mathrm{L}$ & \si{\kilo\Pa} & +13,6 & +20,0 & +1,21 \\ \hline 
+		$1-\pi_\mathrm{FOHE}$ & - & +0,010 & +20,0 & +0,828 \\ \hline 
+		$\eta_\mathrm{HPFP}$ & - & -0,0365 & -5,00 & +3,81 \\ \hline 
+		$\eta_\mathrm{LPFP}$ & - & -0,030 & -5,00 & +1,48 \\ \hline 
+		$\dot{Q}_\mathrm{FOHE}$ & \si{\kilo\W} & -6,35 & -5,20 & -1,36 \\ \hline 
+		$\Delta p_\mathrm{inj}$ & \si{\kilo\Pa} & +30,0 & +10,0 & +2,67 \\ \hline 
+	\end{tabular}	
+	\label{Tab:sensjeta}%
+\end{table}
+\FloatBarrier 
+
+Zwar führt der verringerte Austrittsdruck zu einer geringeren Leistung der Niederdruckpumpe, jedoch steigt hierdurch das Druckverhältnis und die Leistung der Hochdruckpumpe. Die Auswirkungen auf die Hochdruckpumpe überwiegen, was zu einem Anstieg des Leistungsbedarfs um $4,38\,\%$ führt – der größten Abweichung unter allen Parametern. 
+
+Eine Verringerung des Wirkungsgrads der Hochdruckpumpe hat einen um $3,81\,\%$ höheren Leistungsbedarf zur Folge. Aufgrund des geringeren Leistungsbedarfs der Niederdruckpumpe hat die Variation ihres Wirkungsgrads mit $1,48\,\%$ eine geringere Auswirkung. 
+
+Eine Steigerung der Injektor-Druckverluste führt zu einem um $2,67\,\%$ höheren Leistungsbedarf der Pumpen. Im Vergleich haben die Variation der Leitungs- und Wärmeübertrager-Druckverluste einen geringen Einfluss auf den Leistungsbedarf. 
+
+Die Verringerung der Abwärme führt zu einem geringeren Massenstrom durch die Niederdruckpumpe und somit zu einer um $1,36\,\%$ verringerten Pumpenleistung.
 
 \section{Validierung}
 
 Zur Validierung der Methodik dieser Arbeit wird das Wasserstoff-Kraftstoffsystem mit Pumpe angepasst und parametriert, um das von Brewer \cite{Brewer.1991} vorgeschlagene Kraftstoffsystem nachzuempfinden. 
 
-Dabei werden folgende Modifikationen an der Modellierung vorgenommen: Die Druckverluste im rezirkulierten Kraftstoffstrom werden vernachlässigt, da das Kraftstoffsystem nach Brewer keinen Rezirkulationsverdichter vorsieht. Der Kraftstoffmassenstrom wird nicht an die Brennkammer-Eintrittstemperatur und Leistungsentnahmen angepasst und eine parallele Wasserstoffverbrennung ist nicht vorgesehen. Zudem bleibt der Wärmeeintrag des von Brewer vorgeschlagenen Rekuperators unberücksichtigt, da sich dieser Wärmeübertrager Stromabwärts der Entnahmestelle des rezirkulierten Kraftstoffs befindet - eine Konfiguration, die von der Modellierung dieser Arbeit abweicht. Um dennoch eine Vergleichbarkeit der Pumpenleistung zu gewährleisten, wird der Druckverlust dieses Wärmeübertragers zu den Druckverluste der Injektoren addiert. 
+Dabei werden folgende Modifikationen an der Modellierung vorgenommen: Die Druckverluste im rezirkulierten Kraftstoffstrom werden vernachlässigt, da das Kraftstoffsystem nach Brewer keinen Rezirkulationsverdichter vorsieht. Der Kraftstoffmassenstrom wird nicht an die Brennkammer-Eintrittstemperatur angepasst und eine parallele Wasserstoffverbrennung ist nicht vorgesehen. Zudem bleibt der Wärmeeintrag des von Brewer vorgeschlagenen Rekuperators unberücksichtigt, da sich dieser Wärmeübertrager Stromabwärts der Entnahmestelle des rezirkulierten Kraftstoffs befindet - eine Konfiguration, die von der Modellierung dieser Arbeit abweicht. Um dennoch eine Vergleichbarkeit der Pumpenleistung zu gewährleisten, wird der Druckverlust dieses Wärmeübertragers zu den Druckverluste der Injektoren addiert. 
 
 Ein weiterer Unterschied liegt in der Modellierung des Kraftstoffs: Während in dieser Arbeit Parawasserstoff verwendet wird, basieren Brewers Berechnungen auf Normalwasserstoff. Dies macht eine Anpassung der Modellparameter des Wasserstoff-Stoffmodels erforderlich. Tabelle \ref{Tab:brewer} zeigt die weiteren Änderungen der Parameter und Variablen gegenüber dem ursprünglichen Wasserstoff-Kraftstoffsystem mit Pumpe.
 

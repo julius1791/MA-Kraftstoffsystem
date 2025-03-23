@@ -1,10 +1,9 @@
-$\dot{Q}_\mathrm{FOHE}$ & \si{\kilo\W} & -19,0 & -11,899999999999999 & +0,129 & +0,129 \\ \hline 
-$1-\pi_\mathrm{FOHE}$ & - & +0,01 & +20,0 & +1,98 & -0,309 \\ \hline 
-$1-\pi_\mathrm{PHC}$ & - & +0,004 & +20,0 & +0,768 & -0,12 \\ \hline 
-$\eta_\mathrm{RV}$ & - & -0,035 & -5,0 & +1,706 & -0,266 \\ \hline 
-$\eta_\mathrm{HPFC}$ & - & -0,035 & -5,0 & +2,676 & -0,418 \\ \hline 
-$\dot{m}_\mathrm{BK,0}$ & \si{\kg\per\s} & +0,0 & +0,0 & +0,0 & +0,0 \\ \hline 
-$\Delta p_\mathrm{L}$ & \si{\kilo\Pa} & +52,0 & +20,0 & +5,394 & -0,842 \\ \hline 
-$\Delta p_\mathrm{inj}$ & \si{\kilo\Pa} & +16,89 & +10,0 & +0,167 & -0,026 \\ \hline 
-$1-\pi_\mathrm{V, HP}$ & - & +0,01 & +$\infty$ & +1,881 & -0,294 \\ \hline 
-$1-\pi_\mathrm{V, LP}$ & - & +0,005 & +$\infty$ & +0,202 & -0,032 \\ \hline 
+$\dot{Q}_\mathrm{FOHE}$ & \si{\kilo\W} & -7,95 & -5,00 & +0,0541 \\ \hline 
+$1-\pi_\mathrm{FOHE}$ & - & +0,010 & +20,0 & +1,98 \\ \hline 
+$1-\pi_\mathrm{PHC}$ & - & +0,004 & +20,0 & +0,768 \\ \hline 
+$\eta_\mathrm{RV}$ & - & -0,0355 & -5,00 & +1,71 \\ \hline 
+$\eta_\mathrm{HPFC}$ & - & -0,0355 & -5,00 & +2,68 \\ \hline 
+$\Delta p_\mathrm{L}$ & \si{\kilo\Pa} & +52,0 & +20,0 & +5,39 \\ \hline 
+$\Delta p_\mathrm{inj}$ & \si{\kilo\Pa} & +8,45 & +5,00 & +0,0829 \\ \hline 
+$1-\pi_\mathrm{V, HP}$ & - & +0,010 & - & +1,88 \\ \hline 
+$1-\pi_\mathrm{V, LP}$ & - & +0,005 & - & +0,202 \\ \hline 
