@@ -18,7 +18,7 @@ Da die Druckverluste von Wärmeübertragern und Leitungen ein Auslegungsziel dar
 
 Die Druckverluste des Verdampfers $1-\pi_{\mathrm{V}, i}$ werden in der Modellierung des Kraftstoffsystems vernachlässigt. Da auf der Hochdruckseite zwar geringe, jedoch im Verhältnis zur Niederdruckseite höhere Druckverluste zu erwarten sind (Siehe Kapitel \ref{chap:param}), werden absolute Schrittweiten von $+0,01$ auf der Hochdruckseite und $+0,005$ auf der Niederdruckseite verwendet. 
 
-Die Unsicherheiten der Wirkungsgrade von Pumpen und Verdichtern $\eta$, der verfügbaren Abwärme $\dot{Q}_\mathrm{FOHE}$  und den Injektor-Druckverlusten $\Delta p_\mathrm{inj}$ werden als gering eingeschätzt. Aus diesem Grund wird für diese Parameter eine Schrittweite von $\pm 5\,\%$ ausgewählt.
+Die Unsicherheiten der Wirkungsgrade von Pumpen und Verdichtern $\eta_i$, der verfügbaren Abwärme $\dot{Q}_\mathrm{FOHE}$  und den Injektor-Druckverlusten $\Delta p_\mathrm{inj}$ werden als gering eingeschätzt. Aus diesem Grund wird für diese Parameter eine Schrittweite von $\pm 5\,\%$ ausgewählt.
 
 \subsection{Auswertung der Sensitivitätsanalyse}
 
@@ -109,13 +109,13 @@ Die Ergebnisse der Sensitivitätsanalyse für das kerosinbetriebene Kraftstoffsy
 \end{table}
 \FloatBarrier 
 
-Zwar führt der verringerte Austrittsdruck zu einer geringeren Leistung der Niederdruckpumpe, jedoch steigt hierdurch das Druckverhältnis und die Leistung der Hochdruckpumpe. Die Auswirkungen auf die Hochdruckpumpe überwiegen, was zu einem Anstieg des Leistungsbedarfs um $4,38\,\%$ führt – der größten Abweichung unter allen Parametern. 
+Zwar führt der verringerte Austrittsdruck zu einer geringeren Leistung der Niederdruckpumpe, jedoch steigt hierdurch das Druckverhältnis und die Leistung der Hochdruckpumpe. Die Auswirkungen auf die Hochdruckpumpe überwiegen, was zu einem Anstieg des Leistungsbedarfs um $4,38\,\%$ führt – der größten Abweichung unter den Parametern. 
 
 Eine Verringerung des Wirkungsgrads der Hochdruckpumpe hat einen um $3,81\,\%$ höheren Leistungsbedarf zur Folge. Aufgrund des geringeren Leistungsbedarfs der Niederdruckpumpe hat die Variation ihres Wirkungsgrads mit $1,48\,\%$ eine geringere Auswirkung. 
 
 Eine Steigerung der Injektor-Druckverluste führt zu einem um $2,67\,\%$ höheren Leistungsbedarf der Pumpen. Im Vergleich haben die Variation der Leitungs- und Wärmeübertrager-Druckverluste einen geringen Einfluss auf den Leistungsbedarf. 
 
-Die Verringerung der Abwärme führt zu einem geringeren Massenstrom durch die Niederdruckpumpe und somit zu einer um $1,36\,\%$ verringerten Pumpenleistung.
+Die kleinere Abwärme führt zu einem geringeren Massenstrom durch die Niederdruckpumpe und somit zu einer um $1,36\,\%$ verringerten Pumpenleistung.
 
 \section{Validierung}
 
@@ -168,7 +168,7 @@ weist ein Residuum von $\Delta \dot{E}_\mathrm{HPFP}=$ \SI{-79.9}{\kilo\W} auf. 
 
 \section{Parameterstudie}
 
-Um die Wechselwirkung zwischen Wärmeübertrager- und Brennkammer-Eintritts-temperatur auf die Betriebsmittelbedarfe der Wasserstoff-Kraftstoffsysteme zu untersuchen wird eine zweidimensionale Parameterstudie durchgeführt. Die Parameter und Konfiguration der Wasserstoff-Kraftstoffsysteme werden über den untersuchten Bereich als konstant angenommen. Da sich die Wasserstoff-Kraftstoffsysteme untereinander in ihrem Verhalten weitgehend ähneln, werden die Ergebnisse zunächst für die Architektur mit Hochdruckpumpe gezeigt. Anschließend werden die Unterschiede zwischen den Architekturen im Detail betrachtet.
+Um die Wechselwirkung zwischen Wärmeübertrager- und Brennkammer-Eintrittstemperatur auf die Betriebsmittelbedarfe der Wasserstoff-Kraftstoffsysteme zu untersuchen wird eine zweidimensionale Parameterstudie durchgeführt. Die Parameter und Konfiguration der Wasserstoff-Kraftstoffsysteme werden über den untersuchten Bereich als konstant angenommen. Da sich die Wasserstoff-Kraftstoffsysteme untereinander in ihrem Verhalten weitgehend ähneln, werden die Ergebnisse zunächst für die Architektur mit Hochdruckpumpe gezeigt. Anschließend werden die Unterschiede zwischen den Architekturen im Detail betrachtet.
 
 \subsection{Architektur mit Hochdruckpumpe}
 
@@ -182,7 +182,7 @@ Abbildung \ref{fig:pumppower} zeigt den mechanischen Leistungsbedarf des Wassers
 \end{figure}
 \FloatBarrier
 
-Der Gesamtleistungsbedarf steigt mit zunehmender Wärmeübertrager-Eintrittstemperatur, da die geringe Differenz zur Brennkammer-Eintrittstemperatur eine verstärkte Kraftstoffrezirkulation erfordert, was die Leistung des Rezirkulationsverdichters erhöht. Zwar führen höhere Brennkammer-Eintrittstemperaturen zu einer Zunahme der spezifischen Arbeit des Rezirkulationsverdichters, jedoch wird dieser Effekt durch den aufgrund der erhöhten Temperaturdifferenz reduzierten rezirkulierten Massenstrom mehr als ausgeglichen. Die Leistung der Hochdruckpumpe ist hingegen unabhängig von den Eintrittstemperaturen (Abbildung \ref{fig:pumpsplit}). 
+Der Gesamtleistungsbedarf steigt mit zunehmender Wärmeübertrager-Eintrittstemperatur, da die geringe Differenz zur Brennkammer-Eintrittstemperatur einen größeren Rezirkulations-Massenstrom erfordert, was die Leistung des Rezirkulationsverdichters erhöht. Zwar führen höhere Brennkammer-Eintrittstemperaturen zu einer Zunahme der spezifischen Arbeit des Rezirkulationsverdichters, jedoch wird dieser Effekt durch den aufgrund der erhöhten Temperaturdifferenz reduzierten rezirkulierten Massenstrom mehr als ausgeglichen. Die Leistung der Hochdruckpumpe ist hingegen unabhängig von den Eintrittstemperaturen (Abbildung \ref{fig:pumpsplit}). 
 
 \begin{figure}[ht]
 \centering
