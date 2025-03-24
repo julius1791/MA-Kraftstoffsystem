@@ -1,0 +1,17 @@
+%==============================================================================
+\chapter{Stand der Technik}\label{chap:standdertechnik}
+%==============================================================================
+
+Die Literatur hat sich bereits umfassend mit der Modellierung von Kraftstoffsystemen für Fluggasturbinen beschäftigt. Im Folgenden werden ausgewählte Modellierungsansätze aus der Literatur erläutert. Für die Modellierung von Kraftstoff- und Wärmemanagementsystemen werden in der Regel physikbasierte Ansätze verwendet. Empirische Modellierungen werden hingegen selten eingesetzt. 
+
+Mawid et al. \cite{Mawid.1998} haben eine Simulationssoftware für thermo-hydraulische Systeme angepasst, um  Kraftstoffsysteme von kerosinbetriebenen Fluggasturbinen zu simulieren. 
+
+Bodie et al. \cite{Bodie.2010} haben die Wärmemanagementsysteme eines Flugzeugs, einschließlich des Kraftstoffsystems, mit einem zusammengesetzte Elemente-Ansatz (engl.: lumped element model) in MATLAB Simulink modelliert. Die Autoren empfehlen in der frühen Entwicklungsphase den Einsatz von Ersatzmodellen mit verringerter Genauigkeit und geringem Rechenaufwand, um die Festlegung der Modelltopologie zu beschleunigen.
+
+German \cite{German.2012} hat mit einem physikbasierten Ansatz die Auswirkungen der Kraftstoffrückführung auf die Temperaturen des Kraftstoff in den Kraftstofftanks modelliert. Die Modellierung kann aufgrund ihres geringen Detailgrads schon früh in der Entwicklungsphase genutzt werden, um die Anforderungen an das Wärmemanagementsystem abzuschätzen.
+
+Sun et al. \cite{Sun.2019} haben die Modellierungen des Kraftstoffsystems und des Ölsystems eines kerosinbetriebenen Turbofantriebwerks in MATLAB Simulink gekoppelt. Die gekoppelte Modellierung der Systeme ermöglicht eine akkurate Abbildung des Systemverhaltens auch unter untypischen Betriebsbedingungen.
+
+Sciatti et al. \cite{Sciatti.2022} haben das Kraftstoffsystem einer kerosinbetriebenen Fluggasturbine mit einem physikbasierten Ansatz in MATLAB Simulink modelliert. Der Fokus lag dabei auf der Interaktion zwischen der Hochdruckpumpe und der Kraftstoffregeleinheit. Das Wärmemanagementsystem wurde hingegen nicht betrachtet. 
+
+Diese Arbeit verwendet einen physikbasierten zusammensetzte Elemente-Ansatz auf Basis der Energiebilanz. Hierfür werden Modelle der einzelnen Komponenten zu Kraftstoffsystemen verschaltet und iterativ gelöst.
