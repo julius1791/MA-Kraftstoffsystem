@@ -2,13 +2,13 @@
 \chapter{Methodik}
 \label{chap:methodik}
 %==============================================================================
-Ziel dieser Arbeit ist die Entwicklung einer Methode für die Modellierung von Kraftstoffsystemen für Fluggasturbinen, um deren Vorauslegung zu unterstützen. Insbesondere wird angestrebt, eine Vergleichbarkeit des Wärme-/Leistungsbedarfs zwischen kerosinbetriebenen und wasserstoffbetriebenen Kraftstoffsystemen zu ermöglichen. 
+Ziel dieser Arbeit ist die Entwicklung einer Methode für die Modellierung von Kraftstoffsystemen für Fluggasturbinen, um deren Vorauslegung zu unterstützen. Insbesondere wird angestrebt, eine Vergleichbarkeit des Wärme-/Leistungsbedarfs zwischen Wasserstoff- und Kerosin-Kraftstoffsystemen zu ermöglichen. 
 
-Zunächst werden die Stoffmodelle für Kerosin und Wasserstoff erläutert. Anschließend werden die für die Modellierung der Kraftstoffsysteme erforderlichen Komponentenmodelle definiert. Im nächsten Schritt wird das Kraftstoffsystem des kerosinbetriebenen CFM56-5B-Triebwerks aus den Komponentenmodellen nachgebildet und mögliche Architekturen für wasserstoffbetriebene Kraftstoffsysteme erarbeitet.
+Zunächst werden die Stoffmodelle für Kerosin und Wasserstoff erläutert. Anschließend werden die für die Modellierung der Kraftstoffsysteme erforderlichen Komponentenmodelle definiert. Im nächsten Schritt wird das Kraftstoffsystem des kerosinbetriebenen CFM56-5B Triebwerks aus den Komponentenmodellen nachgebildet und mögliche Architekturen für Wasserstoff-Kraftstoffsysteme erarbeitet.
 
 \section{Annahmen und Vereinfachungen}
 
-Um einen Kompromiss zwischen Detailtiefe, Genauigkeit und Rechenaufwand zu finden, werden in dieser Arbeit mehrere Vereinfachungen verwendet. Insbesondere gelten die betrachteten Modelle lediglich für den stationären Fall. Da der Fokus dieser Arbeit auf der Vorauslegungsrechnung liegt, wird transientes Systemverhalten nicht betrachtet. 
+Um einen Kompromiss zwischen Detailtiefe, Genauigkeit und Rechenaufwand zu finden, werden in dieser Arbeit mehrere Vereinfachungen verwendet. Insbesondere gelten die betrachteten Modelle lediglich für den stationären Fall. Transientes Systemverhalten wird nicht betrachtet. 
 
 Zudem wird in den für die Modellierung relevanten Querschnitten der Kraftstoffsysteme von vernachlässigbaren Geschwindigkeiten, beziehungsweise kinetischen Energien ausgegangen. Innerhalb der modellierten Turbomaschinen ist diese Annahme nicht gültig, jedoch beschränkt sich die Modellierung auf die Erfassung der Stoffgrößen in den Leitungen zwischen den jeweiligen Komponenten. Bei einer konservativ abgeschätzten Machzahl in den Leitungen von $Ma_L=0.1$ und mit dem Isentropenexponenten $\kappa_{\mathrm{H}_2} = 1.4$ beträgt das mit der Isentropenbeziehung berechnete total zu statische Temperaturverhältnis  $\frac{T_{t,L}}{T_L}$
 
@@ -16,15 +16,19 @@ Zudem wird in den für die Modellierung relevanten Querschnitten der Kraftstoffs
 	\frac{T_{t,\mathrm{L}}}{T_\mathrm{L}}=1+\frac{\kappa_{\mathrm{H}_2}-1}{2}Ma_\mathrm{L}^2
 \end{equation}
 
-lediglich $1,002$. Unter Annahme eines maximalen Wasserstoffmassenstroms von \SI{0.731}{\kg\per\s} bei einer Temperatur von \SI{300}{\K} beträgt der maximale Leitungsdurchmesser \SI{69}{\milli\m}, was als unkritisch eingestuft wird.
+lediglich $1,002$. Unter Annahme eines maximalen Wasserstoffmassenstroms von \SI{0.731}{\kg\per\s} bei einer Temperatur von \SI{300}{\K} beträgt der maximale Leitungsdurchmesser \SI{69}{\milli\m}, was als unkritisch eingestuft wird. Somit gilt die Annahme 
+
+\begin{equation}\label{Eq:ts}
+	T_s=T_t=T,\quad h_s=h_t=h,\quad p_s=p_t=p\,.
+\end{equation}
 
 \section{Stoffmodelle}
 
-Die Modellierung der Kraftstoffsysteme erfordert Stoffmodelle, um thermodynamische Zustandsgrößen wie die spezifische Enthalpie und Entropie in Abhängigkeit von Temperatur und Druck der Kraftstoffe bestimmen zu können. In diesem Abschnitt werden die für Kerosin und Wasserstoff verwendeten Stoffmodelle erläutert.
+Die Modellierung der Kraftstoffsysteme erfordert Stoffmodelle, um thermodynamische Zustandsgrößen wie die spezifische Enthalpie und Entropie in Abhängigkeit von Temperatur und Druck der Kraftstoffe zu bestimmen. In diesem Abschnitt werden die für Kerosin und Wasserstoff verwendeten Stoffmodelle erläutert.
 
 \subsection{Wasserstoff Stoffmodell}
 
-Wasserstoff besteht aus zwei unterschiedlichen Kernspin-Isomeren, Parawasserstoff und Orthowasserstoff. Da sich die beiden Spin-Isomer in ihrer Wärmekapazität bei niedrigen Temperaturen stark unterscheiden, muss das Stoffmodell das Verhältnis der Kern-Isomer berücksichtigen. Bei Temperaturen oberhalb von \SI{200}{\K} liegen die Isomere im thermischen Gleichgewicht in einem Verhältnis von 3:1 zwischen Ortho- und Parawasserstoff vor. Flüssiger Wasserstoff besteht im Gleichgewichtszustand hingegen aus nahezu purem Parawasserstoff (Siehe Abbildung \ref{fig:spin}). In Abwesenheit eines Katalysators wird der Gleichgewichtszustand nur langsam erreicht. Daher ist davon auszugehen, dass der ursprünglich kryogen gelagerte Wasserstoff im Kraftstoffsystem nahezu vollständig in Form von Parawasserstoff vorliegt. Für die Parametrierung des Stoffmodells wird daher eine Zusammensetzung aus purem Parawasserstoff angenommen. \cite{Buntkowsky.2022}
+Wasserstoff besteht aus zwei unterschiedlichen Kernspin-Isomeren, Parawasserstoff und Orthowasserstoff. Da sich die beiden Spin-Isomer in ihrer Wärmekapazität bei niedrigen Temperaturen unterscheiden, muss das Stoffmodell das Verhältnis der Kern-Isomer berücksichtigen. Bei Temperaturen oberhalb von \SI{200}{\K} liegen die Isomere im thermischen Gleichgewicht in einem Verhältnis von 3:1 zwischen Ortho- und Parawasserstoff vor. Flüssiger Wasserstoff besteht im Gleichgewichtszustand hingegen aus nahezu purem Parawasserstoff (Siehe Abbildung \ref{fig:spin}). In Abwesenheit eines Katalysators wird der Gleichgewichtszustand nur langsam erreicht. Es ist daher davon auszugehen, dass der ursprünglich kryogen gelagerte Wasserstoff im gesamten Kraftstoffsystem nahezu vollständig in Form von Parawasserstoff vorliegt. Für die Parametrierung des Stoffmodells wird daher eine Zusammensetzung aus purem Parawasserstoff angenommen. \cite{Buntkowsky.2022}
 
 \begin{figure}[ht]
 	\centering
@@ -43,16 +47,16 @@ Für die Berechnung der thermodynamischen Zustandsgrößen von Parawasserstoff, 
 als Summe der Idealgaskomponente $\alpha^0$ und des Anteils aufgrund von Kompressibilität $\alpha^r$. Hierbei gelten folgende Definitionen der entdimensionierten Helmholtz-Energie $\alpha$ und der entdimensionierten Variablen $\delta$ und $\tau$
 
 \begin{equation}
-	\alpha = \frac{a}{RT}, \delta = \frac{\rho}{\rho_c}, \tau = \frac{T_c}{T} \,.
+	\alpha = \frac{a}{RT}, \quad \delta = \frac{\rho}{\rho_c}, \quad \tau = \frac{T_c}{T} \,
 \end{equation}
 
-Mit einer semi-empirischen Zustandsgleichung berechnen Leachman et al. die Idealgaskomponente der entdimensionierten freien Energie $\alpha^0$
+in Abhängigkeit der spezifischen freien Energie $a$ und den Zustandsgrößen $\rho_c, T_c$ im kritischen Punkt.  Leachman et al. berechnen die Idealgaskomponente der entdimensionierten freien Energie $\alpha^0$
 
 \begin{equation}\label{Eq:free-energy-idealgas}
-	\alpha^0(\tau,\delta)=ln(\delta)+(a_0-1)\mathrm{ln}(\tau)+a_1+a_2\tau-\sum_{i=3}^{m}a_i\frac{(\frac{T_c}{\tau})^{k_i}}{k_i(k_i+1)}+\sum_{i=m+1}^{n}a_i\mathrm{ln}\left(1-e^{\frac{-k_i\tau}{T_c}}\right) \,,
+	\alpha^0(\tau,\delta)=ln(\delta)+(a_0-1)\mathrm{ln}(\tau)+a_1+a_2\tau-\sum_{i=3}^{m}a_i\frac{(\frac{T_c}{\tau})^{k_i}}{k_i(k_i+1)}+\sum_{i=m+1}^{n}a_i\mathrm{ln}\left(1-e^{\frac{-k_i\tau}{T_c}}\right) \,
 \end{equation}
 
-wobei die empirisch bestimmten Koeffizienten $a_i$ und $k_i$ verwendet werden. Die Zustandsgleichung für den Anteil an der entdimensionierten freien Energie aufgrund von Kompressibilitätseffekten $\alpha^r$
+mit einer semi-empirischen Zustandsgleichung, wobei die empirisch bestimmten Koeffizienten $a_i$ und $k_i$ verwendet werden. Die Zustandsgleichung für den Anteil an der entdimensionierten freien Energie aufgrund von Kompressibilitätseffekten $\alpha^r$
 
 \begin{equation}\label{Eq:free-energy-compressibility}
 	\alpha^r(\tau,\delta)=\sum_{i=1}^{l}N_i\delta^{d_i}\tau^{t_i}+\sum_{i=l+1}^{m}N_i\delta^{d_i}\tau^{t_i}e^{-\delta^{p_i}}+\sum_{i=m+1}^{n}N_i\delta^{d_i}\tau^{t_i}e^{-\phi_i(\delta-D_i)^2-\beta_i(\tau-\gamma_i)^2)}
@@ -64,7 +68,7 @@ orientiert sich an theoretischen und praktischen Abwägungen. Die in Gleichung \
 	p=\rho RT\left(1+\delta\frac{\partial\alpha^r}{\partial\delta}(\delta, \tau)\right)
 \end{equation}
 
-iterativ mit dem Newton-Raphson-Verfahren gelöst. Die Ableitung des inkompressiblen Anteils der freien Energie nach der entdimensionierten Dichte $\frac{\partial\alpha^r}{\partial\delta}$ wird aus Gleichung \ref{Eq:free-energy-compressibility} hergeleitet. Mit Dichte und Temperatur beziehungsweise deren entdimensionierten Äquivalenten ist es möglich die freien Energien und die Ableitungen der freien Energien nach $\delta$ und $\tau$ zu berechnet und das Stoffmodell somit eindeutig bestimmt. Diese Werte liefern die Grundlage für die Berechnung der thermodynamischen Zustandsgrößen mit den in Tabelle \ref{Tab:thermodynamic_properties_h2} definierten Zustandsgleichungen.
+iterativ mit dem Newton-Raphson-Verfahren gelöst. Die Ableitung des inkompressiblen Anteils der freien Energie nach der entdimensionierten Dichte $\frac{\partial\alpha^r}{\partial\delta}$ wird aus Gleichung \ref{Eq:free-energy-compressibility} hergeleitet. Mit Dichte und Temperatur beziehungsweise deren entdimensionierten Äquivalenten ist es möglich die freien Energien und die Ableitungen der freien Energien nach $\delta$ und $\tau$ zu berechnen und das Stoffmodell ist somit eindeutig bestimmt. Diese Werte liefern die Grundlage für die Berechnung der thermodynamischen Zustandsgrößen mit den in Tabelle \ref{Tab:thermodynamic_properties_h2} definierten Zustandsgleichungen.
 
 \begin{table}[ht]
 	\centering
@@ -103,24 +107,26 @@ Da Kerosin kein Reinstoff, sondern eine Mischung von Kohlen-Wasserstoffverbindun
 \end{table}
 \FloatBarrier 
 
-Da eine Berechnung der Dichte mit demselben Ansatz nicht möglich ist, werden in dieser Arbeit stattdessen von Outcalt et al. \cite{Outcalt.2009} gemessenen Datenpunkte interpoliert beziehungsweise für Temperaturen unterhalb von \SI{270}{\K} extrapoliert. Als Datengrundlage wird die Probe "Jet-A 4658" verwendet, da sie von den Autoren als die repräsentativste der Proben erachtet wird. Für die Berechnung der Dichte $\rho(T,p)$, werden die vier angrenzenden gemessenen Dichten $\rho(T_\mathrm{N},p_{\mathrm{N,n}})$, $\rho(T_\mathrm{N},p_{\mathrm{N,h}})$, $\rho(T_\mathrm{H},p_{\mathrm{H,n}})$ und $\rho(T_\mathrm{H},p_{\mathrm{H,h}})$ benötigt. Bei der Extrapolation werden stattdessen Messwerte der jeweils zwei nächsthöheren Temperaturen als Stützstellen verwendet. Da Outcalt et al. die Dichte für einheitliche Temperaturschritte, aber uneinheitliche Druckschritte gemessen haben, werden zunächst die Dichten $\rho(T_\mathrm{H}, p)$ und $\rho(T_\mathrm{N}, p)$ 
+Da eine Berechnung der Dichte mit demselben Ansatz nicht möglich ist, werden in dieser Arbeit stattdessen von Outcalt et al. \cite{Outcalt.2009} gemessenen Datenpunkte interpoliert. Als Datengrundlage wird die Probe "Jet-A 4658" verwendet, da sie von den Autoren als die repräsentativste der Proben erachtet wird. Für die Interpolation werden die vier angrenzenden Datenpunkte herangezogen. Zunächst wird die Dichte für den Druck interpoliert, da die Autoren die Dichte für uneinheitliche Druckschritte gemessen haben. Abschließend werden die druck-interpolierten Punkte für die Temperatur interpoliert. 
 
-\begin{equation}\label{Eq:pressure-interp}
-	\rho(T_i, p)= \rho(T_i, p_{i,\mathrm{n}}) + \frac{\rho(T_i, p_{i,\mathrm{h}})-\rho(T_i, p_{i,\mathrm{n}})}{p_{i,\mathrm{h}}-p_{i,\mathrm{n}}}(p-p_{i,\mathrm{n}}) 
-\end{equation}
+% Für die Berechnung der Dichte $\rho(T,p)$, werden die vier angrenzenden gemessenen Dichten $\rho(T_\mathrm{N},p_{\mathrm{N,n}})$, $\rho(T_\mathrm{N},p_{\mathrm{N,h}})$, $\rho(T_\mathrm{H},p_{\mathrm{H,n}})$ und $\rho(T_\mathrm{H},p_{\mathrm{H,h}})$ benötigt. Bei der Extrapolation werden stattdessen Messwerte der jeweils zwei nächsthöheren Temperaturen als Stützstellen verwendet. Da Outcalt et al. die Dichte für einheitliche Temperaturschritte, aber uneinheitliche Druckschritte gemessen haben, werden zunächst die Dichten $\rho(T_\mathrm{H}, p)$ und $\rho(T_\mathrm{N}, p)$ 
 
-für den Druck interpoliert. Abschließend wird die Dichte $\rho(T,p)$
+% \begin{equation}\label{Eq:pressure-interp}
+	%\rho(T_i, p)= \rho(T_i, p_{i,\mathrm{n}}) + \frac{\rho(T_i, p_{i,\mathrm{h}})-\rho(T_i, p_{i,\mathrm{n}})}{p_{i,\mathrm{h}}-p_{i,\mathrm{n}}}(p-p_{i,\mathrm{n}}) 
+%\end{equation}
 
-\begin{equation}\label{Eq:temperature-interp}
-	\rho(T, p)= \rho(T_\mathrm{N}, p) + \frac{\rho(T_\mathrm{H}, p)-\rho(T_\mathrm{N}, p)}{T_\mathrm{H}-T_\mathrm{N}}(T-T_\mathrm{N}) 
-\end{equation}
+%für den Druck interpoliert. Abschließend wird die Dichte $\rho(T,p)$
 
-für die Temperatur interpoliert. 
+%\begin{equation}\label{Eq:temperature-interp}
+	%\rho(T, p)= \rho(T_\mathrm{N}, p) + \frac{\rho(T_\mathrm{H}, p)-\rho(T_\mathrm{N}, p)}{T_\mathrm{H}-T_\mathrm{N}}(T-T_\mathrm{N}) 
+%\end{equation}
+
+%für die Temperatur interpoliert. 
 
 
 \section{Modellierung der Komponenten}
 
-Im Folgenden werden die Modellierungen der verschiedenen Komponenten erläutert, die in den Kraftstoffsystemen zum Einsatz kommen. Neben Modellen für Verdichter und Pumpen wird ein Modell für Wärmeübertrager benötigt. Für die Modellierung der Wasserstoff-Kraftstoffsysteme ist zusätzlich ein Modell für parallele Wasserstoffverbrennung in einer Nebenbrennkammer erforderlich. 
+Im Folgenden werden die Modellierungen der verschiedenen Kraftstoffsystem-Komponenten erläutert. Neben Modellen für Verdichter und Pumpen wird ein Modell für Wärmeübertrager benötigt. Für die Modellierung der Wasserstoff-Kraftstoffsysteme ist zusätzlich ein Modell für parallele Wasserstoffverbrennung in einer Nebenbrennkammer erforderlich. 
 
 \subsection{Pumpen und Verdichter}
 
@@ -130,7 +136,7 @@ Sämtliche Verdichter- und Pumpentypen werden durch die Definition des isentrope
 	\eta_s=\frac{h_2-h_1}{h_{2,s}-h_1}
 \end{equation}
 
-modelliert. Dabei werden neben dem isentropen Wirkungsgrad auch der Austrittsdruck $p_2$, der Eintrittsdruck $p_1$, die Eintrittstemperatur $T_1$ und somit über das Stoffmodell die spezifische Eintrittsenthalpie $h_1(T_1, p_1)$ sowie die spezifische Eintrittsentropie $s_1(T_1, p_1)$ als bekannt vorausgesetzt. Die Austrittstemperatur des reversiblen Prozesses $T_{2,s}$ wird iterativ mit der spezifischen Eintrittsentropie $s_1$ und dem Austrittsdruck $p_2$ bestimmt. Die Temperatur der nächsten Iteration wird mit der idealen Zustandsgleichung für die Entropie geschätzt
+modelliert. Dabei werden neben dem isentropen Wirkungsgrad auch der Austrittsdruck $p_2$, der Eintrittsdruck $p_1$, die Eintrittstemperatur $T_1$ und somit über das Stoffmodell die spezifische Eintrittsenthalpie $h_1(T_1, p_1)$ sowie die spezifische Eintrittsentropie $s_1(T_1, p_1)$ als bekannt vorausgesetzt. Die Austrittstemperatur des reversiblen Prozesses $T_{2,s}$ wird iterativ mit der spezifischen Eintrittsentropie $s_1$ und dem Austrittsdruck $p_2$ bestimmt. Die Temperatur der nächsten Iteration wird mit der idealen Zustandsgleichung für die Entropie und der spezifischen isobaren Wärmekapazität $c_p(T_1,p)$ geschätzt 
 
 \begin{equation}\label{Eq:entropy}
 	s(T_2,p)-s(T_1, p)=\cancel{s(T_0,p_0) - s(T_0,p_0)} + c_p(T_1,p) ln\left(\frac{T_2}{T_1}\right) - {\cancel{\overbrace{R ln\frac{p}{p}}^{\substack{\text{Nur bei } \\ \text{idealem Gas}}}}}\,.
@@ -149,17 +155,17 @@ Abschließend wird mit der Energiebilanz um die Pumpe beziehungsweise den Verdic
 	P=\dot{m}(h_2-h_1)
 \end{equation}
 
-bestimmt, die benötigt wird um den Kraftstoffmassenstrom $\dot{m}$ zu fördern.
+bestimmt, die benötigt wird, um den Kraftstoffmassenstrom $\dot{m}$ zu fördern.
 
 \subsection{Wärmeübertrager}
 
-Da in dieser Arbeit ein stationärer Prozess angenommen wird, ist eine ausführliche Modellierung mit Berücksichtigung der konkreten Geometrie des Wärmeübergangs nicht notwendig. Eine Auslegungsrechnung der Wärmeübertrager wird in dieser Arbeit nicht angestrebt. Es gilt jedoch die Randbedingung, dass die Wärmequelle eines Wärmeübertragers in jedem Schnitt ein höheres Temperaturniveau als der zu erwärmende Kraftstoffmassenstrom aufweist. Anhand des $\dot{Q}-T$ Diagramms (Beispiel siehe Abbildung \ref{fig:hx}) kann festgestellt werden, ob über den gesamten Wärmeübertrager eine minimale Temperaturdifferenz $\Delta T_{min}$ zwischen Wärmequelle und Kraftstoffstrom eingehalten werden kann.
+Eine Auslegungsrechnung der Wärmeübertrager wird in dieser Arbeit nicht angestrebt. Es gilt jedoch die Randbedingung, dass die Wärmequelle eines Wärmeübertragers in jedem Schnitt ein höheres Temperaturniveau als der zu erwärmende Kraftstoffmassenstrom aufweist. Anhand des $\dot{Q}-T$ Diagramms (Beispiel siehe Abbildung \ref{fig:hx}) kann festgestellt werden, ob über den gesamten Wärmeübertrager eine minimale Temperaturdifferenz $\Delta T_{min}$ zwischen Wärmequelle und Kraftstoffstrom eingehalten werden kann.
 
 
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=1\linewidth]{4_Abbildungen/2_Hauptteil/hx.pdf}
-	\caption{schematisches Wärmestromdiagramm eines Wasserstoffkraftstoffsystems}
+	\caption{schematisches Wärmestromdiagramm eines Kraftstoffsystems}
 	\label{fig:hx}
 \end{figure}
 \FloatBarrier 
@@ -355,35 +361,7 @@ Die abhängigen Variablen der Modellierungen der Wasserstoff-Kraftstoffsysteme s
 
 
 
-
-
-
-
-\section{Mathematische Formulierung}
-
-Die Modellierung der Kraftstoffsysteme kann vereinfacht als Funktion $f$ betrachtet werden, welche die unabhängigen Variablen $x$ (Pumpenleistungen, Wärmezufuhr etc.) mithilfe der bekannten Parameter $P$ (Wirkungsgrade, Randbedingungen etc.) auf die abhängigen Variablen $y$ (z.B. Brennkammer-Eintrittstemperatur)
-
-\begin{equation}\label{Eq:fuel_func}
-	y = f(x, P)
-\end{equation}
-
-abbildet. Zu den Parametern $P$ zählen hierbei beispielsweise als konstant angenommene Pumpenwirkungsgrade und der Ausgangszustand der Kraftstoffe. Für den Zweck dieser Betrachtung fallen unter die unabhängigen Variablen Größen wie der Austrittsdruck der Hochdruckpumpe. Der Brennkammer-Eintrittsdruck und die Brennkammer-Eintrittstemperatur sind Beispiele für die abhängigen Variablen. Für den Zweck dieser Arbeit ist allerdings von Interesse, inwiefern sich die abhängigen Variablen die unabhängigen Variablen auswirken. So ist eine relevante Fragestellung, welche Wärmezufuhr zum erreichen einer bestimmten Brennkammer-Eintrittstemperatur erforderlich ist. Mathematisch entspricht dies der Umkehrfunktion $f^{-1}$, welche die abhängigen Variablen $y$ auf die unabhängigen Variablen $x$
-
-\begin{equation}\label{Eq:fuel_inverse}
-	x = f^{-1}(y, P)
-\end{equation}
-
-abbildet. Eine analytische Herleitung der Umkehrfunktion der Modellierungen der Kraftstoffsysteme zu bilden, ist nicht möglich. Es ist daher notwendig die Werte der Umkehrfunktion numerisch zu approximieren. Der Lösungsansatz dieser Arbeit für dieses mathematische Problem ist in Abbildung \ref{fig:solver} dargestellt. 
-
-\begin{figure}[ht]
-	\centering
-	\includegraphics[width=0.8\linewidth]{4_Abbildungen/2_Hauptteil/solver.pdf}
-	\caption{Numerische Berechnung von Werten der Umkehrfunktion}
-	\label{fig:solver}
-\end{figure}
-\FloatBarrier 
-
-Zunächst werden die Parameter und die Zielwerte für die abhängigen Variablen definiert. Mithilfe der Zielwerte werden vernünftige Startwerte für die unabhängigen Variablen geschätzt. An dieser Stelle beginnt die iterative Lösung der Modellierung. In jeder Iteration wird mit den gegebenen Werten der unabhängigen Variablen ein Wert für die abhängigen Variablen $y'$ berechnet. Wenn das Residuum, also der Betrag der Differenz zwischen dem Zielwert und dem  berechneten Wert der abhängigen Variable, die Toleranz unterschreitet, ist die Lösung erfolgreich abgeschlossen. Die spezifische Enthalpie der rezirkulierten Kraftstoffmassenströme in dem vorwärts-rechnenden Modell ist unbekannt. Es wird daher mit dem Wert der vorherigen Iteration gerechnet. Dieser Umstand wird durch Einführung einer Schließungsbedingung berücksichtigt. Die Bedingung gilt als erfüllt, wenn der Betrag der Differenz der spezifischen Enthalpien der letzten zwei Iterationen einen geringeren Wert als die Toleranz erreicht.
+\section{Zuammenfassung}
 
 
 
