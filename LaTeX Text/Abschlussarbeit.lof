@@ -8,22 +8,23 @@
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {4.1}{\ignorespaces Wasserstoff Kernspin-Isomer Anteile nach \cite {Buntkowsky.2022}}}{14}{figure.caption.12}%
 \contentsline {figure}{\numberline {4.2}{\ignorespaces schematisches Wärmestromdiagramm eines Kraftstoffsystems}}{18}{figure.caption.15}%
-\contentsline {figure}{\numberline {4.3}{\ignorespaces Referenzkraftstoffsystem}}{21}{figure.caption.16}%
-\contentsline {figure}{\numberline {4.4}{\ignorespaces Wasserstoffkraftstoffsystem mit Pumpe adaptiert aus \cite {Brewer.1991}}}{23}{figure.caption.18}%
-\contentsline {figure}{\numberline {4.5}{\ignorespaces Wasserstoffkraftstoffsystem mit Verdichter und Verdampfer}}{25}{figure.caption.19}%
-\contentsline {figure}{\numberline {4.6}{\ignorespaces Wasserstoffkraftstoffsystem mit Verdichter und Vormischung}}{26}{figure.caption.20}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Kerosin-Kraftstoffsystem}}{21}{figure.caption.16}%
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Wasserstoff-Kraftstoffsystem mit Pumpe adaptiert aus \cite {Brewer.1991}}}{23}{figure.caption.18}%
+\contentsline {figure}{\numberline {4.5}{\ignorespaces Wasserstoff-Kraftstoffsystem mit Verdichter und Verdampfer}}{24}{figure.caption.19}%
+\contentsline {figure}{\numberline {4.6}{\ignorespaces Wasserstoff-Kraftstoffsystem mit Verdichter und Vormischung}}{25}{figure.caption.20}%
+\contentsline {figure}{\numberline {4.7}{\ignorespaces Lösungsalgorithmus des Kraftstoffsystems mit Hochdruckpumpe}}{27}{figure.caption.22}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {5.1}{\ignorespaces Abwärmequellen konventioneller Kraftstoffsysteme}}{31}{figure.caption.24}%
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Abwärmequellen konventioneller Kraftstoffsysteme}}{31}{figure.caption.25}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {6.1}{\ignorespaces Leistungsbedarf Wasserstoff-Kraftstoffsystem mit Pumpe [kW]}}{48}{figure.caption.35}%
-\contentsline {figure}{\numberline {6.2}{\ignorespaces Leistungsaufteilung Architektur mit Pumpe}}{49}{figure.caption.36}%
-\contentsline {figure}{\numberline {6.3}{\ignorespaces Wärmebedarf Wasserstoff-Kraftstoffsystem mit Pumpe [kW]}}{49}{figure.caption.37}%
-\contentsline {figure}{\numberline {6.4}{\ignorespaces Kraftstoffverbrauch Wasserstoff-Kraftstoffsystem mit Pumpe [kg/s]}}{50}{figure.caption.38}%
-\contentsline {figure}{\numberline {6.5}{\ignorespaces Leistungsbedarf Wasserstoff-Kraftstoffsysteme}}{51}{figure.caption.39}%
-\contentsline {figure}{\numberline {6.6}{\ignorespaces Leistungsaufteilung Vergleich [$T_\mathrm {BK}=$ \SI {300}{\K }]}}{51}{figure.caption.40}%
-\contentsline {figure}{\numberline {6.7}{\ignorespaces Leistungsaufteilung Vergleich [$T_\mathrm {W}=$ \SI {160}{\K }]}}{52}{figure.caption.41}%
-\contentsline {figure}{\numberline {6.8}{\ignorespaces Stapeldiagramme der Leistungsanteile}}{53}{figure.caption.42}%
-\contentsline {figure}{\numberline {6.9}{\ignorespaces Betriebsmittelbedarf der Kraftstoffsysteme}}{54}{figure.caption.43}%
-\contentsline {figure}{\numberline {6.10}{\ignorespaces Energieverbrauch der Kraftstoffsysteme}}{55}{figure.caption.44}%
+\contentsline {figure}{\numberline {6.1}{\ignorespaces Leistungsbedarf Wasserstoff-Kraftstoffsystem mit Pumpe [kW]}}{48}{figure.caption.36}%
+\contentsline {figure}{\numberline {6.2}{\ignorespaces Leistungsaufteilung Architektur mit Pumpe}}{49}{figure.caption.37}%
+\contentsline {figure}{\numberline {6.3}{\ignorespaces Wärmebedarf Wasserstoff-Kraftstoffsystem mit Pumpe [kW]}}{49}{figure.caption.38}%
+\contentsline {figure}{\numberline {6.4}{\ignorespaces Kraftstoffverbrauch Wasserstoff-Kraftstoffsystem mit Pumpe [kg/s]}}{50}{figure.caption.39}%
+\contentsline {figure}{\numberline {6.5}{\ignorespaces Leistungsbedarf Wasserstoff-Kraftstoffsysteme}}{51}{figure.caption.40}%
+\contentsline {figure}{\numberline {6.6}{\ignorespaces Leistungsaufteilung Vergleich [$T_\mathrm {BK}=$ \SI {300}{\K }]}}{51}{figure.caption.41}%
+\contentsline {figure}{\numberline {6.7}{\ignorespaces Leistungsaufteilung Vergleich [$T_\mathrm {W}=$ \SI {160}{\K }]}}{52}{figure.caption.42}%
+\contentsline {figure}{\numberline {6.8}{\ignorespaces Stapeldiagramme der Leistungsanteile}}{53}{figure.caption.43}%
+\contentsline {figure}{\numberline {6.9}{\ignorespaces Betriebsmittelbedarf der Kraftstoffsysteme}}{54}{figure.caption.44}%
+\contentsline {figure}{\numberline {6.10}{\ignorespaces Energieverbrauch der Kraftstoffsysteme}}{55}{figure.caption.45}%
 \addvspace {10\p@ }
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 
