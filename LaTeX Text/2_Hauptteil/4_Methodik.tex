@@ -4,7 +4,7 @@
 %==============================================================================
 Ziel dieser Arbeit ist die Entwicklung einer Methode für die Modellierung von Kraftstoffsystemen für Fluggasturbinen, um deren Vorauslegung zu unterstützen. Insbesondere wird angestrebt, eine Vergleichbarkeit des Wärme-/Leistungsbedarfs zwischen Wasserstoff- und Kerosin-Kraftstoffsystemen zu ermöglichen. 
 
-Zunächst werden die Stoffmodelle für Kerosin und Wasserstoff erläutert. Anschließend werden die für die Modellierung der Kraftstoffsysteme erforderlichen Komponentenmodelle definiert. Im nächsten Schritt wird das Kraftstoffsystem des kerosinbetriebenen CFM56-5B Triebwerks aus den Komponentenmodellen nachgebildet und mögliche Architekturen für Wasserstoff-Kraftstoffsysteme erarbeitet.
+Zunächst werden die Stoffmodelle für Kerosin und Wasserstoff erläutert. Anschließend werden die für die Modellierung der Kraftstoffsysteme erforderlichen Komponentenmodelle definiert. Im nächsten Schritt wird das Kraftstoffsystem des kerosinbetriebenen CFM56-5B Triebwerks aus den Komponentenmodellen nachgebildet und mögliche Architekturen für Wasserstoff-Kraftstoffsysteme erarbeitet. Abschließend wird der Lösungsalgorithmus der Modellierung erläutert.
 
 \section{Annahmen und Vereinfachungen}
 
@@ -205,10 +205,10 @@ wird mit der Energiebilanz um die Mischung bestimmt. Druckverluste in der Mischu
 In den Wasserstoff-Kraftstoffsystemen ist nicht ausreichend Abwärme vorhanden, um den Wasserstoff auf beliebige Brennkammer-Eintrittstemperatur zu erwärmen. In dieser Arbeit wird der potenzielle zusätzliche Wärmebedarf durch parallele Wasserstoffverbrennung in einer separaten Brennkammer aufgebracht. Diese Brennkammer wird mit Wasserstoff von der Kraftstoffregeleinheit und mit Fan-Zapfluft versorgt. Die Modellierung der parallelen Wasserstoffverbrennung berechnet diesen Mehrbedarf an Wasserstoff und Zapfluft. Unter Abwägung der angestrebten Detailtiefe werden die Prozesse der parallelen Wasserstoffverbrennung mit einer vereinfachten Energiebilanz um die Nebenbrennkammer und den dazugehörigen Wärmeübertrager modelliert 
 
 \begin{equation}\label{Eq:phc}
-	0 = \dot{m}_{\mathrm{H}_2, \mathrm{PHC}}\left(H_{u, \mathrm{H}_2} + \frac{1}{\beta_\mathrm{PHC}}c_{p,\mathrm{L}} T_\mathrm{Z} - \left(1+\frac{1}{\beta_\mathrm{PHC}}\right)c_{p,\mathrm{B}} T_\mathrm{W}\right)-\dot{Q}_\mathrm{PHC}\,.
+	0 = \dot{m}_{\mathrm{H}_2, \mathrm{PHC}}\left(H_{u, \mathrm{H}_2} + \frac{1}{\beta_\mathrm{PHC}}c_{p,\mathrm{L}} T_{13} - \left(1+\frac{1}{\beta_\mathrm{PHC}}\right)c_{p,\mathrm{B}} T_\mathrm{B}\right)-\dot{Q}_\mathrm{PHC}\,.
 \end{equation}
 
-Für die Berechnung werden das Brennstoff-Luft-Verhältnis $\beta_\mathrm{PHC}$, die spezifischen isobaren Wärmekapazitäten von Luft $c_{p,\mathrm{L}}$ beziehungsweise dem Abgas $c_{p,\mathrm{B}}$, der Zapflufttemperatur $T_\mathrm{Z}$ und die Abgastemperatur hinter dem Wärmeübertrager $T_\mathrm{W}$ angenommen. Der benötigte Wasserstoffmassen $\dot{m}_{\mathrm{H}_2, \mathrm{PHC}}$ wie auch der Zapfluftbedarf $\dot{m}_\mathrm{Z} = \frac{\dot{m}_{\mathrm{H}_2, \mathrm{PHC}}}{\beta_\mathrm{PHC}}$ werden somit in Abhängigkeit des Wärmebedarfs $\dot{Q}_\mathrm{PHC}$ berechnet.
+Für die Berechnung werden das Brennstoff-Luft-Verhältnis $\beta_\mathrm{PHC}$, die spezifischen isobaren Wärmekapazitäten von Luft $c_{p,\mathrm{L}}$ beziehungsweise dem Abgas $c_{p,\mathrm{B}}$ und die Fan-Zapflufttemperatur $T_{13}$ angenommen. Die Abgastemperatur hinter dem Wärmeübertrager $T_\mathrm{B}$ entspricht der Eintrittstemperatur des kalten Wasserstoffs in den PHC-Wärmeübertrager zuzüglich der Annäherungstemperatur $\Delta T$. Der benötigte Wasserstoffmassen $\dot{m}_{\mathrm{H}_2, \mathrm{PHC}}$ wie auch der Zapfluftbedarf $\dot{m}_\mathrm{Z} = \frac{\dot{m}_{\mathrm{H}_2, \mathrm{PHC}}}{\beta_\mathrm{PHC}}$ werden somit in Abhängigkeit des Wärmebedarfs $\dot{Q}_\mathrm{PHC}$ berechnet.
 
 \section{Kerosin-Kraftstoffsystem}
 
@@ -228,9 +228,9 @@ Die Modellierung des Kerosin-Kraftstoffsystems orientiert sich an der vereinfach
 
 In dieser Arbeit werden nur Komponenten, die sich innerhalb der Triebwerksgondel befinden, betrachtet. Die Kraftstofftanks und die darin befindlichen Boosterpumpen werden daher nicht modelliert. In der Modellierung wird stattdessen eine Versorgung der Niederdruckpumpe mit dem benötigten Kraftstoffmassenstrom, bei konstanten Eintrittsbedingungen $T_\mathrm{e}, p_\mathrm{e}$ angenommen. 
 
-Die Niederdruckpumpe pumpt den Kraftstoff auf den Austrittsdruck $p_{\mathrm{LPFP}}$ mit dem isentropen Wirkungsgrad $\eta_{\mathrm{LPFP}}$ und einer Leistung von $P_{LPFP}$. Da die Modellierung vorwärts rechnet, ist es nicht möglich die spezifische Enthalpie $h_\mathrm{R}$ des rezirkulierten Kraftstoffs direkt innerhalb derselben Iteration zu integrieren. Stattdessen wird die in der vorherigen Iteration berechnete spezifische Enthalpie verwendet. Der rezirkulierte Kraftstoffmassenstrom $\dot{m}_\mathrm{R}$ wird so gewählt, dass die Brennkammer-Eintrittstemperatur $T_{\mathrm{BK}}$ eingehalten wird. 
+Die Niederdruckpumpe pumpt den Kraftstoff auf den Austrittsdruck $p_{\mathrm{LP}}$ mit dem isentropen Wirkungsgrad $\eta_{\mathrm{LP}}$ und einer Leistung von $P_{LP}$. Da die Modellierung vorwärts rechnet, ist es nicht möglich die spezifische Enthalpie $h_\mathrm{R}$ des rezirkulierten Kraftstoffs direkt innerhalb derselben Iteration zu integrieren. Stattdessen wird die in der vorherigen Iteration berechnete spezifische Enthalpie verwendet. Der rezirkulierte Kraftstoffmassenstrom $\dot{m}_\mathrm{R}$ wird so gewählt, dass die Brennkammer-Eintrittstemperatur $T_{\mathrm{BK}}$ eingehalten wird. 
 
-Der gemischte Kraftstoffmassenstrom durchläuft anschließend den Wärmeübertrager für das Hauptölsystem und nimmt dabei die Wärme $\dot{Q}_{\mathrm{FOHE}}$ auf. Über diesen Wärmeübertrager liegt ein Druckverhältnis von $\pi_{\mathrm{FOHE}}$ an. Der erwärmte Kraftstoffmassenstrom wird nun in der Hochdruckpumpe mit dem isentropen Wirkungsgrad $\eta_{\mathrm{HPFP}}$ und einer Leistung $P_{\mathrm{HPFP}}$ gepumpt. Der Austrittsdruck der Hochdruckpumpe $p_{\mathrm{HPFP}}$ wird so gewählt, dass der Brennkammer-Eintrittsdruck $p_{\mathrm{BK}}$ erreicht wird.  Da es sich bei der Hochdruckpumpe um eine Verdrängerpumpe handelt und diese für den maximalen Kraftstoffverbrauch im Startfall dimensioniert wird, ist der geförderte Massenstrom im Reiseflug $\dot{m}_{\mathrm{HPFP}}$ vorgegeben. 
+Der gemischte Kraftstoffmassenstrom durchläuft anschließend den Wärmeübertrager für das Hauptölsystem und nimmt dabei die Wärme $\dot{Q}_{\mathrm{FOHE}}$ auf. Über diesen Wärmeübertrager liegt ein Druckverhältnis von $\pi_{\mathrm{FOHE}}$ an. Der erwärmte Kraftstoffmassenstrom wird nun in der Hochdruckpumpe mit dem isentropen Wirkungsgrad $\eta_{\mathrm{HP}}$ und einer Leistung $P_{\mathrm{HP}}$ gepumpt. Der Austrittsdruck der Hochdruckpumpe $p_{\mathrm{HP}}$ wird so gewählt, dass der Brennkammer-Eintrittsdruck $p_{\mathrm{BK}}$ erreicht wird.  Da es sich bei der Hochdruckpumpe um eine Verdrängerpumpe handelt und diese für den maximalen Kraftstoffverbrauch im Startfall dimensioniert wird, ist der geförderte Massenstrom im Reiseflug $\dot{m}_{\mathrm{HP}}$ vorgegeben. 
 
 Vor dem Eintritt in die Kraftstoffregeleinheit werden in den Leitungen des Kraftstoffsystems auftretende Druckverluste $\Delta p_{\mathrm{L}}$  berücksichtigt. In der Kraftstoffregeleinheit wird der Kraftstoffmassenstrom für die Versorgung der Brennkammer $\dot{m}_{\mathrm{BK}}$ abgezweigt. In den Injektoren erfährt der Kraftstoff den Druckverlust $\Delta p_{\mathrm{inj}}$. 
 
@@ -238,25 +238,19 @@ Der übrige Kraftstoff durchläuft den Wärmeübertrager für das Ölsystem des 
 
 \subsection{Variablen und Parameter}
 
-Die abhängigen Variablen des Kerosin-Kraftstoffsystems sind der Brennkammer-Eintrittsdruck $p_{\mathrm{BK}}$ und die Brennkammer-Eintrittstemperatur $T_{\mathrm{BK}}$. Tabelle \ref{Tab:referenz_params} zeigt die Parameter und unabhängigen Variablen des Kerosin-Kraftstoffsystems.
+In dieser Arbeit werden unabhängige Variablen, abhängige Variablen, Zielgrößen und Parameter unterschieden. Die Zielgrößen der Modellierung des Kerosin-Kraftstoffsystems sind die Pumpenleistungen $P_{\mathrm{LP}}$ und $P_{\mathrm{HP}}$. Zu den unabhängigen Variablen des Kerosin-Kraftstoffsystems zählen der Brennkammerdruck $p_{\mathrm{BK}}$ und die Brennkammer-Eintrittstemperatur $T_{\mathrm{BK}}$. Der rezirkulierte Massenstrom $\dot{m}_\mathrm{R}$, dessen spezifische Enthalpie $h_\mathrm{R}$ und der Austrittsdruck der Hochdruckpumpe $p_{\mathrm{HP}}$ werden als abhängige Variablen modelliert. Tabelle \ref{Tab:referenz_params} zeigt die Parameter des Kerosin-Kraftstoffsystems.
 
 \begin{table}[ht]
     \centering
-	\caption{Parameter und Variablen der Modellierung des  Kerosin-Kraftstoffsystems}
+	\caption{Parameter der Modellierung des Kerosin-Kraftstoffsystems}
 	\begin{tabular} {|l|c|l|c|} \hline%
-		\multicolumn{2}{|c}{Parameter} & \multicolumn{2}{|c|}{unabhängige Variablen}\\ \hline\hline%
-        LPFP-Eintrittstemperatur & $T_\mathrm{e}$ & HPFP-Austrittsdruck & $p_{\mathrm{HPFP}}$ \\ \hline
-        LPFP-Eintrittsdruck & $p_\mathrm{e}$ & HPFP-Leistung & $P_{\mathrm{HPFP}}$ \\ \hline
-        FOHE-Wärme & $\dot{Q}_{\mathrm{FOHE}}$ & LPFP-Leistung & $P_{\mathrm{LPFP}}$ \\ \hline
-        FOHE-Druckverhältnis & $\pi_{\mathrm{FOHE}}$ & rezirkulierter Massenstrom & $\dot{m}_\mathrm{R}$ \\ \hline
-        IDG-FOHE-Wärme  & $\dot{Q}_{\mathrm{IDG}}$ & spezifische Enthalpie von $\dot{m}_\mathrm{R}$ & $h_\mathrm{R}$                 \\ \hline
-        LPFP-Austrittsdruck & $p_{\mathrm{LPFP}}$& \multicolumn{2}{c|}{}\\ \hline
-        isentroper Wirkungsgrad LPFP & $\eta_{\mathrm{LPFP}}$& \multicolumn{2}{c|}{}\\ \hline
-        isentroper Wirkungsgrad HPFP & $\eta_{\mathrm{HPFP}}$& \multicolumn{2}{c|}{}\\ \hline
-        HPFP-Massenstrom & $\dot{m}_{\mathrm{HPFP}}$& \multicolumn{2}{c|}{}\\ \hline
-        Brennkammermassenstrom & $\dot{m}_\mathrm{BK}$& \multicolumn{2}{c|}{}\\ \hline
-        Leitungsdruckverluste & $\Delta p_{\mathrm{L}}$& \multicolumn{2}{c|}{}\\ \hline
-        Injektordruckverluste & $\Delta p_{\mathrm{inj}}$& \multicolumn{2}{c|}{}\\ \hline
+		\multicolumn{2}{|c|}{Parameter} & \multicolumn{2}{c|}{Parameter} \\ \hline\hline
+        LPFP-Eintrittstemperatur & $T_\mathrm{e}$ & LPFP-Eintrittsdruck & $p_\mathrm{e}$ \\ \hline
+        FOHE-Wärme & $\dot{Q}_{\mathrm{FOHE}}$ & FOHE-Druckverhältnis & $\pi_{\mathrm{FOHE}}$ \\ \hline   
+        IDG-FOHE-Wärme  & $\dot{Q}_{\mathrm{IDG}}$ &  Brennkammermassenstrom & $\dot{m}_\mathrm{BK}$ \\ \hline
+        LPFP-Austrittsdruck & $p_{\mathrm{LP}}$ & isentroper Wirkungsgrad LPFP & $\eta_{\mathrm{LP}}$ \\ \hline  
+        HPFP-Massenstrom & $\dot{m}_{\mathrm{HP}}$ & isentroper Wirkungsgrad HPFP & $\eta_{\mathrm{HP}}$ \\ \hline
+        Leitungs-Druckverluste & $\Delta p_{\mathrm{L}}$& Injektor-Druckverluste & $\Delta p_{\mathrm{inj}}$ \\ \hline
 	\end{tabular}	
     \label{Tab:referenz_params}%
 \end{table}
@@ -280,7 +274,7 @@ Im Gegensatz zum Kerosin-Kraftstoffsystem wird beim Wasserstoff-Kraftstoffsystem
 \end{figure}
 \FloatBarrier 
 
-Der Wasserstoff erreicht das Triebwerk im flüssigen Zustand mit dem Eintrittsdruck $p_\mathrm{e}$ und der Eintrittstemperatur $T_\mathrm{e}$ und wird direkt in der Hochdruckpumpe auf den Druck $p_{\mathrm{HPFP}}$ gepumpt, sodass der Brennkammer-Eintrittsdruck $p_{\mathrm{BK}}$ erreicht wird. Die Hochdruckpumpe arbeitet mit dem isentropen Wirkungsgrad $\eta_{\mathrm{HPFP}}$ und benötigt die Leistung $P_{\mathrm{HPFP}}$. 
+Der Wasserstoff erreicht das Triebwerk im flüssigen Zustand mit dem Eintrittsdruck $p_\mathrm{e}$ und der Eintrittstemperatur $T_\mathrm{e}$ und wird direkt in der Hochdruckpumpe auf den Druck $p_{\mathrm{HP}}$ gepumpt, sodass der Brennkammer-Eintrittsdruck $p_{\mathrm{BK}}$ erreicht wird. Die Hochdruckpumpe arbeitet mit dem isentropen Wirkungsgrad $\eta_{\mathrm{HP}}$ und benötigt die Leistung $P_{\mathrm{HP}}$. 
 
 Um die Druckverluste des rezirkulierten Kraftstoffs im Hochdrucksystem zu kompensieren, schlägt Brewer eine Strahlpumpe mit dem  Hochdruckpumpen-Kraftstoffmassenstrom als Treibmedium vor \cite{Brewer.1991}. Da in dieser Arbeit der rezirkulierte Massenstrom teilweise ein vielfaches des Hochdruckpumpen-Massenstroms beträgt, würde eine Strahlpumpe nicht hinnehmbare Druckverluste verursachen. Stattdessen wird ein Rezirkulationsverdichter (RV) modelliert. Der rezirkulierte Kraftstoffmassenstrom $\dot{m}_\mathrm{R}$ erreicht den Rezirkulationsverdichter mit der Temperatur $T_\mathrm{R}$ und dem Druck $p_\mathrm{R}$ und wird auf den Austrittsdruck der Hochdruckpumpe verdichtet. Der Rezirkulationsverdichter arbeitet mit dem isentropen Wirkungsgrad $\eta_\mathrm{RV}$ und benötigt die Leistung $P_\mathrm{VR}$. 
 
@@ -302,7 +296,7 @@ Die Architektur mit Verdichter und Verdampfer ist ähnlich wie das Kraftstoffsys
 \end{figure}
 \FloatBarrier 
 
-Der Wasserstoff wird in dem Triebwerk zunächst in dem Verdampfer unter Zuführung des Wärmestroms $|\dot{Q}_\mathrm{V}|$ aus dem Hochdrucksystem gerade vollständig verdampft. Hierbei liegt über die Niederdruckseite des Wärmeübertragers das Druckverhältnis $\pi_{\mathrm{V,LP}}$ an. Der Hochdruckverdichter fördert den Wasserstoff mit dem Druck $p_{\mathrm{HPFC}}$ in das Hochdrucksystem, sodass der Brennkammer-Eintrittsdruck $p_{\mathrm{BK}}$ erreicht wird. Der Hochdruckverdichter arbeitet mit dem isentropen Wirkungsgrad $\eta_{\mathrm{HPFC}}$ und benötigt die Leistung $P_{\mathrm{HPFC}}$. 
+Der Wasserstoff wird in dem Triebwerk zunächst in dem Verdampfer unter Zuführung des Wärmestroms $|\dot{Q}_\mathrm{V}|$ aus dem Hochdrucksystem gerade vollständig verdampft. Hierbei liegt über die Niederdruckseite des Wärmeübertragers das Druckverhältnis $\pi_{\mathrm{V,LP}}$ an. Der Hochdruckverdichter fördert den Wasserstoff mit dem Druck $p_{\mathrm{HP}}$ in das Hochdrucksystem, sodass der Brennkammer-Eintrittsdruck $p_{\mathrm{BK}}$ erreicht wird. Der Hochdruckverdichter arbeitet mit dem isentropen Wirkungsgrad $\eta_{\mathrm{HP}}$ und benötigt die Leistung $P_{\mathrm{HP}}$. 
 
 Die Hochdruckseite gleicht dem Kraftstoffsystem mit Hochdruckpumpe mit dem einzigen Unterschied, dass zwischen dem Wärmeübertrager mit dem Ölsystem und dem Wärmeübertrager der parallelen Wasserstoffverbrennung die Hochdruckseite des Verdampfers durchlaufen wird. Hier wird die Wärme $\dot{Q}_\mathrm{V}$ an das Niederdrucksystem abgegeben und es liegt das Druckverhältnis $\pi_{\mathrm{V,HP}}$ an. Der Verdampfer wird auf der Hochdruckseite vor dem Wärmeübertrager mit der parallelen Wasserstoffverbrennung positioniert, um die maximale Wasserstofftemperatur zu mindern. Die geringere Maximaltemperatur ermöglicht eine geringere Abgastemperatur der parallelen Wasserstoffverbrennung und reduziert somit ihren Wasserstoffverbrauch.
 
@@ -320,37 +314,30 @@ Dieses Kraftstoffsystem hat das Alleinstellungsmerkmal, dass an zwei unterschied
 
 \subsection{Variablen und Parameter}
 
-Die abhängigen Variablen der Modellierungen der Wasserstoff-Kraftstoffsysteme sind der Brennkammer-Eintrittsdruck $p_{\mathrm{BK}}$, die Brennkammer-Eintrittstemperatur $T_\mathrm{BK}$ und die Wärmeübertrager-Eintrittstemperatur $T_\mathrm{W}$. Die Parameter und unabhängigen Variablen der Modellierungen sind in Tabelle \ref{Tab:h2_params} zusammengefasst.
+Die Zielgrößen der Wasserstoff-Kraftstoffsysteme sind die Pumpen-/Verdichterleistungen $P_{\mathrm{HP}}$ und $P_{\mathrm{RV}}$, sowie die Wärme der parallelen Wasserstoffverbrennung $\dot{Q}_\mathrm{PHC}$ und die damit assoziierten Wasserstoff- und Fan-Zapfluftbedarfe $\dot{m}_\mathrm{H\textsubscript{2}, PHC}$ und $\dot{m}_\mathrm{Z}$. Die unabhängigen Variablen der Modellierungen der Wasserstoff-Kraftstoffsysteme sind der Brennkammerdruck $p_{\mathrm{BK}}$, die Brennkammer-Eintrittstemperatur $T_\mathrm{BK}$ und die Wärmeübertrager-Eintrittstemperatur $T_\mathrm{W}$. Der Austrittsdruck der Hochdruckpumpe beziehungsweise des Hochdruckverdichters $p_{\mathrm{HP}}$ und die Zustandsgrößen des rezirkulierten Massenstroms $\dot{m}_\mathrm{R}$, $T_\mathrm{R}$ und $p_\mathrm{R}$ werden als abhängige Variablen modelliert. Die Modellierung des Kraftstoffsystems mit Verdampfer hat durch die Wärme des Verdampfers $|\dot{Q}_\mathrm{V}|$ eine zusätzliche abhängige Variable. Bei der Modellierung des Kraftstoffsystems mit Vormischung wird der Vormischungs-Massenstrom $\dot{m}_\mathrm{V}$ als zusätzliche abhängige Variable geführt. Die Parameter der Modellierungen der Wasserstoff-Kraftstoffsysteme sind in Tabelle \ref{Tab:h2_params} zusammengefasst.
 
 \begin{table}[ht]
     \centering
-	\caption{Variablen der Modellierungen der Wasserstoff-Kraftstoffsysteme}
+	\caption{Parameter der Modellierungen der Wasserstoff-Kraftstoffsysteme}
 	\begin{tabular} {|l|c|l|c|} \hline%
-    \multicolumn{4}{|c}{Alle Wasserstoff-Kraftstoffsysteme}\\ \hline
-    \multicolumn{2}{|c}{Parameter} & \multicolumn{2}{|c|}{unabhängige Variablen}\\ \hline\hline%
-    isentroper Wirkungsgrad RV & $\eta_\mathrm{RV}$ & RV-Leistung & $P_{\mathrm{RV}}$ \\ \hline
-    Kraftstoff-Eintrittsdruck & $p_\mathrm{e}$ & rezirkulierter Massenstrom & $\dot{m}_\mathrm{R}$ \\ \hline
-    Kraftstoff-Eintrittstemperatur & $T_\mathrm{e}$ & Temperatur des rezirkulierten H$_2$ & $T_\mathrm{R}$ \\ \hline
-    PHCHE-Druckverhältnis  & $\pi_{\mathrm{PHC}}$ & Druck des rezirkulierten H$_2$ & $p_\mathrm{R}$\\ \hline
-    FOHE-Wärme & $\dot{Q}_{\mathrm{FOHE}}$ & PHCHE-Wärme  & $\dot{Q}_{\mathrm{PHC}}$\\ \hline
-    FOHE-Druckverhältnis & $\pi_{\mathrm{FOHE}}$ & \multicolumn{2}{c|}{}\\ \hline
-    Brennkammer-Massenstrom & $\dot{m}_\mathrm{BK}$ & \multicolumn{2}{c|}{}\\ \hline
-    Leitungs-Druckverluste & $\Delta p_{\mathrm{L}}$ & \multicolumn{2}{c|}{}\\ \hline
-    Injektor-Druckverluste & $\Delta p_{\mathrm{inj}}$ & \multicolumn{2}{c|}{}\\ \hline\hline
-	\multicolumn{4}{|c|}{Kraftstoffsystem mit Hochdruckpumpe}\\ \hline
-    \multicolumn{2}{|c}{Parameter} & \multicolumn{2}{|c|}{unabhängige Variablen}\\ \hline\hline%
-    isentroper Wirkungsgrad HPFP & $\eta_{\mathrm{HPFP}}$ & HPFP-Austrittsdruck & $p_{\mathrm{HPFP}}$ \\ \hline
-    & & HPFP-Leistung & $P_{\mathrm{HPFP}}$ \\ \hline\hline
-    \multicolumn{4}{|c|}{Kraftstoffsystem mit Verdampfer}\\ \hline
-    \multicolumn{2}{|c}{Parameter} & \multicolumn{2}{|c|}{unabhängige Variablen}\\ \hline\hline%
-    isentroper Wirkungsgrad HPFC & $\eta_{\mathrm{HPFC}}$ & HPFC-Austrittsdruck & $p_{\mathrm{HPFC}}$ \\ \hline
-    Druckverhältnis LP-Verdampfer & $\pi_{\mathrm{V,LP}}$ & HPFC-Leistung & $P_{\mathrm{HPFC}}$ \\ \hline
-    Druckverhältnis HP-Verdampfer & $\pi_\mathrm{V,HP}$ & Verdampfer-Wärme & $|\dot{Q}_\mathrm{V}|$ \\ \hline\hline
-    \multicolumn{4}{|c|}{Kraftstoffsystem mit Vormischung}\\ \hline
-    \multicolumn{2}{|c}{Parameter} & \multicolumn{2}{|c|}{unabhängige Variablen}\\ \hline\hline%
-    isentroper Wirkungsgrad HPFC & $\eta_{\mathrm{HPFC}}$ & HPFC-Austrittsdruck & $p_{\mathrm{HPFC}}$ \\ \hline
-    \multicolumn{2}{|c|}{}& HPFC-Leistung & $P_{\mathrm{HPFC}}$ \\ \hline
-    \multicolumn{2}{|c|}{}& Massenstrom Verdampfung & $\dot{m}_\mathrm{V}$ \\ \hline
+    \multicolumn{4}{|c|}{Alle Wasserstoff-Kraftstoffsysteme} \\ \hline\hline%  
+    Kraftstoff-Eintrittstemperatur & $T_\mathrm{e}$ & Kraftstoff-Eintrittsdruck & $p_\mathrm{e}$ \\ \hline
+    PHCHE-Druckverhältnis  & $\pi_{\mathrm{PHC}}$ & isentroper Wirkungsgrad RV & $\eta_\mathrm{RV}$ \\ \hline
+    FOHE-Wärme & $\dot{Q}_{\mathrm{FOHE}}$ & FOHE-Druckverhältnis & $\pi_{\mathrm{FOHE}}$ \\ \hline
+    Leitungs-Druckverluste & $\Delta p_{\mathrm{L}}$ & Injektor-Druckverluste & $\Delta p_{\mathrm{inj}}$ \\ \hline
+    unterer Heizwert Wasserstoff & $H_{u, \mathrm{H}_2}$ & PHC Brennstoff-Luft-Verhältnis & $\beta_\mathrm{PHC}$ \\ \hline
+    isobare Wärmekapazität Luft & $c_{p, \mathrm{L}}$ & isobare Wärmekapazität Abgas & $c_{p, \mathrm{B}}$ \\ \hline
+    Fan-Zapflufttemperatur & $T_{13}$ & PHCHE-Annäherungstemperatur & $\Delta T$ \\ \hline
+    Brennkammer-Massenstrom & $\dot{m}_\mathrm{BK}$ & \multicolumn{2}{c|}{} \\ \hline\hline
+    
+	\multicolumn{2}{|c}{Kraftstoffsystem mit Hochdruckpumpe} & \multicolumn{2}{|c|}{Kraftstoffsystem mit Vormischung}\\ \hline\hline%
+	isentroper Wirkungsgrad HPFP & $\eta_{\mathrm{HP}}$ & isentroper Wirkungsgrad HPFC & $\eta_{\mathrm{HP}}$ \\ \hline\hline
+	
+	\multicolumn{4}{|c|}{Kraftstoffsystem mit Verdampfer} \\ \hline \hline
+	Druckverhältnis LP-Verdampfer & $\pi_{\mathrm{V,LP}}$ & Druckverhältnis HP-Verdampfer & $\pi_{\mathrm{V,HP}}$ \\ \hline
+	isentroper Wirkungsgrad HPFC & $\eta_{\mathrm{HPFC}}$ & \multicolumn{2}{c|}{} \\ \hline
+    
+   
     \end{tabular}	
     \label{Tab:h2_params}%
 \end{table}
@@ -359,9 +346,9 @@ Die abhängigen Variablen der Modellierungen der Wasserstoff-Kraftstoffsysteme s
 
 \section{Lösungsalgorithmus}
 
-Im Folgenden wird der Lösungsalgorithmus der in dieser Arbeit entwickelten Methodik exemplarisch am Wasserstoff-Kraftstoffsystem mit Hochdruckpumpe erläutert. Abbildung \ref{fig:algo} stellt den Lösungsalgorithmus des Kraftstoffsystems mit Hochdruckpumpe schematisch als Flussdiagramm dar.
+Abschließend wird der Lösungsalgorithmus der in dieser Arbeit entwickelten Methodik exemplarisch am Wasserstoff-Kraftstoffsystem mit Hochdruckpumpe erläutert. Abbildung \ref{fig:algo} stellt den Lösungsalgorithmus des Kraftstoffsystems mit Hochdruckpumpe schematisch als Flussdiagramm dar. 
 
-\begin{figure}
+\begin{figure}[!ht]
 \centering
 \begin{tikzpicture}[]
 	\node (start) [startstop, align = center] {
@@ -369,11 +356,11 @@ Im Folgenden wird der Lösungsalgorithmus der in dieser Arbeit entwickelten Meth
 	};
 	\node (def) [process, below = of start, align = center] {
 		Definiere Zielwerte \\ 
-		der abhängigen Variablen
+		der unhängigen Variablen
 	};
 	\node (startwerte) [process, below = of def, align=center] 
 	{Bestimme Startwerte \\
-	der unabhängigen Variablen};
+	der abhängigen Variablen};
 	
 	\node (hpfp) [process, below = of startwerte, align = center] {
 		Berechne Hochdruckpumpe \\
@@ -404,10 +391,10 @@ Im Folgenden wird der Lösungsalgorithmus der in dieser Arbeit entwickelten Meth
 	};
 	
 	\node (next) [process, right = of hpfp, align = center] {
-		Berechne neue Werte \\ der unabhängigen Variablen
+		Berechne neue Werte \\ der abhängigen Variablen
 	};
 	
-	\node (end) [startstop, right = of phc] {Ende};
+	\node (end) [startstop, below = of phc] {Ende};
 	
 	
 	\draw [arrow] (start) -- (def);
@@ -419,19 +406,27 @@ Im Folgenden wird der Lösungsalgorithmus der in dieser Arbeit entwickelten Meth
 	\draw [arrow] (wu) -- (dp);
 	\draw [arrow] (dp) -- (phc);
 	\draw [arrow] (phc) -- (conv);
-	\draw [arrow] (conv.north) node[anchor=east] {nein} --  (next);
+	\draw [arrow] (conv.north)  -- node[anchor=east] {nein} (next);
 	\draw [arrow] (next) -- (hpfp);
-	%\draw [arrow] (conv.east) -- node[auto] {ja} +(2,0) |- (end);
-	\draw [arrow] (conv.east) node[anchor=north] {ja} -|  (end);
+	\draw [arrow] (conv.east) -- node[auto] {ja} +(2,0) |- (end);
+	%\draw [arrow] (conv.east) node[anchor=north] {ja} -|  (end);
 	\draw[red, thick] (10.9,-5.5) rectangle (-3.5,-14.2);
 	\node[text width=4cm, text=red] at (3.7, -5.2) {Iterationsschleife};
 \end{tikzpicture}
-\vspace*{0mm}
+\vspace*{3mm}
 \caption{Lösungsalgorithmus des Kraftstoffsystems mit Hochdruckpumpe}
 \label{fig:algo}
 \end{figure}
 \FloatBarrier 
 
-Das Verfahren beginnt mit der Definition der abhängigen Variablen $p_\mathrm{BK}$, $T_\mathrm{BK}$ und $T_\mathrm{W}$. Zunächst werden die Startwerte der unabhängigen Variablen $\dot{m}_\mathrm{R}, h_\mathrm{R}, p_\mathrm{HPFP},$ als Funktion der abhängigen Variablen bestimmt. 
+Das Verfahren beginnt mit der Definition der unabhängigen Variablen $p_\mathrm{BK}$, $T_\mathrm{BK}$ und $T_\mathrm{W}$. Zunächst werden die Startwerte der abhängigen Variablen $\dot{m}_\mathrm{R}, T_\mathrm{R}, p_\mathrm{R}$ und $p_\mathrm{HP}$ in Abhängigkeit der unabhängigen Variablen bestimmt. 
+
+Anschließend beginnt die iterative Berechnung der Zielgrößen mit der Berechnung der Leistungen der Hochdruckpumpe und des Rezirkulationsverdichters und der jeweiligen Austrittszuständen. Aus diesen Austrittszuständen werden die Austrittsgrößen der Kraftstoffmischung berechnet. 
+
+Anschließend wird die Energiebilanz des gesamten Kraftstoffsystems herangezogen, um den Fehlbetrag zwischen der verfügbarer Abwärme und dem Wärmebedarf zu ermitteln. Dies entspricht der Wärme der parallelen Wasserstoffverbrennung. Im Anschluss wird der Austrittszustand der Wärmeübertrager bestimmt. Hierauf wird durch Berücksichtigung der Leitungs- und Injektor-Druckverluste der Eintrittszustand des Kraftstoffs in die Brennkammer sowie der Zustand des rezirkulierten Kraftstoffs bestimmt. Abschließend wird der Wasserstoff- und Zapfluftbedarf der parallelen Wasserstoffverbrennung berechnet. 
+
+Die Konvergenz wird anhand der Differenz zwischen den Zielwerten und den tatsächlich erreichten Eintrittstemperaturen sowie dem tatsächlichen Brennkammerdruck überprüft. Zudem muss die Schließbedingung erfüllt sein, dass der Zustand des rezirkulierten Kraftstoffs mit dem zu Beginn der Iteration angenommenen Zustand übereinstimmt. Sind beide Kriterien erfüllt, wird die Berechnung erfolgreich abgeschlossen.
+
+Sind die Kriterien nicht erfüllt, werden für die nächste Iteration zunächst neue Werte der abhängigen Variablen $\dot{m}_\mathrm{R}$ und $p_\mathrm{HP}$ in Abhängigkeit der Differenz zwischen den Zielwerten und den tatsächlich erreichten Werten der unabhängigen Variablen bestimmt. Die angenommenen Zustandsgrößen des rezirkulierten Kraftstoffs $T_\mathrm{R}$ und $p_\mathrm{R}$ werden entsprechend der tatsächlich erzielten Werte angepasst. Mit diesen aktualisierten Werten wird die nächste Iteration durchgeführt.
 
 
