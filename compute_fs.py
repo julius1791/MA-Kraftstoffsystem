@@ -21,15 +21,15 @@ t_wu_list = range(100, 290, 10)
 
 p_bk = 1.33e6
 
-qm_cb = 0.10998
+qm_cb = 0.11
 eta_p = 0.154
 eta_v = 0.71
 t0 = 25.2
 p0 = 3.45e5
-Q_fohe = 159e3
+Q_fohe = 149e3
 tpr_fohe = 0.95
 tpr_phc = 0.98
-dT = 20
+dT = 30
 dp_l = 260e3
 dp_inj = 168.9e3
 
