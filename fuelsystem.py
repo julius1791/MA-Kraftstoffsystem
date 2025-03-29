@@ -10,7 +10,7 @@ from operator import itemgetter
 # modelling parameters
 tolerance = 1e-1
 max_iter = 100
-rel_fac = 1/100
+rel_fac = 1/200
 rel_fac_2 = 0.95
 
 # global velocity setting
@@ -353,7 +353,7 @@ def get_dh(qm_cb, t_cb, p_cb, t0, p0, v):
     dH = qm_cb * (h2flow.calc_ht(t_cb, p_cb, 0) - h2flow.calc_ht(t0, p0, v))
     return dH
 
-def h2pump(params, t_cbt, t_hxt, p_cbt, pcc=True, corr=False, filename="", v=v0, tolerance=tolerance):
+def h2pump(params, t_cbt, t_hxt, p_cbt, pcc=True, corr=False, Brewer = False, filename="", v=v0, tolerance=tolerance):
     # unpack params dict
     p0, t0 = itemgetter("p0","t0")(params)
     Q_fohe, tpr_fohe, tpr_phc, dT = itemgetter("Q_fohe","tpr_fohe", "tpr_phc", "dT")(params)
@@ -377,26 +377,16 @@ def h2pump(params, t_cbt, t_hxt, p_cbt, pcc=True, corr=False, filename="", v=v0,
     dH = dH0
     h_r = dH/qm_cb0
     p_r = p_cbt
-    t_cba = t_cbt
-    
-    t_phc = 400
     
     P_r = 0
     P_hpfp = 0
+    qm_cb = qm_cb0
        
     i = 0
     condition_bool = True
     try:
         while condition_bool:
             
-            # calculate h2 requirements of parallel combustion
-            if pcc:
-                qm_phc, m_z = parallel_combustion(max(0, dH-P_r-P_hpfp-Q_fohe), t_hx=t_phc+dT)
-                qm_cb = qm_cb0 + qm_phc
-                dH = dH0 * qm_cb / qm_cb0
-            else:
-                qm_cb = qm_cb0
-                dH = dH0
             
             # initialise h2 at engine inlet
             ff_main = h2flow.H2Flow(qm_cb, t0, p0, v, False)
@@ -405,7 +395,10 @@ def h2pump(params, t_cbt, t_hxt, p_cbt, pcc=True, corr=False, filename="", v=v0,
             P_hpfp, t_mfp = ff_main.pump_hydraulic(p_hpfp, eta_hpfp)
             
             # initialise recirculation h2 flow
-            ff_r =h2flow.H2Flow(qm_r, h2flow.calc_t(h_r, p_r, v, True), p_r, v, True)
+            if Brewer:
+                ff_r =h2flow.H2Flow(qm_r, h2flow.calc_t(h_r, p_hpfp, v, True), p_hpfp, v, True)
+            else:
+                ff_r =h2flow.H2Flow(qm_r, h2flow.calc_t(h_r, p_r, v, True), p_r, v, True)
             
             # calculte recirculation compression
             P_r, _ = ff_r.pump_hydraulic(p_hpfp, eta_r)
@@ -414,7 +407,7 @@ def h2pump(params, t_cbt, t_hxt, p_cbt, pcc=True, corr=False, filename="", v=v0,
             t_hxa, _ = ff_main.mix_flows(ff_r)
             
             # calculate primary heat exchanger
-            t_phc = ff_main.heat_exchanger(Q_fohe, tpr_fohe)
+            t_phc = ff_main.heat_exchanger(Q_fohe, tpr_fohe) + dT
             
             # calculate phc heat exchanger
             ff_main.heat_exchanger(dH-P_hpfp-P_r-Q_fohe, tpr_phc)
@@ -431,6 +424,18 @@ def h2pump(params, t_cbt, t_hxt, p_cbt, pcc=True, corr=False, filename="", v=v0,
             t_cba = ff_cb.t + ff_cb.v**2/(2*h2flow.h2.calc_H2_cp(ff_cb.t, ff_cb.p))
         
             
+            # calculate h2 requirements of parallel combustion
+            if pcc:
+                qm_phc, m_z = parallel_combustion(max(0, dH-P_r-P_hpfp-Q_fohe), t_hx=t_phc)
+                qm_cb = qm_cb0 + qm_phc
+                dH = dH0 * qm_cb / qm_cb0
+            else:
+                qm_cb = qm_cb0
+                dH = dH0
+                m_z = 0
+                qm_phc = 0
+        
+        
             # advance independent variables
             p_hpfp_old = p_hpfp
             p_hpfp += (p_cbt - p_cba) * rel_fac_2
@@ -635,6 +640,7 @@ def h2dual(params, t_cbt, t_hxt, p_cbt, pcc=True, corr=False, filename="", v=v0,
     h_r = dH/qm_cb0
     t_phc = 400
     p_r = p_hpfp
+
     
     P_r = 0
     P_hpfp = 0
@@ -651,6 +657,7 @@ def h2dual(params, t_cbt, t_hxt, p_cbt, pcc=True, corr=False, filename="", v=v0,
             else:
                 qm_cb = qm_cb0
                 dH = dH0
+            
             # intialise h2 flow
             ff_main = h2flow.H2Flow(qm_cb, t0, p0, v, False)
             
@@ -748,21 +755,21 @@ if __name__ == "__main__":
     
     p_bk = 1.33e6
     
-    qm_cb = 0.10998
+    qm_cb = 0.11
     eta_p = 0.154
     eta_v = 0.71
     t0 = 25.2
     p0 = 3.45e5
-    Q_fohe = 159e3
+    Q_fohe = 149e3
     tpr_fohe = 0.95
     tpr_phc = 0.98
-    dT = 20
+    dT = 30
     dp_l = 260e3
     dp_inj = 168.9e3
     ref_params = {
-        "p0": 180e3,"t0": 270, "Q_fohe": 122e3,"tpr_fohe": 0.95, "Q_idg": 5e3,
-        "eta_lpfp": 0.6, "eta_hpfp": 0.73, "p_lpfp": 930e3, "qm_hpfp": 1.113,
-        "qm_cb0": 0.31305, "dp_l": 68e3, "dp_inj":300e3
+        "p0": 180e3,"t0": 270, "Q_fohe": 112e3,"tpr_fohe": 0.95, "Q_idg": 5e3,
+        "eta_lpfp": 0.6, "eta_hpfp": 0.73, "p_lpfp": 930e3, "qm_hpfp": 1.11,
+        "qm_cb0": 0.313, "dp_l": 68e3, "dp_inj":300e3
     }
     pump_params = {
         "p0": p0,"t0": t0, "Q_fohe": Q_fohe,"tpr_fohe": tpr_fohe, 
@@ -772,7 +779,7 @@ if __name__ == "__main__":
     brewer_params = {
         "p0": 344.7e3,"t0": t0, "Q_fohe": 0,"tpr_fohe": 1, 
         "tpr_phc": 1, "dT": 0,"eta_r": 0.71, "eta_hpfp": 0.154, 
-        "qm_cb0": 0.166, "dp_l": 30e3, "dp_inj":168.9e3+45.5e3
+        "qm_cb0": 0.166, "dp_l": 31.1e3, "dp_inj":168.9e3+45.5e3
     }
     after_params = {
         "p0": p0,"t0": t0, "Q_fohe": Q_fohe,"tpr_fohe": tpr_fohe, 
@@ -787,22 +794,22 @@ if __name__ == "__main__":
     }
     
     
-    print("reference")
-    reference(ref_params, 399.15, p_bk, filename="ref.csv")
-    print("reference2")
-    reference2(ref_params, 399.15, p_bk, filename="ref2.csv")
+    # print("reference")
+    # reference(ref_params, 399.15, p_bk, corr = False, filename="ref.csv")
+    # print("reference2")
+    # reference2(ref_params, 399.15, p_bk, corr = False, filename="ref2.csv")
     
     # print("\nh2dual")
-    # h2dual(dual_params, t_bk, t_wu, p_bk, pcc=True, filename="dual.csv")
+    # h2dual(dual_params, t_bk, t_wu, p_bk, pcc=True, corr = False, filename="dual.csv")
     
     # print("\nh2pump")
-    # h2pump(pump_params, t_bk, t_wu, p_bk, pcc=True, filename="pump.csv")
+    # h2pump(pump_params, t_bk, t_wu, p_bk, pcc=True, corr = False, filename="test.csv")
     
     # print("\nh2after")
-    # h2after(after_params, t_bk, t_wu, p_bk, pcc=True, filename="after.csv")
+    # h2after(after_params, t_bk, t_wu, p_bk, pcc=True, corr = False, filename="after.csv")
     
-    # print("\nh2pump")
-    # h2pump(brewer_params, 264, 200, 1516.2e3, pcc=False, corr=False, filename="brewer.csv")
+    print("\nh2pump")
+    h2pump(brewer_params, 264, 200, 1516.2e3, pcc=False, corr=False, Brewer = True, filename="brewer.csv")
     
 
 

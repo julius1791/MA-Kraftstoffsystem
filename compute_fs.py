@@ -31,7 +31,7 @@ tpr_fohe = 0.95
 tpr_phc = 0.98
 dT = 30
 dp_l = 260e3
-dp_inj = 168.9e3
+dp_inj = 169e3
 
 pump_params = {
     "p0": p0,"t0": t0, "Q_fohe": Q_fohe,"tpr_fohe": tpr_fohe, 

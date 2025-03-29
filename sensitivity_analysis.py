@@ -23,7 +23,7 @@ t_wu = 160
 p_bk = 1.33e6
 t_bk_jeta = 399.15
 
-qm_cb = 0.10998
+qm_cb = 0.11
 qm_cbs = qm_cb
 eta_p = 0.154
 eta_ps = eta_p*0.95
@@ -31,7 +31,7 @@ eta_v = 0.71
 eta_vs = eta_v*0.95
 t0 = 25.2
 p0 = 3.45e5
-Q_fohe = 159e3
+Q_fohe = 149e3
 Q_fohes = Q_fohe*0.95
 tpr_fohe = 0.95
 tpr_fohes = 1-(1-tpr_fohe)*1.2
@@ -40,10 +40,10 @@ tpr_phcs = 1-(1-tpr_phc)*1.2
 dT = 20
 dp_l = 260e3
 dp_ls = dp_l*1.2
-dp_inj = 168.9e3
+dp_inj = 169e3
 dp_injs = dp_inj*1.05
-tpr_vhps = 0.99
-tpr_vlps = 0.995
+tpr_vhps = 0.995
+tpr_vlps = 0.99
 
 
 def sigfig(num, sigfigs):
@@ -87,11 +87,11 @@ if func == "reference":
     par_hr_list = ["$\dot{Q}_\mathrm{FOHE}$", "$1-\pi_\mathrm{FOHE}$", "$p_\mathrm{LPFP}$", "$\eta_\mathrm{LPFP}$", "$\eta_\mathrm{HPFP}$", "$\Delta p_\mathrm{L}$", "$\Delta p_\mathrm{inj}$"]
     par_name_list = ["Q_fohe", "tpr_fohe", "p_lpfp", "eta_lpfp", "eta_hpfp", "dp_l", "dp_inj"]
     par_unit_list = ["\si{\kilo\W}", "-", "-", "-", "-", "\si{\kilo\Pa}", "\si{\kilo\Pa}"]
-    par_value_list = [122e3-127e3*0.05, tpr_fohes, 930e3*0.9, 0.6*0.95, 0.73*0.95, 68e3*1.2, 300e3*1.1]
+    par_value_list = [112e3-117e3*0.05, tpr_fohes, 930e3*0.9, 0.6*0.95, 0.73*0.95, 68e3*1.2, 300e3*1.1]
     params = {
         "p0": 180e3,"t0": 270, "Q_fohe": 122e3,"tpr_fohe": 0.95, "Q_idg": 5e3,
-        "eta_lpfp": 0.6, "eta_hpfp": 0.73, "p_lpfp": 930e3, "qm_hpfp": 1.113,
-        "qm_cb0": 0.31305, "dp_l": 68e3, "dp_inj":300e3
+        "eta_lpfp": 0.6, "eta_hpfp": 0.73, "p_lpfp": 930e3, "qm_hpfp": 1.11,
+        "qm_cb0": 0.313, "dp_l": 68e3, "dp_inj":300e3
     }
 if func == "pump":
     folder = folders[0]
@@ -163,13 +163,13 @@ path_list.append(defname)
 
 if False:
     if func == "reference":
-        Parallel(n_jobs=i+1)(delayed(fuelsystem.reference)(pc, t_bk_jeta, p_bk, filename=path) for pc, path in zip(param_comb_list, path_list))
+        Parallel(n_jobs=i+1)(delayed(fuelsystem.reference)(pc, t_bk_jeta, p_bk, corr = False, filename=path) for pc, path in zip(param_comb_list, path_list))
     if func == "pump":
-        Parallel(n_jobs=i+1)(delayed(fuelsystem.h2pump)(pc, t_bk, t_wu, p_bk, filename=path) for pc, path in zip(param_comb_list, path_list))
+        Parallel(n_jobs=i+1)(delayed(fuelsystem.h2pump)(pc, t_bk, t_wu, p_bk, corr = False, filename=path) for pc, path in zip(param_comb_list, path_list))
     elif func == "after":
-        Parallel(n_jobs=i+1)(delayed(fuelsystem.h2after)(pc, t_bk, t_wu, p_bk, filename=path) for pc, path in zip(param_comb_list, path_list))
+        Parallel(n_jobs=i+1)(delayed(fuelsystem.h2after)(pc, t_bk, t_wu, p_bk, corr = False, filename=path) for pc, path in zip(param_comb_list, path_list))
     elif func == "dual":
-        Parallel(n_jobs=i+1)(delayed(fuelsystem.h2dual)(pc, t_bk, t_wu, p_bk, filename=path) for pc, path in zip(param_comb_list, path_list))
+        Parallel(n_jobs=i+1)(delayed(fuelsystem.h2dual)(pc, t_bk, t_wu, p_bk, corr = False, filename=path) for pc, path in zip(param_comb_list, path_list))
 
 with open(defname, newline='') as def_file:
     data_def = csv.reader(def_file)
