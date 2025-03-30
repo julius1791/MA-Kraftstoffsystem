@@ -8,6 +8,8 @@ import numpy as np
 from matplotlib.patches import Rectangle
 from matplotlib.lines import Line2D
 import matplotlib.cm as cm
+import pathlib
+import csv
 
 cwd = os.getcwd()
 os.chdir(os.path.dirname(cwd))
@@ -15,11 +17,14 @@ os.chdir(os.path.dirname(cwd))
 csfont = {'family': "serif", "serif": ["lmr"], "size": 12}
 plt.rc('font',**csfont)
 plt.rc('text', usetex=True)
+plt.rcParams['hatch.color'] = 'gray'
+plt.rcParams['hatch.linewidth'] = 4
 par = {'mathtext.default': 'regular'}
 plt.rcParams.update(par)
 
 systemnames = ["Referenz", "Pumpe", "Verdampfer", "Vormischung"]
 save_dir = os.path.join(os.getcwd(), "diagrams")
+folder = os.path.join(os.getcwd(), "single_results")
 
 # # Referenz
 # Referenz = {
@@ -53,8 +58,10 @@ save_dir = os.path.join(os.getcwd(), "diagrams")
 #     }
 # }
 
-colors = ["darkred", "orangered", "navy", "cyan"]
-label_list = ["$P_\mathrm{HPFP/C}$", "$P_\mathrm{RV/LPFP}$", "$\dot{Q}_\mathrm{FOHE}$", "$\dot{Q}_\mathrm{PHC}$"]
+edgecols = ["none", "none", "none", "none", "red", "none"]
+hatches = ["", "", "", "", "//", ""]
+colors = ["darkred", "yellow", "orangered", "navy", "navy", "cyan"]
+label_list = ["$P_\mathrm{HP}$", "$P_\mathrm{LP}$", "$P_\mathrm{RV}$", "$\dot{Q}_\mathrm{FOHE}$", "Überschuss", "$\dot{Q}_\mathrm{PHC}$"]
 # # tw=250
 # data_list = np.array([
 #     [1713.758305, 663.9556996, 127e3, 0],
@@ -72,27 +79,76 @@ data_list = np.array([
 ])/1e3
 
 
+# find files in target directory
+files = [f for f in os.listdir(folder) if os.path.isfile(
+    os.path.join(pathlib.Path().resolve(), folder, f))]
+data = dict()
+for file in files:
+    # only import .csv files
+    if file.split(".")[1] == "csv":
+        filename = os.path.join(folder, file)
+        with open(filename, newline="") as f:
+            data_f = csv.reader(f)
+            _ = next(data_f)
+            param_row = next(data_f)
+            _ = next(data_f)
+            P_row = next(data_f)
+            _ = next(data_f)
+            Q_row = next(data_f)
+            _ = next(data_f)
+            qm_row = next(data_f)
+        func = param_row[0]
+        data.update({param_row[0]: {
+            "P_hp": float(P_row[0]), "P_2": float(P_row[1]), 
+            "Q_fohe": float(Q_row[0])-float(Q_row[1]), 
+            "Q_phc": float(Q_row[1]), "qm_phc": float(qm_row[1])*1e3}
+            })
+
+
+ref = data["reference"]
+ref2 = data["reference2"]
+pump = data["pump"]
+after = data["after"]
+dual = data["dual"]
+
+data_list = np.array([
+    [ref["P_hp"], ref["P_2"], 0, ref2["Q_fohe"], ref["Q_fohe"]-ref2["Q_fohe"], 0],
+    [pump["P_hp"], 0, pump["P_2"], pump["Q_fohe"], 0, pump["Q_phc"]],
+    [after["P_hp"], 0, after["P_2"], after["Q_fohe"], 0, after["Q_phc"]],
+    [dual["P_hp"], 0, dual["P_2"], dual["Q_fohe"], 0, dual["Q_phc"]],
+])/1e3
+
+qm_phc_list = [0, pump["qm_phc"], after["qm_phc"], dual["qm_phc"]]
+
 fig, ax = plt.subplots(1, 2, width_ratios=[1, 5])
+ax2 = ax[1].twinx()
 fig.subplots_adjust(wspace=0.3)
 bottom = np.zeros(len(data_list))
+xvals = np.arange(0, len(data_list), 1)-np.full(len(data_list), 0.05)
+xvals[0] = 0
 for i in range(len(label_list)):
     dps = []
     for j in range(len(data_list)):
         dps.append(data_list[j][i])
-    ax[1].bar(systemnames, dps, bottom=bottom, label=label_list[i], color=colors[i], width = 0.5)
-    bottom += dps
 
+    ax[1].bar(xvals, dps, bottom=bottom, label=label_list[i], fc=colors[i], hatch=hatches[i], width = 0.5)
+    bottom += dps
+ax2.bar(np.arange(0, len(data_list), 1)+np.full(len(data_list), 0.25), qm_phc_list, label="$\dot{m}_\mathrm{PHC}$", fc = "green", width = 0.1)
 ax[1].set_ylabel("Leistung [kW]")
+ax2.set_ylabel("PHC Wasserstoffbedarf $\dot{m}_\mathrm{PHC}$ [g/s]")
 ax[1].set_ylim([0, 500])
+ax[1].set_xticks(np.arange(0, len(data_list), 1), systemnames)
 
 bottom = 0
+ax[0].bar(0, 0, bottom=0, label="$\dot{m}_\mathrm{PHC}$", fc = "green", width = 0)
 for i in range(len(label_list)):
     dps = data_list[0][i]
-    ax[0].bar(systemnames[0], dps, bottom=bottom, label=label_list[i], color=colors[i], width=0.5)
+    ax[0].bar(systemnames[0], dps, bottom=bottom, label=label_list[i], fc=colors[i], hatch=hatches[i], width=0.4)
     bottom += dps
+
 ax[0].set_ylabel("Leistung [kW]")
 ax[0].set_ylim([0, 9.9])
-ax[0].legend(bbox_to_anchor=[0.5, 1.4], loc="upper center", ncols=2, columnspacing=0.5, fontsize=12)
+ax[0].legend(bbox_to_anchor=[0.5, 1.55], loc="upper center", ncols=2, columnspacing=0.5, fontsize=12)
 ax[0].set_position([0, 0.05, 0.1, 0.6])
 ax[1].set_position([0.3, 0.05, 0.65, 0.9])
 

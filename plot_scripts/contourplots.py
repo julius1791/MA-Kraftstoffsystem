@@ -107,6 +107,7 @@ for arch, plot, name in zip(subfolders, [0,1,2], systemnames):
     #clevs = [30, 40, 50, 60, 80, 100, 120, 160, 200, 250]
     plt.ylabel("Wärmeübertrager-Eintrittstemperatur $T_\mathrm{W}$ [K]", fontsize=12)
     plt.xlabel("Brennkammer-Eintrittstemperatur $T_\mathrm{BK}$ [K]")
+    plt.title("Leistungsbedarf $P$ [kW]")
     
     fig = mpl.pyplot.gcf()
     fig.set_size_inches(16/2.54, 10.5/2.54)
@@ -253,7 +254,7 @@ for arch, name in zip(subfolders, systemnames):
     lev = [*np.linspace(150, 900, 600)]
     cs = plt.contourf(t_bk_u, t_wu_u, Q3/1e3, levels = lev, cmap="Reds", norm=norm)
 
-    levs = [200, 300, 400, 500, 600, 700, 800]
+    levs = [149, 200, 300, 400, 500, 600, 700, 800]
 
     
     cs = plt.contour(t_bk_u, t_wu_u, Q3/1e3, levels = levs, colors='black')
@@ -266,6 +267,7 @@ for arch, name in zip(subfolders, systemnames):
     # clevs = [120, 200, 300, 400, 500, 600, 700]
     plt.ylabel("Wärmeübertrager-Eintrittstemperatur $T_\mathrm{W}$ [K]", fontsize=12)
     plt.xlabel("Brennkammer-Eintrittstemperatur $T_\mathrm{BK}$ [K]")
+    plt.title("Wärmebedarf $\dot{Q}$ [kW]")
     
     fig = mpl.pyplot.gcf()
     fig.set_size_inches(16/2.54, 10.5/2.54)

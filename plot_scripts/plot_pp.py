@@ -38,7 +38,7 @@ for subfolder in subfolders:
     with open(file_path) as jsonfile:
         data.update({name: json.load(jsonfile)})
 stylelist = ["-", ":", "--", "-."]
-colors = ["orangered", "navy", "red", "cyan"]
+colors = ["orangered", "navy", "green", "cyan"]
 
 ###############################################################################
 ######################## Leistungsbedarf Systemvergleich ######################
@@ -97,6 +97,7 @@ for key, style, name, color in zip(data, stylelist, systemnames, colors):
 plt.legend(loc="best")
 plt.xlabel("Brennkammer-Eintrittstemperatur $T_{\mathrm{BK}}$ [K]")
 plt.ylabel("Leistung $P_{i}$ [kW]")
+plt.title("Wärmeübertrager-Eintrittstemperatur $T_\mathrm{W}= 160$ K")
 plt.xlim([max(140,t+20), tbk_lims[1]])
 plt.ylim([0,120])
 fig = mpl.pyplot.gcf()
@@ -208,6 +209,7 @@ for tbk in [300, 400]:
     plt.legend(loc="best")
     plt.xlabel("Wärmeübertrager-Eintrittstemperatur $T_\mathrm{W}$ [K]")
     plt.ylabel("Leistung $P_{i}$ [kW]")
+    plt.title("Brennkammer-Eintrittstemperatur $T_\mathrm{BK}="+str(tbk)+"$ K")
     plt.xlim(twu_lims)
     plt.ylim([0,200])
     fig = mpl.pyplot.gcf()

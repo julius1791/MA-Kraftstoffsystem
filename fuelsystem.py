@@ -310,7 +310,7 @@ def reference2(params, t_cbt, p_cbt, filename="", v=v0, tolerance=tolerance):
         raise ValueError("Solution includes negative mass flow")
         
     save_results(
-        filename, "reference", t_cbt, float("nan"), eta_hpfp, eta_lpfp, p_cbt, 
+        filename, "reference2", t_cbt, float("nan"), eta_hpfp, eta_lpfp, p_cbt, 
         qm_cb, t0, p0, tpr_fohe, float("nan"), float("nan"), v, 
         P_hpfp, P_lpfp, Q_idg + Q_fohe, 0, qm_cb, qm_t, qm_r,
         0, p_hpfp, 0, i,
