@@ -31,15 +31,15 @@ Die Ergebnisse der Sensitivitätsanalyse für das H$_2$-Kraftstoffsystem mit Ver
 	\caption{Sensitivitätsanalyse des H$_2$-Kraftstoffsystems mit Verdampfer}
 	\begin{tabular} {|l|c|c|c|c|c|} \hline%
 		Parameter & Einheit & Schrittweite & Schrittweite [\%] & $ \Delta \sum P_i$ [\%] \\ \hline\hline%
-		$\Delta p_\mathrm{L}$ & \si{\kilo\Pa} & +52,0 & +20,0 & +5,39 \\ \hline 
-		$1-\pi_\mathrm{FOHE}$ & - & +0,010 & +20,0 & +1,98 \\ \hline 
-		$1-\pi_\mathrm{PHC}$ & - & +0,004 & +20,0 & +0,768 \\ \hline
-		$\eta_\mathrm{HPFC}$ & - & -0,0355 & -5,00 & +2,68 \\ \hline  
-		$\eta_\mathrm{RV}$ & - & -0,0355 & -5,00 & +1,71 \\ \hline 
-		$\dot{Q}_\mathrm{FOHE}$ & \si{\kilo\W} & -7,95 & -5,00 & +0,0541 \\ \hline 
-		$\Delta p_\mathrm{inj}$ & \si{\kilo\Pa} & +8,45 & +5,00 & +0,0829 \\ \hline 
-		$1-\pi_\mathrm{V, HP}$ & - & +0,010 & - & +1,88 \\ \hline 
-		$1-\pi_\mathrm{V, LP}$ & - & +0,005 & - & +0,202 \\ \hline 
+		$\Delta p_\mathrm{L}$ & 260 & \si{\kilo\Pa} & +52,0 & +5,42 \\ \hline 
+		$\pi_\mathrm{FOHE}$ & 0,95 & - & -0,01 & +2,01 \\ \hline 
+		$\pi_\mathrm{PHC}$ & 0,98 & - & -0,004 & +0,767 \\ \hline 
+		$\eta_\mathrm{HP}$ & 0,71 & - & -0,04 & +3,03 \\ \hline 
+		$\eta_\mathrm{RV}$ & 0,71 & - & -0,04 & +1,97 \\ \hline 
+		$\dot{Q}_\mathrm{FOHE}$ & 149 & \si{\kilo\W} & -7,45 & +0,0505 \\ \hline 
+		$\Delta p_\mathrm{inj}$ & 169 & \si{\kilo\Pa} & +8,45 & +0,0827 \\ \hline 
+		$\pi_\mathrm{V, HP}$ & 1,00 & - & -0,005 & +0,939 \\ \hline 
+		$\pi_\mathrm{V, LP}$ & 1,00 & - & -0,01 & +0,406 \\ \hline 
 	\end{tabular}	
 	\label{Tab:sensafter}%
 \end{table}
@@ -59,13 +59,13 @@ Die Tabellen \ref{Tab:senspump} und \ref{Tab:sensdual} zeigen die Ergebnisse der
 	\caption{Sensitivitätsanalyse des H$_2$-Kraftstoffsystems mit Pumpe}
 	\begin{tabular} {|l|c|c|c|c|c|} \hline%
 		Parameter & Referenzwert & Einheit & Schrittweite & $ \Delta \sum P_i$ [\%] \\ \hline\hline%
-		$\dot{Q}_\mathrm{FOHE}$ & 149000,0 & \si{\kilo\W} & -7,45 & +0,0511 \\ \hline 
-		$1-\pi_\mathrm{FOHE}$ & 0,95 & - & +0,010 & +3,00 \\ \hline 
-		$1-\pi_\mathrm{PHC}$ & 0,98 & - & +0,004 & +1,17 \\ \hline 
-		$\eta_\mathrm{RV}$ & 0,71 & - & -0,040 & +3,35 \\ \hline 
-		$\eta_\mathrm{HPFP}$ & 0,154 & - & -0,008 & +1,47 \\ \hline 
-		$\Delta p_\mathrm{L}$ & 260000,0 & \si{\kilo\Pa} & +52,0 & +8,19 \\ \hline 
-		$\Delta p_\mathrm{inj}$ & 169000,0 & \si{\kilo\Pa} & +8,45 & -0,054 \\ \hline 
+		$\Delta p_\mathrm{L}$ & 260 & \si{\kilo\Pa} & +52,0 & +8,19 \\ \hline 
+		$\pi_\mathrm{FOHE}$ & 0,95 & - & -0,01 & +3,00 \\ \hline 
+		$\pi_\mathrm{PHC}$ & 0,98 & - & -0,004 & +1,17 \\ \hline 
+		$\eta_\mathrm{HP}$ & 0,154 & - & -0,008 & +1,47 \\ \hline 
+		$\eta_\mathrm{RV}$ & 0,71 & - & -0,04 & +3,35 \\ \hline 
+		$\dot{Q}_\mathrm{FOHE}$ & 149 & \si{\kilo\W} & -7,45 & +0,0511 \\ \hline 
+		$\Delta p_\mathrm{inj}$ & 169 & \si{\kilo\Pa} & +8,45 & -0,054 \\ \hline   
 	\end{tabular}	
 	\label{Tab:senspump}%
 \end{table}
@@ -76,13 +76,13 @@ Die Tabellen \ref{Tab:senspump} und \ref{Tab:sensdual} zeigen die Ergebnisse der
 	\caption{Sensitivitätsanalyse des H$_2$-Kraftstoffsystems mit Vormischung}
 	\begin{tabular} {|l|c|c|c|c|c|} \hline%
 		Parameter & Einheit & Schrittweite & Schrittweite [\%] & $ \Delta \sum P_i$ [\%] \\ \hline\hline%
-		$\Delta p_\mathrm{L}$ & \si{\kilo\Pa} & +52,0 & +20,0 & +5,38 \\ \hline 
-		$1-\pi_\mathrm{FOHE}$ & - & +0,010 & +20,0 & +1,97 \\ \hline 
-		$1-\pi_\mathrm{PHC}$ & - & +0,004 & +20,0 & +0,766 \\ \hline
-		$\eta_\mathrm{HPFC}$ & - & -0,0355 & -5,00 & +2,68 \\ \hline  
-		$\eta_\mathrm{RV}$ & - & -0,0355 & -5,00 & +1,70 \\ \hline 
-		$\dot{Q}_\mathrm{FOHE}$ & \si{\kilo\W} & -7,95 & -5,00 & +0,0551 \\ \hline 
-		$\Delta p_\mathrm{inj}$ & \si{\kilo\Pa} & +8,45 & +5,00 & +0,0838 \\ \hline 
+		$\Delta p_\mathrm{L}$ & 260 & \si{\kilo\Pa} & +52,0 & +5,37 \\ \hline 
+		$\pi_\mathrm{FOHE}$ & 0,95 & - & -0,01 & +1,97 \\ \hline 
+		$\pi_\mathrm{PHC}$ & 0,98 & - & -0,004 & +0,765 \\ \hline 
+		$\eta_\mathrm{HP}$ & 0,71 & - & -0,04 & +3,04 \\ \hline 
+		$\eta_\mathrm{RV}$ & 0,71 & - & -0,04 & +1,92 \\ \hline 
+		$\dot{Q}_\mathrm{FOHE}$ & 149 & \si{\kilo\W} & -7,45 & +0,051 \\ \hline 
+		$\Delta p_\mathrm{inj}$ & 169 & \si{\kilo\Pa} & +8,45 & +0,084 \\ \hline  
 	\end{tabular}	
 	\label{Tab:sensdual}%
 \end{table}
@@ -96,14 +96,14 @@ Die Ergebnisse der Sensitivitätsanalyse für das Kerosin-Kraftstoffsystem sind 
 	\centering
 	\caption{Sensitivitätsanalyse des Kerosin-Kraftstoffsystems}
 	\begin{tabular} {|l|c|c|c|c|} \hline%
-		Parameter & Einheit & Schrittweite & Schrittweite [\%] & $ \Delta \sum P_i$ [\%] \\ \hline\hline%
-		$p_\mathrm{LPFP}$ & - & -93,0 & -10,0 & +4,38 \\ \hline 
-		$\Delta p_\mathrm{L}$ & \si{\kilo\Pa} & +13,6 & +20,0 & +1,21 \\ \hline 
-		$1-\pi_\mathrm{FOHE}$ & - & +0,010 & +20,0 & +0,828 \\ \hline 
-		$\eta_\mathrm{HPFP}$ & - & -0,0365 & -5,00 & +3,81 \\ \hline 
-		$\eta_\mathrm{LPFP}$ & - & -0,030 & -5,00 & +1,48 \\ \hline 
-		$\dot{Q}_\mathrm{FOHE}$ & \si{\kilo\W} & -6,35 & -5,20 & -1,36 \\ \hline 
-		$\Delta p_\mathrm{inj}$ & \si{\kilo\Pa} & +30,0 & +10,0 & +2,67 \\ \hline 
+		Parameter & Referenzwert & Einheit & Schrittweite & $ \Delta \sum P_i$ [\%] \\ \hline\hline%
+		$\Delta p_\mathrm{L}$ & 68 & \si{\kilo\Pa} & +13,6 & +1,23 \\ \hline 
+		$\pi_\mathrm{FOHE}$ & 0,95 & - & -0,01 & +0,845 \\ \hline 
+		$p_\mathrm{LP}$ & 930 & \si{\kilo\Pa} & -93,0 & +4,73 \\ \hline 
+		$\eta_\mathrm{HP}$ & 0,73 & - & -0,04 & +4,29 \\ \hline 
+		$\eta_\mathrm{LP}$ & 0,60 & - & -0,03 & +1,40 \\ \hline 
+		$\dot{Q}_\mathrm{FOHE}$ & 112 & \si{\kilo\W} & -5,85 & -1,28 \\ \hline 
+		$\Delta p_\mathrm{inj}$ & 300 & \si{\kilo\Pa} & +30,0 & +2,72 \\ \hline 
 	\end{tabular}	
 	\label{Tab:sensjeta}%
 \end{table}
@@ -149,10 +149,10 @@ Tabelle \ref{Tab:validation} zeigt die von Brewer berechneten Werte und die mit 
 	\caption{Validierung der Methodik}
 	\begin{tabular} {|l|c|c|c|c|} \hline%
     \multicolumn{2}{|c|}{Variable} & Einheit & Brewer \cite{Brewer.1991} & Diese Arbeit \\ \hline\hline%
-    Pumpenleistung & $P_\mathrm{HPFP}$ & kW & 23,9 & 23,4 \\ \hline
+    Pumpenleistung & $P_\mathrm{HP}$ & kW & 23,9 & 23,4 \\ \hline
     Wärme & $\dot{Q}$ & kW & 542,7 & 539,8 \\ \hline
     Rezirkulierter Massenstrom & $\dot{m}_\mathrm{R}$ & kg/s & 0,377 & 0,439 \\ \hline
-    Pumpen-Austrittstemperatur & $T_{2,\mathrm{HPFP}}$ & K & 50 & 33,1 \\ \hline
+    Pumpen-Austrittstemperatur & $T_{2,\mathrm{HP}}$ & K & 50 & 33,1 \\ \hline
     \end{tabular}	
     \label{Tab:validation}%
 \end{table}
@@ -201,18 +201,6 @@ Der Wärmebedarf ist insbesondere mit der Brennkammer-Eintrittstemperatur korrel
   \label{fig:pumpheat}
 \end{figure}
 \FloatBarrier
-
-Abbildung \ref{fig:pumpfuel} zeigt den Kraftstoffverbrauch des Triebwerks mit dem Kraftstoffsystem mit Pumpe für die unterschiedlichen Eintrittstemperaturen.
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=0.9\linewidth]{4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpemassflowcontour.pdf}
-  \caption{Kraftstoffverbrauch Wasserstoff-Kraftstoffsystem mit Pumpe [kg/s]}
-  \label{fig:pumpfuel}
-\end{figure}
-\FloatBarrier
-
-Die Leistung des Rezirkulationsverdichters bei hohen Wärmeübertrager-Eintritts-temperaturen verringert den Gesamtwirkungsgrad des Triebwerks. Im Gegensatz dazu hat die Brennkammer-Eintrittstemperatur einen geringeren Einfluss auf den Verbrauch.
 
 
 \subsection{Vergleich der Wasserstoff-Kraftstoffsysteme}
@@ -277,15 +265,3 @@ Im Folgenden werden die Wasserstoff-Kraftstoffsysteme mit dem Kerosin-Kraftstoff
 
 Der Betriebsmittelbedarf der Wasserstoff-Kraftstoffsysteme übersteigt den Bedarf des Kerosin-Kraftstoffsystems um einen Faktor von drei. Im Vergleich zum Kerosin-Kraftstoffsystem erfordert das Wasserstoff-Kraftstoffsystem mit Pumpe 22,7-Mal mehr Leistungsentnahme von der Hochdruckwelle und hat einen Wärmefehlbetrag von \SI{278}{\kilo\W}, der durch die parallele Wasserstoffverbrennung gedeckt wird. Bei dem Kraftstoffsystem mit Verdampfer wird sogar das 27,1-Fache an Leistungsentnahme benötigt bei einem Wärmefehlbetrag von \SI{268}{\kilo\W}. Bei dem Kraftstoffsystem mit Vormischung wird das 30,2-Fache an Leistungsentnahme benötigt bei einem Wärmefehlbetrag von nur noch \SI{261}{\kilo\W}. 
 
-Um die Vergleichbarkeit des Kraftstoffverbrauchs sicherzustellen, wird der Energieverbrauch als Produkt aus dem Kraftstoffverbrauch und dem unteren Heizwert bei Normaldruck und einer Temperatur von \SI{298.15}{\K} berechnet.
-Abbildung \ref{fig:refenergy} zeigt die Differenz des Energieverbrauchs der Wasserstoff-Kraftstoffsysteme zum Kerosin-Kraftstoffsystem. 
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=1\linewidth]{4_Abbildungen/2_Hauptteil/Ergebnisse/refenergy.pdf}
-  \caption{Energieverbrauch der Kraftstoffsysteme}
-  \label{fig:refenergy}
-\end{figure}
-\FloatBarrier
-
-Trotz des zusätzlichen Betriebsmittelbedarfs verbrauchen die Wasserstoff-Kraftstoffsysteme bis zu $0{,}27\,\%$ weniger Energie. Dies ist auf den höheren Wirkungsgrad des Kreisprozesses des wasserstoffbetriebenen Zyklus zurückzuführen, der durch die abweichenden Abgaseigenschaften begünstigt wird.
