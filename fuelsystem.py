@@ -110,7 +110,7 @@ def reference(params, t_cbt, p_cbt, filename="", v=v0, tolerance=tolerance):
         
         # initialise recirculation fuel flow
         ff_r = jetaflow.JetaFlow(qm_r,
-            jetaflow.calc_t(h_r, ff_main.p, v), ff_main.p, v
+            jetaflow.calc_t(h_r, p_lpfp, v), p_lpfp, v
         )
         
         # calculation of lp fuel pump
@@ -183,7 +183,6 @@ def reference(params, t_cbt, p_cbt, filename="", v=v0, tolerance=tolerance):
     # print("saturation margin injector [bar]: " + str((ff_cb.p - p_sat_cb - dp_inj)/1e5))
    
     stop = time.time()
-    
     # filter negative mass flows
     if qm_r < 0 or qm_t < 0:
         raise ValueError("Solution includes negative mass flow")
@@ -237,7 +236,7 @@ def reference2(params, t_cbt, p_cbt, filename="", v=v0, tolerance=tolerance):
         
         # initialise recirculation fuel flow
         ff_r = jetaflow.JetaFlow(qm_r,
-            jetaflow.calc_t(h_r, ff_main.p, v), ff_main.p, v
+            jetaflow.calc_t(h_r, p_lpfp, v), p_lpfp, v
         )
         
         # calculation of lp fuel pump
@@ -787,19 +786,19 @@ if __name__ == "__main__":
     }
     
     folder = "single_results"
-    print("reference")
-    reference(ref_params, 399.15, p_bk, filename= os.path.join(folder, "ref.csv"))
+    # print("reference")
+    # reference(ref_params, 399.15, p_bk, filename= os.path.join(folder, "ref.csv"))
     print("reference2")
     reference2(ref_params, 399.15, p_bk, filename=os.path.join(folder, "ref2.csv"))
     
-    print("\nh2dual")
-    h2dual(dual_params, t_bk, t_wu, p_bk, pcc=True, filename=os.path.join(folder, "dual.csv"))
+    # print("\nh2dual")
+    # h2dual(dual_params, t_bk, t_wu, p_bk, pcc=True, filename=os.path.join(folder, "dual.csv"))
     
-    print("\nh2pump")
-    h2pump(pump_params, t_bk, t_wu, p_bk, pcc=True, filename=os.path.join(folder, "pump.csv"))
+    # print("\nh2pump")
+    # h2pump(pump_params, t_bk, t_wu, p_bk, pcc=True, filename=os.path.join(folder, "pump.csv"))
     
-    print("\nh2after")
-    h2after(after_params, t_bk, t_wu, p_bk, pcc=True, filename=os.path.join(folder, "after.csv"))
+    # print("\nh2after")
+    # h2after(after_params, t_bk, t_wu, p_bk, pcc=True, filename=os.path.join(folder, "after.csv"))
     
     # print("\nh2pump")
     # h2pump(brewer_params, 264, 200, 1516.2e3, pcc=False, Brewer = True, filename=os.path.join(folder, "brewer.csv"))

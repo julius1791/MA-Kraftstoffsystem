@@ -1,7 +1,7 @@
-$\dot{Q}_\mathrm{FOHE}$ & \si{\kilo\W} & -7,95 & -5,00 & +0,0551 \\ \hline 
-$1-\pi_\mathrm{FOHE}$ & - & +0,010 & +20,0 & +1,97 \\ \hline 
-$1-\pi_\mathrm{PHC}$ & - & +0,004 & +20,0 & +0,766 \\ \hline 
-$\eta_\mathrm{RV}$ & - & -0,0355 & -5,00 & +1,70 \\ \hline 
-$\eta_\mathrm{HPFC}$ & - & -0,0355 & -5,00 & +2,68 \\ \hline 
-$\Delta p_\mathrm{L}$ & \si{\kilo\Pa} & +52,0 & +20,0 & +5,38 \\ \hline 
-$\Delta p_\mathrm{inj}$ & \si{\kilo\Pa} & +8,45 & +5,00 & +0,0838 \\ \hline 
+$\Delta p_\mathrm{L}$ & 260,0 & \si{\kilo\Pa} & +52,0 & +5,37 \\ \hline 
+$\pi_\mathrm{FOHE}$ & 0,95 & - & -0,010 & +1,97 \\ \hline 
+$\pi_\mathrm{PHC}$ & 0,98 & - & -0,004 & +0,765 \\ \hline 
+$\eta_\mathrm{HP}$ & 0,71 & - & -0,040 & +3,04 \\ \hline 
+$\eta_\mathrm{RV}$ & 0,71 & - & -0,040 & +1,92 \\ \hline 
+$\dot{Q}_\mathrm{FOHE}$ & 149,0 & \si{\kilo\W} & -7,45 & +0,051 \\ \hline 
+$\Delta p_\mathrm{inj}$ & 169,0 & \si{\kilo\Pa} & +8,45 & +0,084 \\ \hline 

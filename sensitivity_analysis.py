@@ -9,7 +9,7 @@ import numpy as np
 from pathlib import Path
 import math
 
-func = "pump"
+func = "dual"
 
 # results folder (!CHANGE IN fuelsystem2!!!)
 results_dir = "sensitivity"
@@ -84,18 +84,18 @@ def fixfloat(string):
 
 if func == "reference":
     folder = folders[3]
-    par_hr_list = ["$\dot{Q}_\mathrm{FOHE}$", "$1-\pi_\mathrm{FOHE}$", "$p_\mathrm{LPFP}$", "$\eta_\mathrm{LPFP}$", "$\eta_\mathrm{HPFP}$", "$\Delta p_\mathrm{L}$", "$\Delta p_\mathrm{inj}$"]
+    par_hr_list = ["$\dot{Q}_\mathrm{FOHE}$", "$\pi_\mathrm{FOHE}$", "$p_\mathrm{LP}$", "$\eta_\mathrm{LP}$", "$\eta_\mathrm{HP}$", "$\Delta p_\mathrm{L}$", "$\Delta p_\mathrm{inj}$"]
     par_name_list = ["Q_fohe", "tpr_fohe", "p_lpfp", "eta_lpfp", "eta_hpfp", "dp_l", "dp_inj"]
-    par_unit_list = ["\si{\kilo\W}", "-", "-", "-", "-", "\si{\kilo\Pa}", "\si{\kilo\Pa}"]
+    par_unit_list = ["\si{\kilo\W}", "-", "\si{\kilo\Pa}", "-", "-", "\si{\kilo\Pa}", "\si{\kilo\Pa}"]
     par_value_list = [112e3-117e3*0.05, tpr_fohes, 930e3*0.9, 0.6-0.03, 0.73-0.04, 68e3*1.2, 300e3*1.1]
     params = {
-        "p0": 180e3,"t0": 270, "Q_fohe": 122e3,"tpr_fohe": 0.95, "Q_idg": 5e3,
+        "p0": 180e3,"t0": 270, "Q_fohe": 112e3,"tpr_fohe": 0.95, "Q_idg": 5e3,
         "eta_lpfp": 0.6, "eta_hpfp": 0.73, "p_lpfp": 930e3, "qm_hpfp": 1.11,
         "qm_cb0": 0.313, "dp_l": 68e3, "dp_inj":300e3
     }
 if func == "pump":
     folder = folders[0]
-    par_hr_list = ["$\dot{Q}_\mathrm{FOHE}$", "$1-\pi_\mathrm{FOHE}$", "$1-\pi_\mathrm{PHC}$", "$\eta_\mathrm{RV}$", "$\eta_\mathrm{HPFP}$", "$\dot{m}_\mathrm{BK,0}$", "$\Delta p_\mathrm{L}$", "$\Delta p_\mathrm{inj}$"]
+    par_hr_list = ["$\dot{Q}_\mathrm{FOHE}$", "$\pi_\mathrm{FOHE}$", "$\pi_\mathrm{PHC}$", "$\eta_\mathrm{RV}$", "$\eta_\mathrm{HP}$", "$\dot{m}_\mathrm{BK}$", "$\Delta p_\mathrm{L}$", "$\Delta p_\mathrm{inj}$"]
     par_name_list = ["Q_fohe", "tpr_fohe", "tpr_phc", "eta_r", "eta_hpfp", "qm_cb0", "dp_l", "dp_inj"]
     par_unit_list = ["\si{\kilo\W}", "-", "-", "-", "-", "\si{\kg\per\s}", "\si{\kilo\Pa}", "\si{\kilo\Pa}"]
     par_value_list = [Q_fohes, tpr_fohes, tpr_phcs, eta_vs, eta_ps, qm_cbs, dp_ls, dp_injs]
@@ -106,7 +106,7 @@ if func == "pump":
     }
 elif func == "after":
     folder = folders[1]
-    par_hr_list = ["$\dot{Q}_\mathrm{FOHE}$", "$1-\pi_\mathrm{FOHE}$", "$1-\pi_\mathrm{PHC}$", "$\eta_\mathrm{RV}$", "$\eta_\mathrm{HPFC}$", "$\dot{m}_\mathrm{BK,0}$", "$\Delta p_\mathrm{L}$", "$\Delta p_\mathrm{inj}$", "$1-\pi_\mathrm{V, HP}$", "$1-\pi_\mathrm{V, LP}$"]
+    par_hr_list = ["$\dot{Q}_\mathrm{FOHE}$", "$\pi_\mathrm{FOHE}$", "$\pi_\mathrm{PHC}$", "$\eta_\mathrm{RV}$", "$\eta_\mathrm{HP}$", "$\dot{m}_\mathrm{BK,0}$", "$\Delta p_\mathrm{L}$", "$\Delta p_\mathrm{inj}$", "$\pi_\mathrm{V, HP}$", "$\pi_\mathrm{V, LP}$"]
     par_name_list = ["Q_fohe", "tpr_fohe", "tpr_phc", "eta_r", "eta_hpfp", "qm_cb0", "dp_l", "dp_inj", "tpr_vhp", "tpr_vlp"]
     par_unit_list = ["\si{\kilo\W}", "-", "-", "-", "-", "\si{\kg\per\s}", "\si{\kilo\Pa}", "\si{\kilo\Pa}", "-", "-"]
     par_value_list = [Q_fohes, tpr_fohes, tpr_phcs, eta_vs, eta_vs, qm_cbs, dp_ls, dp_injs, tpr_vhps, tpr_vlps]
@@ -118,7 +118,7 @@ elif func == "after":
     }
 elif func == "dual":
     folder = folders[2]
-    par_hr_list = ["$\dot{Q}_\mathrm{FOHE}$", "$1-\pi_\mathrm{FOHE}$", "$1-\pi_\mathrm{PHC}$", "$\eta_\mathrm{RV}$", "$\eta_\mathrm{HPFC}$", "$\dot{m}_\mathrm{BK,0}$", "$\Delta p_\mathrm{L}$", "$\Delta p_\mathrm{inj}$"]
+    par_hr_list = ["$\dot{Q}_\mathrm{FOHE}$", "$\pi_\mathrm{FOHE}$", "$\pi_\mathrm{PHC}$", "$\eta_\mathrm{RV}$", "$\eta_\mathrm{HP}$", "$\dot{m}_\mathrm{BK,0}$", "$\Delta p_\mathrm{L}$", "$\Delta p_\mathrm{inj}$"]
     par_name_list = ["Q_fohe", "tpr_fohe", "tpr_phc", "eta_r", "eta_hpfp", "qm_cb0", "dp_l", "dp_inj"]
     par_unit_list = ["\si{\kilo\W}", "-", "-", "-", "-", "\si{\kg\per\s}", "\si{\kilo\Pa}", "\si{\kilo\Pa}"]
     par_value_list = [Q_fohes, tpr_fohes, tpr_phcs, eta_vs, eta_vs, qm_cbs, dp_ls, dp_injs]
@@ -147,7 +147,7 @@ for i in range(len(par_name_list)):
     param_comb[par_name_list[i]] = par_value_list[i]
     param_comb_list.append(param_comb)
     path_list.append(path)
-    if not "pi" in par_hr_list[i]:
+    if True: # "not pi" in par_hr_list[i]:
         step_size.append(par_value_list[i]-params[par_name_list[i]])
         rel_step_size.append(step_size[i]/params[par_name_list[i]])
     elif not "V," in par_hr_list[i]:
@@ -252,9 +252,21 @@ content = {"Parameters": par_dict, "Absolute Differences": absolute_difference.t
 #         csvwriter.writerow([par_name_list[i], par_unit_list[i], step_size[i], relative_difference[i, 0]*1e2, relative_difference[i, 1]*1e2, relative_difference[i, 2]*1e2])
 
 
+# change order
+if func == "after": 
+    indexes = [5, 6, 1, 2, 4, 3, 0, 7, 8, 9]
+elif func == "reference":
+    indexes = [5, 1, 2, 4, 3, 0, 6]
+else:
+    indexes = [5, 6, 1, 2, 4, 3, 0, 7]
+    
+
+    
+
+
 txtfn = os.path.join(results_dir, folder + ".txt")
 with open(txtfn, "w") as f:
-    for i in range(len(par_name_list)):
+    for i in indexes:
         if par_name_list[i] == "qm_cb0":
             continue
         sz_string = str(sigfig(step_size[i], 3)) if step_size[i] < 0 else "+" + str(sigfig(step_size[i], 3))
@@ -265,7 +277,11 @@ with open(txtfn, "w") as f:
         sz_string = fixfloat(sz_string)
         dP_string = fixfloat(dP_string)
         dQ_string = fixfloat(dQ_string)
-        par_ref_value = str(params[par_name_list[i]])
+        par_ref_value = params[par_name_list[i]]
+        if par_ref_value > 1e3:
+            par_ref_value = str(sigfig(par_ref_value/1e3,3))
+        else:
+            par_ref_value = str(sigfig(par_ref_value,3))
         
         f.write((par_hr_list[i] + " & " + par_ref_value + " & " + par_unit_list[i] + " & " + sz_string + " & " + dP_string + " \\\ \hline \n").replace(".", ",").replace("+inf", "-"))
         
