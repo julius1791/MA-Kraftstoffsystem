@@ -2,7 +2,7 @@
 \chapter{Ergebnisse} \label{chap:ergebnis}
 %==============================================================================
 
-In diesem Kapitel werden mit der vorgeschlagenen Modellierung von Kraftstoffsystemen für Fluggasturbinen berechnete Ergebnisse analysiert. Dabei steht insbesondere die Frage im Fokus, ob die Modellierung den Leistungs- und Wärmebedarf der Kraftstoffsysteme akkurat vorhersagen kann. Zunächst wird in einer Sensitivitätsanalyse die Auswirkung von Unsicherheiten der in Kapitel \ref{chap:param} bestimmten Parametern auf das Modellverhalten untersucht. Danach wird die Methodik dieser Arbeit daher mit Daten aus der Literatur validiert. Anschließend wird im Rahmen einer Parameterstudie analysiert, wie sich die Eintrittstemperaturen des Kraftstoffs in den Wärmeübertrager und die Brennkammer auf die Modellierungen der Wasserstoff-Kraftstoffsysteme auswirkt. Abschließend erfolgt ein Vergleich des Betriebsmittelbedarfs der H$_2$-Kraftstoffsysteme untereinander und mit dem Referenzkraftstoffsystem anhand eines ausgewählten Betriebspunkts.
+In diesem Kapitel werden mit der vorgeschlagenen Modellierung berechneten Ergebnisse diskutiert. Dabei steht insbesondere die Frage im Fokus, ob die Modellierung den Leistungs- und Wärmebedarf der Kraftstoffsysteme akkurat vorhersagen kann. Hierfür wird im Rahmen einer Sensitivitätsanalyse die Auswirkung von Unsicherheiten der in Kapitel \ref{chap:param} bestimmten Parametern auf das Modellverhalten untersucht. Danach wird die Methodik dieser Arbeit mit Daten aus der Literatur validiert. Anschließend wird im Rahmen einer Parameterstudie analysiert, wie sich die Eintrittstemperaturen des Kraftstoffs in den ersten Wärmeübertrager und die Brennkammer auf die Modellierungen der Wasserstoff-Kraftstoffsysteme auswirkt. Abschließend erfolgt ein Vergleich des Leistungs- und Wärmebedarfs der H$_2$-Kraftstoffsysteme untereinander und mit dem Kerosin-Kraftstoffsystem anhand eines ausgewählten Betriebspunkts.
 
 \section{Sensitivitätsanalyse}
 
@@ -12,7 +12,7 @@ Im Folgenden wird eine Sensitivitätsanalyse durchgeführt und ausgewertet, um d
 
 Da die statistische Verteilung der Parameterwerte nicht bekannt ist, werden die Schrittweiten für die Variation der Parameter geschätzt. Die Schrittweiten werden so gewählt, dass die Abweichung der Pumpenleistung des H$_2$-Kraftstoffsystems mit Verdampfer stets ein positives Vorzeichen aufweist.
 
-Der Austrittsdruck der Niederdruckpumpe $p_\mathrm{LPFP}$ des kerosinbetriebenen Kraftstoffsystems ist stets höher als der Öldruck im Wärmeübertrager des Hauptölsystems und somit von diesem abhängig. Der Öldruck ist eine Funktion der Druckverlust des Ölsystems. Aus diesem Grund wird eine moderate Schrittweite von $-10\,\%$ gewählt.
+Der Austrittsdruck der Niederdruckpumpe $p_\mathrm{LPFP}$ des Kerosin-Kraftstoffsystems ist stets höher als der Öldruck im Wärmeübertrager des Hauptölsystems und somit von diesem abhängig. Der Öldruck ist eine Funktion der Druckverlust des Ölsystems. Aus diesem Grund wird eine moderate Schrittweite von $-10\,\%$ gewählt.
 
 Da die Druckverluste von Wärmeübertragern und Leitungen ein Auslegungsziel darstellen, sind sie nicht direkt mit Unsicherheit behaftet. Jedoch können abweichende Anforderungen an das Gewicht dieser Komponenten eine Aufweichung der Auslegungsziele erfordern. Um diesen Effekt zu berücksichtigen werden der Leitungsdruckverlust $\Delta p_L$ und die Druckverluste $1-\pi_i$ der Wärmeübertrager mit einer Schrittweite von $+20\,\%$ variiert. 
 
@@ -22,7 +22,7 @@ Die Unsicherheiten der Wirkungsgrade von Pumpen und Verdichtern $\eta_i$, der ve
 
 \subsection{Auswertung der Sensitivitätsanalyse}
 
-Auf Basis der zuvor bestimmten Schrittweiten wird im Folgenden die Sensitivität der Kraftstoffsysteme untersucht und ausgewertet. Zunächst werden die Ergebnisse der Modellierung des H$_2$-Kraftstoffsystems mit Verdampfer präsentiert. Daraufhin werden die Ergebnisse der Sensitivitätsanalysen der H$_2$-Kraftstoffsysteme miteinander verglichen. Abschließend werden die Ergebnisse der Sensitivitätsanalyse für das kerosinbetriebene Kraftstoffsystem diskutiert.
+Auf Basis der zuvor bestimmten Schrittweiten wird im Folgenden die Sensitivität der Kraftstoffsysteme untersucht und ausgewertet. Zunächst werden die Ergebnisse der Modellierung des H$_2$-Kraftstoffsystems mit Verdampfer präsentiert. Daraufhin werden die Ergebnisse der Sensitivitätsanalysen der H$_2$-Kraftstoffsysteme miteinander verglichen. Abschließend werden die Ergebnisse der Sensitivitätsanalyse für das Kerosin-Kraftstoffsystem diskutiert.
 
 Die Ergebnisse der Sensitivitätsanalyse für das H$_2$-Kraftstoffsystem mit Verdampfer sind in Tabelle \ref{Tab:sensjeta} dargestellt.
 
@@ -90,11 +90,11 @@ Die Tabellen \ref{Tab:senspump} und \ref{Tab:sensdual} zeigen die Ergebnisse der
 
 Die H$_2$-Kraftstoffsysteme weisen nur geringfügige Unterschiede in ihren Sensitivitäten auf. Das H$_2$-Kraftstoffsystem mit Hochdruckpumpe zeigt mit $+8,19\,\%$ eine besonders hohe Sensitivität gegenüber Variationen der Leitungs-Druckverluste. Auch Änderungen der Druckverluste in den Wärmeübertragern haben einen stärkeren Einfluss auf dieses System. Die Ergebnisse des H$_2$-Kraftstoffsystems mit Vormischung weichen nur minimal von denen des H$_2$-Kraftstoffsystems mit Verdampfer ab.
 
-Die Ergebnisse der Sensitivitätsanalyse für das kerosinbetriebene Kraftstoffsystem sind in Tabelle \ref{Tab:sensjeta} zusammengefasst.
+Die Ergebnisse der Sensitivitätsanalyse für das Kerosin-Kraftstoffsystem sind in Tabelle \ref{Tab:sensjeta} zusammengefasst.
 
 \begin{table}[ht]
 	\centering
-	\caption{Sensitivitätsanalyse des kerosinbetriebenen Kraftstoffsystems}
+	\caption{Sensitivitätsanalyse des Kerosin-Kraftstoffsystems}
 	\begin{tabular} {|l|c|c|c|c|} \hline%
 		Parameter & Einheit & Schrittweite & Schrittweite [\%] & $ \Delta \sum P_i$ [\%] \\ \hline\hline%
 		$p_\mathrm{LPFP}$ & - & -93,0 & -10,0 & +4,38 \\ \hline 
@@ -265,7 +265,7 @@ Eine direkte Empfehlung spezifischer Eintrittstemperaturen lässt sich aus diese
 
 \section{Vergleich Kerosin- und Wasserstoff-Kraftstoffsysteme}
 
-Im Folgenden werden die Wasserstoff-Kraftstoffsysteme mit dem Referenzkraftstoffsystem verglichen. Abbildung \ref{fig:refcomp} zeigt den Betriebsmittelbedarf der verschiedenen Kraftstoffsysteme. Für die Wasserstoff-Kraftstoffsysteme gilt eine Brennkammer-Eintrittstemperatur von $T_\mathrm{BK}=$ \SI{300}{\K} und eine Wärmeübertrager-Eintrittstemperatur von $T_\mathrm{W}=$ \SI{160}{\K}.
+Im Folgenden werden die Wasserstoff-Kraftstoffsysteme mit dem Kerosin-Kraftstoffsystem verglichen. Abbildung \ref{fig:refcomp} zeigt den Betriebsmittelbedarf der verschiedenen Kraftstoffsysteme. Für die Wasserstoff-Kraftstoffsysteme gilt eine Brennkammer-Eintrittstemperatur von $T_\mathrm{BK}=$ \SI{300}{\K} und eine Wärmeübertrager-Eintrittstemperatur von $T_\mathrm{W}=$ \SI{160}{\K}.
 
 \begin{figure}[ht]
 \centering
@@ -275,10 +275,10 @@ Im Folgenden werden die Wasserstoff-Kraftstoffsysteme mit dem Referenzkraftstoff
 \end{figure}
 \FloatBarrier
 
-Der Betriebsmittelbedarf der Wasserstoff-Kraftstoffsysteme übersteigt den Bedarf des Referenzkraftstoffsystems um einen Faktor von drei. Im Vergleich zum Referenzkraftstoffsystem erfordert das Wasserstoff-Kraftstoffsystem mit Pumpe 22,7-Mal mehr Leistungsentnahme von der Hochdruckwelle und hat einen Wärmefehlbetrag von \SI{278}{\kilo\W}, der durch die parallele Wasserstoffverbrennung gedeckt wird. Bei dem Kraftstoffsystem mit Verdampfer wird sogar das 27,1-Fache an Leistungsentnahme benötigt bei einem Wärmefehlbetrag von \SI{268}{\kilo\W}. Bei dem Kraftstoffsystem mit Vormischung wird das 30,2-Fache an Leistungsentnahme benötigt bei einem Wärmefehlbetrag von nur noch \SI{261}{\kilo\W}. 
+Der Betriebsmittelbedarf der Wasserstoff-Kraftstoffsysteme übersteigt den Bedarf des Kerosin-Kraftstoffsystems um einen Faktor von drei. Im Vergleich zum Kerosin-Kraftstoffsystem erfordert das Wasserstoff-Kraftstoffsystem mit Pumpe 22,7-Mal mehr Leistungsentnahme von der Hochdruckwelle und hat einen Wärmefehlbetrag von \SI{278}{\kilo\W}, der durch die parallele Wasserstoffverbrennung gedeckt wird. Bei dem Kraftstoffsystem mit Verdampfer wird sogar das 27,1-Fache an Leistungsentnahme benötigt bei einem Wärmefehlbetrag von \SI{268}{\kilo\W}. Bei dem Kraftstoffsystem mit Vormischung wird das 30,2-Fache an Leistungsentnahme benötigt bei einem Wärmefehlbetrag von nur noch \SI{261}{\kilo\W}. 
 
 Um die Vergleichbarkeit des Kraftstoffverbrauchs sicherzustellen, wird der Energieverbrauch als Produkt aus dem Kraftstoffverbrauch und dem unteren Heizwert bei Normaldruck und einer Temperatur von \SI{298.15}{\K} berechnet.
-Abbildung \ref{fig:refenergy} zeigt die Differenz des Energieverbrauchs der Wasserstoff-Kraftstoffsysteme zum Referenzkraftstoffsystem. 
+Abbildung \ref{fig:refenergy} zeigt die Differenz des Energieverbrauchs der Wasserstoff-Kraftstoffsysteme zum Kerosin-Kraftstoffsystem. 
 
 \begin{figure}[ht]
 \centering
