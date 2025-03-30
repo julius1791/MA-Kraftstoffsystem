@@ -795,7 +795,7 @@ if __name__ == "__main__":
     h2dual(dual_params, t_bk, t_wu, p_bk, pcc=True, filename="dual.csv")
     
     print("\nh2pump")
-    h2pump(pump_params, t_bk, t_wu, p_bk, pcc=True, filename="test.csv")
+    h2pump(pump_params, t_bk, t_wu, p_bk, pcc=True, filename="pump.csv")
     
     print("\nh2after")
     h2after(after_params, t_bk, t_wu, p_bk, pcc=True, filename="after.csv")
