@@ -75,7 +75,7 @@ def reference(params, t_cbt, p_cbt, filename="", v=v0, tolerance=tolerance):
     p0, t0 = itemgetter("p0","t0")(params)
     Q_fohe, tpr_fohe, Q_idg = itemgetter("Q_fohe","tpr_fohe", "Q_idg")(params)
     p_lpfp, eta_lpfp, eta_hpfp = itemgetter("p_lpfp", "eta_lpfp", "eta_hpfp")(params)
-    qm_cb0, qm_hpfp = itemgetter("qm_cb0", "qm_hpfp")(params)
+    qm_cb, qm_hpfp = itemgetter("qm_cb0", "qm_hpfp")(params)
     dp_l, dp_inj = itemgetter("dp_l", "dp_inj")(params)
     
     start = time.time()
@@ -83,10 +83,9 @@ def reference(params, t_cbt, p_cbt, filename="", v=v0, tolerance=tolerance):
     
     # calculate intitial values for independent variables
     h_r = jetaflow.calc_ht(t_cbt, p_cbt, v)
-    h_rold = 0
     
-    qm_t = 0.1
-    qm_t0 = qm_t
+    qm_t0 = 0.1
+    qm_t = qm_t0
     
     p_hpfp = p_cbt/tpr_fohe + dp_l + dp_inj
     
@@ -97,21 +96,24 @@ def reference(params, t_cbt, p_cbt, filename="", v=v0, tolerance=tolerance):
     P_lpfp = 0
     
     while condition_bool:
-        qm_cb = qm_cb0
-        # fuel from boost pump
-        ff_main = jetaflow.JetaFlow(qm_cb+qm_t, t0, p0, v)
-        
-        # calculation of lp fuel pump
-        P_lpfp, _ = ff_main.pump_hydraulic(p_lpfp, eta_lpfp)
         
         # detect negative mass flow and stop calculation
         if qm_cb + qm_t > qm_hpfp:
             raise ValueError("Mass flow exceeds HPFP limit. QM_T: " + str(qm_t))
             
+        # calculate recirculated mass flow
+        qm_r = qm_hpfp - qm_t - qm_cb
+        
+        # init fuel from boost pump
+        ff_main = jetaflow.JetaFlow(qm_cb+qm_t, t0, p0, v)
+        
         # initialise recirculation fuel flow
-        ff_r = jetaflow.JetaFlow(qm_hpfp-qm_t-qm_cb,
+        ff_r = jetaflow.JetaFlow(qm_r,
             jetaflow.calc_t(h_r, ff_main.p, v), ff_main.p, v
         )
+        
+        # calculation of lp fuel pump
+        P_lpfp, _ = ff_main.pump_hydraulic(p_lpfp, eta_lpfp)
         
         # mix recirculation flow into main flow
         ff_main.mix_flows(ff_r)
@@ -119,14 +121,10 @@ def reference(params, t_cbt, p_cbt, filename="", v=v0, tolerance=tolerance):
         # primary heat exchanger
         ff_main.heat_exchanger(Q_fohe, tpr_fohe)
         
-        # saturation pressure and static pressure at hp pump inlet
-        # p_sat_pi = jetaflow.sat_p(ff_main.t)
-        # p_pi = ff_main.p
-        
         # calculation of hp fuel pump
         P_hpfp, _ = ff_main.pump_hydraulic(p_hpfp, eta_hpfp)
         
-        # apply pressure loss
+        # apply pipe pressure loss
         ff_main.heat_exchanger(0, (jetaflow.calc_pt(ff_main.t, ff_main.p, ff_main.v)-dp_l)/jetaflow.calc_pt(ff_main.t, ff_main.p, ff_main.v))
         
         # split off combustion chamber flow
@@ -135,21 +133,35 @@ def reference(params, t_cbt, p_cbt, filename="", v=v0, tolerance=tolerance):
         # apply injector pressure loss
         ff_cb.heat_exchanger(0, (jetaflow.calc_pt(ff_main.t, ff_main.p, ff_main.v)-dp_inj)/jetaflow.calc_pt(ff_main.t, ff_main.p, ff_main.v))
         
-        # vapour pressure at injector
-        # p_sat_cb = jetaflow.sat_p(ff_cb.t)
+        # idg heat exchanger
+        ff_main.heat_exchanger(Q_idg, 1)
+
         
-        # stagnation pressure at injector
+        # calculate combustor state
         t_cba = ff_cb.t+ff_cb.v**2/(2*jetaflow.jeta.calc_jeta_cp(ff_cb.t, ff_cb.p))
         p_cba = jetaflow.calc_pt(ff_cb.t, ff_cb.p, ff_cb.v)
         
-        # idg heat exchanger
-        ff_main.heat_exchanger(Q_idg, 1)
         
-        # calculate recirculated mass flow
-        qm_r = qm_hpfp - qm_t - qm_cb
+            
+        if Verbose:  
+            print(qm_t)
+            print(i, t_cbt - t_cba, p_cbt - p_cba, h_r - ff_main.ht)
+        
+        
+        # check for convergence
+        condition_bool = not (
+            abs(t_cbt - t_cba) < tolerance 
+            and abs(p_cbt - p_cba) < tolerance 
+            and abs(h_r - ff_main.ht) < tolerance
+        )
+        
+        # advance counter and check for iteration limit
+        i+=1
+        if i > max_iter:
+            print("failed to converge")
+            return
         
         # calculate independent variables for next iteration
-        h_rold = h_r
         h_r = (1+qm_r/qm_cb)*ff_main.ht-qm_r/qm_cb*h_r
         
         p_hpfp_old = p_hpfp
@@ -163,24 +175,6 @@ def reference(params, t_cbt, p_cbt, filename="", v=v0, tolerance=tolerance):
             p_hpfp = 1.1*p_hpfp_old
         elif p_hpfp < 0.9 * p_hpfp_old:
             p_hpfp = 0.9*p_hpfp_old 
-            
-            
-        # print(qm_t)
-        # print(i, t_cbt - t_cba, p_cbt - p_cba, h_r - h_rold)
-        
-        
-        # check for convergence
-        condition_bool = not (
-            abs(t_cbt - t_cba) < tolerance 
-            and abs(p_cbt - p_cba) < tolerance 
-            and abs(h_r - h_rold) < tolerance
-        )
-        
-        # advance counter and check for iteration limit
-        i+=1
-        if i > max_iter:
-            print("failed to converge")
-            return
     
     
     
@@ -203,21 +197,23 @@ def reference(params, t_cbt, p_cbt, filename="", v=v0, tolerance=tolerance):
     return
 
 
+# second jet-a fuel system to determine actual heat demand
 def reference2(params, t_cbt, p_cbt, filename="", v=v0, tolerance=tolerance):
     # unpack params dict
     p0, t0 = itemgetter("p0","t0")(params)
     tpr_fohe, Q_idg = itemgetter("tpr_fohe", "Q_idg")(params)
     p_lpfp, eta_lpfp, eta_hpfp = itemgetter("p_lpfp", "eta_lpfp", "eta_hpfp")(params)
-    qm_cb0, qm_hpfp = itemgetter("qm_cb0", "qm_hpfp")(params)
+    qm_cb, qm_hpfp = itemgetter("qm_cb0", "qm_hpfp")(params)
     dp_l, dp_inj = itemgetter("dp_l", "dp_inj")(params)
     
     start = time.time()
     
+    # no fuel return to tank
+    qm_t = 0
+    qm_r = qm_hpfp - qm_cb
     
     # calculate intitial values for independent variables
     h_r = jetaflow.calc_ht(t_cbt, p_cbt, v)
-    
-    qm_t = 0
     
     p_hpfp = p_cbt/tpr_fohe + dp_l + dp_inj
     
@@ -227,36 +223,30 @@ def reference2(params, t_cbt, p_cbt, filename="", v=v0, tolerance=tolerance):
     P_hpfp = 0
     P_lpfp = 0
     
-    DH = qm_cb0*(jetaflow.jeta.calc_jeta_enthalpy(t_cbt, p_cbt)-jetaflow.jeta.calc_jeta_enthalpy(t0, p0))
+    DH = qm_cb*(jetaflow.jeta.calc_jeta_enthalpy(t_cbt, p_cbt)-jetaflow.jeta.calc_jeta_enthalpy(t0, p0))
     
     
     while condition_bool:
-        qm_cb = qm_cb0
+        
+        # calculate heat demand
         Q_fohe = DH-P_hpfp-P_lpfp-Q_idg
-        # fuel from boost pump
+        
+        # init fuel from boost pump
         ff_main = jetaflow.JetaFlow(qm_cb+qm_t, t0, p0, v)
+        
+        # initialise recirculation fuel flow
+        ff_r = jetaflow.JetaFlow(qm_r,
+            jetaflow.calc_t(h_r, ff_main.p, v), ff_main.p, v
+        )
         
         # calculation of lp fuel pump
         P_lpfp, _ = ff_main.pump_hydraulic(p_lpfp, eta_lpfp)
-        
-        # detect negative mass flow and stop calculation
-        if qm_cb + qm_t > qm_hpfp:
-            raise ValueError("Mass flow exceeds HPFP limit. QM_T: " + str(qm_t))
-            
-        # initialise recirculation fuel flow
-        ff_r = jetaflow.JetaFlow(qm_hpfp-qm_t-qm_cb,
-            jetaflow.calc_t(h_r, ff_main.p, v), ff_main.p, v
-        )
         
         # mix recirculation flow into main flow
         ff_main.mix_flows(ff_r)
         
         # primary heat exchanger
         ff_main.heat_exchanger(Q_fohe, tpr_fohe)
-        
-        # saturation pressure and static pressure at hp pump inlet
-        # p_sat_pi = jetaflow.sat_p(ff_main.t)
-        # p_pi = ff_main.p
         
         # calculation of hp fuel pump
         P_hpfp, _ = ff_main.pump_hydraulic(p_hpfp, eta_hpfp)
@@ -269,22 +259,35 @@ def reference2(params, t_cbt, p_cbt, filename="", v=v0, tolerance=tolerance):
         
         # apply injector pressure loss
         ff_cb.heat_exchanger(0, (jetaflow.calc_pt(ff_main.t, ff_main.p, ff_main.v)-dp_inj)/jetaflow.calc_pt(ff_main.t, ff_main.p, ff_main.v))
-        
-        # vapour pressure at injector
-        # p_sat_cb = jetaflow.sat_p(ff_cb.t)
-        
-        # stagnation pressure at injector
-        t_cba = ff_cb.t+ff_cb.v**2/(2*jetaflow.jeta.calc_jeta_cp(ff_cb.t, ff_cb.p))
-        p_cba = jetaflow.calc_pt(ff_cb.t, ff_cb.p, ff_cb.v)
-        
+
         # idg heat exchanger
         ff_main.heat_exchanger(Q_idg, 1)
         
-        # calculate recirculated mass flow
-        qm_r = qm_hpfp - qm_t - qm_cb
+        # calculate combustor state
+        t_cba = ff_cb.t+ff_cb.v**2/(2*jetaflow.jeta.calc_jeta_cp(ff_cb.t, ff_cb.p))
+        p_cba = jetaflow.calc_pt(ff_cb.t, ff_cb.p, ff_cb.v)
         
+        
+
+            
+        if Verbose:
+            print(i, t_cbt - t_cba, p_cbt - p_cba, h_r - ff_main.ht)
+        
+        
+        # check for convergence
+        condition_bool = not (
+            abs(t_cbt - t_cba) < tolerance 
+            and abs(p_cbt - p_cba) < tolerance 
+            and abs(h_r - ff_main.ht) < tolerance
+        )
+        
+        # advance counter and check for iteration limit
+        i+=1
+        if i > max_iter:
+            print("failed to converge")
+            return
+    
         # calculate independent variables for next iteration
-        h_rold = h_r
         h_r = (1+qm_r/qm_cb)*ff_main.ht-qm_r/qm_cb*h_r
         
         p_hpfp_old = p_hpfp
@@ -294,25 +297,6 @@ def reference2(params, t_cbt, p_cbt, filename="", v=v0, tolerance=tolerance):
             p_hpfp = 1.1*p_hpfp_old
         elif p_hpfp < 0.9 * p_hpfp_old:
             p_hpfp = 0.9*p_hpfp_old 
-            
-            
-        
-        # print(i, t_cbt - t_cba, p_cbt - p_cba, h_r - h_rold)
-        
-        
-        # check for convergence
-        condition_bool = not (
-            abs(t_cbt - t_cba) < tolerance 
-            and abs(p_cbt - p_cba) < tolerance 
-            and abs(h_r - h_rold) < tolerance
-        )
-        
-        # advance counter and check for iteration limit
-        i+=1
-        if i > max_iter:
-            print("failed to converge")
-            return
-    
     
     
     # print("saturation margin hpp inlet [bar]: " + str((p_pi - p_sat_pi)/1e5))
@@ -759,7 +743,7 @@ def h2dual(params, t_cbt, t_hxt, p_cbt, pcc=True, filename="", v=v0, tolerance=t
 if __name__ == "__main__":
 
     t_bk = 300  
-    t_wu = 280
+    t_wu = 160
     
     p_bk = 1.33e6
     
@@ -802,19 +786,19 @@ if __name__ == "__main__":
     }
     
     
-    # print("reference")
-    # reference(ref_params, 399.15, p_bk, filename="ref.csv")
-    # print("reference2")
-    # reference2(ref_params, 399.15, p_bk, filename="ref2.csv")
+    print("reference")
+    reference(ref_params, 399.15, p_bk, filename="ref.csv")
+    print("reference2")
+    reference2(ref_params, 399.15, p_bk, filename="ref2.csv")
     
     print("\nh2dual")
     h2dual(dual_params, t_bk, t_wu, p_bk, pcc=True, filename="dual.csv")
     
-    # print("\nh2pump")
-    # h2pump(pump_params, t_bk, t_wu, p_bk, pcc=True, filename="test.csv")
+    print("\nh2pump")
+    h2pump(pump_params, t_bk, t_wu, p_bk, pcc=True, filename="test.csv")
     
-    # print("\nh2after")
-    # h2after(after_params, t_bk, t_wu, p_bk, pcc=True, filename="after.csv")
+    print("\nh2after")
+    h2after(after_params, t_bk, t_wu, p_bk, pcc=True, filename="after.csv")
     
     # print("\nh2pump")
     # h2pump(brewer_params, 264, 200, 1516.2e3, pcc=False, Brewer = True, filename="brewer.csv")
