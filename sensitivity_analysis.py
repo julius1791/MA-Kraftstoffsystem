@@ -9,7 +9,7 @@ import numpy as np
 from pathlib import Path
 import math
 
-func = "reference"
+func = "pump"
 
 # results folder (!CHANGE IN fuelsystem2!!!)
 results_dir = "sensitivity"
@@ -150,7 +150,6 @@ for i in range(len(par_name_list)):
     if not "pi" in par_hr_list[i]:
         step_size.append(par_value_list[i]-params[par_name_list[i]])
         rel_step_size.append(step_size[i]/params[par_name_list[i]])
-        print(par_name_list[i])
     elif not "V," in par_hr_list[i]:
         step_size.append(-par_value_list[i]+params[par_name_list[i]])
         rel_step_size.append(step_size[i]/(1-params[par_name_list[i]]))
@@ -238,10 +237,10 @@ for i in range(len(par_name_list)):
         #pre init
         pass
     relative_difference[i, 2] = dQ/Q0
-params = dict()
+par_dict = dict()
 for i, name, value in zip(range(len(par_names)), par_names, par_vals):
-    params.update({name: value})
-content = {"Parameters": params, "Absolute Differences": absolute_difference.tolist(), "Jacobian": jacobian.tolist(), "Parameter step": step_size, "Parameter names": par_name_list}
+    par_dict.update({name: value})
+content = {"Parameters": par_dict, "Absolute Differences": absolute_difference.tolist(), "Jacobian": jacobian.tolist(), "Parameter step": step_size, "Parameter names": par_name_list}
 # jsonfn = os.path.join(results_dir, folder + ".json")
 # csvfn = os.path.join(results_dir, folder + ".csv")
 # with open(jsonfn, "w") as jsonout:
@@ -266,8 +265,9 @@ with open(txtfn, "w") as f:
         sz_string = fixfloat(sz_string)
         dP_string = fixfloat(dP_string)
         dQ_string = fixfloat(dQ_string)
+        par_ref_value = str(params[par_name_list[i]])
         
-        f.write((par_hr_list[i] + " & " + par_unit_list[i] + " & " + sz_string + " & " + rsz_string + " & " + dP_string + " \\\ \hline \n").replace(".", ",").replace("+inf", "-"))
+        f.write((par_hr_list[i] + " & " + par_ref_value + " & " + par_unit_list[i] + " & " + sz_string + " & " + dP_string + " \\\ \hline \n").replace(".", ",").replace("+inf", "-"))
         
     
     
