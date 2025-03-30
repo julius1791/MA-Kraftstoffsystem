@@ -6,6 +6,7 @@ from parallel_comustion import parallel_combustion
 import csv
 import time
 from operator import itemgetter
+import os
 
 Verbose = False
 
@@ -785,23 +786,23 @@ if __name__ == "__main__":
         "qm_cb0": qm_cb, "dp_l": dp_l, "dp_inj":dp_inj
     }
     
-    
+    folder = "single_results"
     print("reference")
-    reference(ref_params, 399.15, p_bk, filename="ref.csv")
+    reference(ref_params, 399.15, p_bk, filename= os.path.join(folder, "ref.csv"))
     print("reference2")
-    reference2(ref_params, 399.15, p_bk, filename="ref2.csv")
+    reference2(ref_params, 399.15, p_bk, filename=os.path.join(folder, "ref2.csv"))
     
     print("\nh2dual")
-    h2dual(dual_params, t_bk, t_wu, p_bk, pcc=True, filename="dual.csv")
+    h2dual(dual_params, t_bk, t_wu, p_bk, pcc=True, filename=os.path.join(folder, "dual.csv"))
     
     print("\nh2pump")
-    h2pump(pump_params, t_bk, t_wu, p_bk, pcc=True, filename="pump.csv")
+    h2pump(pump_params, t_bk, t_wu, p_bk, pcc=True, filename=os.path.join(folder, "pump.csv"))
     
     print("\nh2after")
-    h2after(after_params, t_bk, t_wu, p_bk, pcc=True, filename="after.csv")
+    h2after(after_params, t_bk, t_wu, p_bk, pcc=True, filename=os.path.join(folder, "after.csv"))
     
     # print("\nh2pump")
-    # h2pump(brewer_params, 264, 200, 1516.2e3, pcc=False, Brewer = True, filename="brewer.csv")
+    # h2pump(brewer_params, 264, 200, 1516.2e3, pcc=False, Brewer = True, filename=os.path.join(folder, "brewer.csv"))
     
 
 
