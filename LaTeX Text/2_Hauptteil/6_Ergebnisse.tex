@@ -6,11 +6,11 @@ In diesem Kapitel werden die mit der vorgeschlagenen Modellierung berechneten Er
 
 \section{Validierung}
 
-Zur Validierung der Methodik dieser Arbeit wird das Wasserstoff-Kraftstoffsystem mit Pumpe angepasst, um das von Brewer \cite{Brewer.1991} vorgeschlagene Kraftstoffsystem nachzuempfinden. 
+Zur Validierung der Methodik dieser Arbeit wird das Wasserstoff-Kraftstoffsystem mit Hochdruckpumpe angepasst, um das von Brewer \cite{Brewer.1991} vorgeschlagene Kraftstoffsystem nachzuempfinden. 
 
 Folgende Modifikationen werden an der Modellierung vorgenommen: Die Druckverluste im rezirkulierten Kraftstoffstrom werden vernachlässigt. Eine parallele Wasserstoffverbrennung ist nicht vorgesehen. Der Wärmeeintrag des von Brewer vorgeschlagenen Rekuperators wird nicht berücksichtigt, da sich dieser Wärmeübertrager Stromabwärts der Entnahmestelle des rezirkulierten Kraftstoffs befindet - eine Konfiguration, die von der Modellierung dieser Arbeit abweicht. Um dennoch eine Vergleichbarkeit der Pumpenleistung zu gewährleisten, wird der Druckverlust dieses Wärmeübertragers zu den Druckverluste der Injektoren addiert. 
 
-Ein weiterer Unterschied liegt in der Modellierung des Kraftstoffs: Während in dieser Arbeit Parawasserstoff verwendet wird, basieren Brewers Berechnungen auf Normalwasserstoff. Dies macht eine Anpassung der Modellparameter des Wasserstoff-Stoffmodels erforderlich. Tabelle \ref{Tab:brewer} zeigt die Änderungen der Parameter und Variablen gegenüber dem ursprünglichen Wasserstoff-Kraftstoffsystem mit Pumpe.
+Ein weiterer Unterschied liegt in der Modellierung des Kraftstoffs: Während in dieser Arbeit Parawasserstoff verwendet wird, basieren Brewers Berechnungen auf Normalwasserstoff. Dies macht eine Anpassung der Modellparameter des Wasserstoff-Stoffmodels erforderlich. Tabelle \ref{Tab:brewer} zeigt die Änderungen der sonstigen Parameter gegenüber dem ursprünglichen Wasserstoff-Kraftstoffsystem mit Pumpe.
 
 \begin{table}[ht]
     \centering
@@ -29,7 +29,7 @@ Ein weiterer Unterschied liegt in der Modellierung des Kraftstoffs: Während in 
 \end{table}
 \FloatBarrier 
 
-Tabelle \ref{Tab:validation} zeigt eine Gegenüberstellung der von Brewer bestimmten Werte und die mit der beschriebenen Methodik berechneten Werte. 
+Tabelle \ref{Tab:validation} zeigt eine Gegenüberstellung der von Brewer bestimmten Werte mit den mit der beschriebenen Methodik berechneten Werte. 
 
 \begin{table}[ht]
     \centering
@@ -38,8 +38,8 @@ Tabelle \ref{Tab:validation} zeigt eine Gegenüberstellung der von Brewer bestim
     \multicolumn{2}{|c|}{Variable} & Einheit & Brewer \cite{Brewer.1991} & Diese Arbeit & Abweichung [\%] \\ \hline\hline%
     Pumpenleistung & $P_\mathrm{HP}$ & kW & 23,9 & 23,5 & -1,67 \\ \hline
     Wärme & $\dot{Q}$ & kW & 542,7 & 539,8 & -0,534 \\ \hline
-    Rezirkulierter Massenstrom & $\dot{m}_\mathrm{R}$ & kg/s & 0,377 & 0,439 & +16,4 \\ \hline
-    Pumpen-Austrittstemperatur & $T_{2,\mathrm{HP}}$ & K & 50 & 33,1 & -33,8 \\ \hline
+    Rez. Massenstrom & $\dot{m}_\mathrm{R}$ & kg/s & 0,377 & 0,439 & +16,4 \\ \hline
+    Pumpen-Austrittstemp. & $T_{2,\mathrm{HP}}$ & K & 50 & 33,1 & -33,8 \\ \hline
     \end{tabular}	
     \label{Tab:validation}%
 \end{table}
@@ -170,7 +170,29 @@ Abbildung \ref{fig:pumppower} zeigt den mechanischen Leistungsbedarf des Wassers
 \end{figure}
 \FloatBarrier
 
-Der Gesamtleistungsbedarf $P$ steigt mit zunehmender Wärmeübertrager-Eintritts-temperatur, da eine geringe Differenz zur Brennkammer-Eintrittstemperatur einen größeren rezirkulierten Massenstrom erfordert, was die Leistung des Rezirkulationsverdichters erhöht. Zwar führen höhere Brennkammer-Eintrittstemperaturen zu einer Zunahme der spezifischen Arbeit des Rezirkulationsverdichters, jedoch wird dieser Effekt durch den reduzierten rezirkulierten Massenstrom mehr als ausgeglichen. Die Leistung der Hochdruckpumpe $P_\mathrm{HP}$ ist hingegen unabhängig von den Eintrittstemperaturen (Abbildung \ref{fig:pumpsplit}). 
+In Abbildung \ref{fig:pumppower} sind fünf ausgewählte Datenpunkte markiert. Tabelle \ref{Tab:punkte} zeigt eine Gegenüberstellung der Ergebnisse der markierten Datenpunkte.
+
+\begin{table}[ht]
+	\centering
+	\caption{Ergebnisse ausgewählter Datenpunkte}
+	\begin{tabular} {|l|c|c|c|c|} \hline%	
+		\multicolumn{5}{|c|}{Architektur mit Hochdruckpumpe}\\ \hline
+		Punkt & $T_\mathrm{BK}$ [K] & $T_\mathrm{W}$ [K] & $P$ [kW] & $\dot{Q}$ [kW] \\ \hline\hline%
+		A & 300 & 160 & 54 & 440 \\ \hline
+		B & 180 & 160 & 115 & 164 \\ \hline
+		C & 500 & 100 & 31 & 813 \\ \hline
+		D & 300 & 280 & 274 & 213 \\ \hline
+		E & 150 & 130 & 84 & 140 \\ \hline
+	\end{tabular}	
+	\label{Tab:punkte}%
+\end{table}
+\FloatBarrier 
+
+Der Gesamtleistungsbedarf $P$ steigt mit zunehmender Wärmeübertrager-Eintritts-temperatur, da eine geringe Differenz zur Brennkammer-Eintrittstemperatur einen größeren rezirkulierten Massenstrom erfordert, was die Leistung des Rezirkulationsverdichters erhöht. So steigt der Gesamtleistungsbedarf ausgehend von \SI{54}{\kilo\W} im Punkt A auf einen Wert von \SI{274}{\kilo\W} im Punkt D. 
+
+Zwar führen höhere Brennkammer-Eintrittstemperaturen zu einer Zunahme der spezifischen Arbeit des Rezirkulationsverdichters, jedoch wird dieser Effekt durch den reduzierten rezirkulierten Massenstrom mehr als ausgeglichen. Ausgehend vom Punkt A führt eine Reduktion der Brennkammer-Eintrittstemperatur zum Punkt B zu einer Erhöhung des Gesamtleistungsbedarfs auf \SI{115}{\kilo\W}. 
+
+Der niedrigste Leistungsbedarf wird bei hoher Brennkammer- und geringer Wärmeübertrager-Eintrittstemperatur im Punkt C mit einem Wert von \SI{31}{\kilo\W} erreicht. Das Wachstum des Leistungsbedarfs entfällt in vollem Umfang auf den Rezirkulationsverdichter (Abbildung \ref{fig:pumpsplit}). Die Leistung der Hochdruckpumpe $P_\mathrm{HP}$ ist hingegen unabhängig von den Eintrittstemperaturen. 
 
 \begin{figure}[ht]
 \centering
@@ -190,9 +212,9 @@ Der Wärmebedarf $\dot{Q}=\dot{Q}_\mathrm{FOHE}+\dot{Q}_\mathrm{PHC}$ ist insbes
 \end{figure}
 \FloatBarrier
 
-Das Wasserstoff-Kraftstoffsystem erfordert fast über den gesamten betrachteten Temperaturbereich den Einsatz der parallelen Wasserstoffverbrennung. Lediglich in einem schmalen Bereich bei niedrigen Brennkammer-Eintrittstemperaturen (in der Abbildung links der \SI{149}{\kilo\W} Kontur) steht ausreichen Abwärme zur Verfügung.
+Das Wasserstoff-Kraftstoffsystem erfordert fast über den gesamten betrachteten Temperaturbereich den Einsatz der parallelen Wasserstoffverbrennung. Lediglich in einem kleinen Bereich um den Punkt E steht ausreichen Abwärme zur Verfügung, so dass die parallele Wasserstoffverbrennung nicht benötigt wird. Im Punkt E wird mit \SI{140}{\kilo\W} der geringste Wärmebedarf verzeichnet.
 
-Für die Bereitstellung der Wärme durch die parallele Wasserstoffverbrennung werden bis zu \SI{5.3}{\g\per\s} zusätzlichen Wasserstoff und \SI{0.53}{\kg\per\s} Fan-Zapfluft benötigt.
+Der maximale Wärmebedarf von \SI{813}{\kilo\W} wird im Punkt C erreicht. Für die Bereitstellung der Wärme durch die parallele Wasserstoffverbrennung werden im Punkt C \SI{5.3}{\g\per\s} zusätzlicher Wasserstoff und \SI{0.53}{\kg\per\s} Fan-Zapfluft benötigt. Dies entspricht einem Mehrverbrauch von $5\,\%$.
 
 
 \subsection{Vergleich der Wasserstoff-Kraftstoffsysteme}
@@ -241,11 +263,11 @@ Bei einer konstanten Temperaturdifferenz von $T_{BK}-T_W=$ \SI{40}{\K} (mittlere
 \end{figure}
 \FloatBarrier
 
-Eine direkte Empfehlung spezifischer Eintrittstemperaturen lässt sich aus diesen Daten nicht ableiten. Grundsätzlich gilt, dass entsprechend der technischen Möglichkeiten die Wahl einer möglichst niedrigen Wärmeübertrager-Eintrittstemperatur den Leistungsbedarf reduziert. Für die Brennkammer-Eintrittstemperatur lässt sich hingegen keine eindeutige Aussage treffen. Stattdessen sollte sie in Abhängigkeit von der Wärmeübertrager-Eintrittstemperatur gewählt werden.
+Eine direkte Empfehlung spezifischer Eintrittstemperaturen lässt sich aus diesen Daten nicht ableiten. Grundsätzlich gilt, dass entsprechend der technischen Möglichkeiten die Wahl einer möglichst niedrigen Wärmeübertrager-Eintrittstemperatur den Leistungsbedarf reduziert. Für die Brennkammer-Eintrittstemperatur lässt sich hingegen keine eindeutige Aussage treffen. Stattdessen sollte sie in Abhängigkeit der Wärmeübertrager-Eintrittstemperatur gewählt werden.
 
 \section{Vergleich Kerosin- und Wasserstoff-Kraftstoffsysteme}
 
-Im Folgenden werden die Wasserstoff-Kraftstoffsysteme mit dem Kerosin-Kraftstoffsystem verglichen, um den abweichenden Bedarfe der betrachteten Systeme im Reiseflug zu verdeutlichen. 
+Im Folgenden werden die Wasserstoff-Kraftstoffsysteme mit dem Kerosin-Kraftstoffsystem verglichen, um die abweichenden Bedarfe der betrachteten Systeme im Reiseflug zu verdeutlichen. 
 
 Da die verfügbare Abwärme den Wärmebedarf des Kerosin-Kraftstoffsystems übersteigt, wird neben der in Kapitel \ref{chap:methodik} beschriebenen Berechnung, eine weitere Berechnung des tatsächliche Wärmebedarfs zum Erreichen der maximal zulässigen Brennkammer-Eintrittstemperatur durchgeführt. Hierfür wird der rezirkulierte Massenstrom $\dot{m}_\mathrm{R}$
 
@@ -269,5 +291,5 @@ Die Summe der Wärme- und Leistungsbedarfe der Wasserstoff-Kraftstoffsysteme üb
 
 Von den \SI{117}{\kilo\W}, die dem Kerosin-Kraftstoffsystem an Abwärme zur Verfügung stehen, werden \SI{90}{\kilo\W} für die Erwärmung des Kraftstoffs benötigt. Um die überschüssigen \SI{27}{\kilo\W} durch Rückführung in die Kraftstofftanks zu kühlen, benötigt die Niederdruckpumpe zusätzliche Leistung in einer Höhe von \SI{0,14}{\kilo\W}. Dies entspricht $6\,\%$ der gesamten Pumpenleistungen des Kerosin-Kraftstoffsystems.
 
-Die Abweichung der Leistungsbedarfe zwischen dem Kerosin- und den Wasserstoff-Kraftstoffsysteme übersteigt die Größenordnung der zuvor ermittelten Sensitivitäten um ein Vielfaches. Daher wird die Auswirkung fehlerbehafteter Annahmen auf das Vergleichsergebnis als unkritisch bewertet. 
+Die Abweichung der Leistungsbedarfe zwischen dem Kerosin- und den Wasserstoff-Kraftstoffsysteme übersteigt die Größenordnung der zuvor ermittelten Sensitivitäten um ein Vielfaches. Die Auswirkung fehlerbehafteter Annahmen auf das Vergleichsergebnis wird daher als unkritisch bewertet. 
 

@@ -50,8 +50,8 @@ t_bk = np.array(data_i["t_bk"])
 
 
 # Define circle positions and corresponding letters
-circle_positions = [(300, 160), (180, 160), (495, 105), (300, 275)]
-letters = ['A', 'B', 'C', 'D']
+circle_positions = [(300, 160), (180, 160), (495, 105), (300, 275), (155, 130)]
+letters = ['A', 'B', 'C', 'D', 'E']
 
 
 

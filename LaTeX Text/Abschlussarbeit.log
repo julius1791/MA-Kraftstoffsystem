@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.3) (preloaded format=pdflatex 2025.3.22)  31 MAR 2025 22:04
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.3) (preloaded format=pdflatex 2025.3.22)  31 MAR 2025 23:51
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1246,10 +1246,10 @@ Package: esvect
 kz/libraries\tikzlibraryer.code.tex
 File: tikzlibraryer.code.tex 2023-01-15 v3.1.10 (3.1.10)
 )) (0_Einstellungen/Einstellungen.tex
-Package hyperref Info: Option `plainpages' set `false' on input line 100.
-Package hyperref Info: Option `breaklinks' set `true' on input line 100.
-Package hyperref Info: Option `colorlinks' set `true' on input line 100.
-Package hyperref Info: Option `bookmarksnumbered' set `true' on input line 100.
+Package hyperref Info: Option `plainpages' set `false' on input line 121.
+Package hyperref Info: Option `breaklinks' set `true' on input line 121.
+Package hyperref Info: Option `colorlinks' set `true' on input line 121.
+Package hyperref Info: Option `bookmarksnumbered' set `true' on input line 121.
 
 )
 LaTeX Font Info:    Trying to load font information for T1+lmr on input line 33
@@ -1543,7 +1543,7 @@ k-mar-ge zum
 
 [4]
 <4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/CFM56 Kraftstoffsystem 
-2.pdf, id=341, 455.2441pt x 213.39565pt>
+2.pdf, id=343, 455.2441pt x 213.39565pt>
 File: 4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/CFM56 Kraftstoffsy
 stem 2.pdf Graphic file (type pdf)
 <use 4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/CFM56 Kraftstoffsys
@@ -1555,7 +1555,7 @@ Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen
 
 [5 <./4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/CFM56 Kraftstoffsy
 stem 2.pdf>]
-<4_Abbildungen/2_Hauptteil/Advanced Cycles.png, id=375, 1505.625pt x 552.0625pt
+<4_Abbildungen/2_Hauptteil/Advanced Cycles.png, id=377, 1505.625pt x 552.0625pt
 >
 File: 4_Abbildungen/2_Hauptteil/Advanced Cycles.png Graphic file (type png)
 <use 4_Abbildungen/2_Hauptteil/Advanced Cycles.png>
@@ -1584,7 +1584,7 @@ Underfull \hbox (badness 1917) in paragraph at lines 88--89
 z für Wasserstoff-
  []
 
-<4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/brewer.pdf, id=412, 455
+<4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/brewer.pdf, id=414, 455
 .2441pt x 227.62209pt>
 File: 4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/brewer.pdf Graphic
  file (type pdf)
@@ -1636,7 +1636,7 @@ oms von
 
 [13{C:/Users/Julius/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-mathsy.
 enc}]
-<4_Abbildungen/2_Hauptteil/spin.pdf, id=486, 415.41328pt x 249.50613pt>
+<4_Abbildungen/2_Hauptteil/spin.pdf, id=488, 415.41328pt x 249.50613pt>
 File: 4_Abbildungen/2_Hauptteil/spin.pdf Graphic file (type pdf)
 <use 4_Abbildungen/2_Hauptteil/spin.pdf>
 Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/spin.pdf  used on input line
@@ -1658,7 +1658,7 @@ en Kraftstoffsystem-
 
 
 [17]
-<4_Abbildungen/2_Hauptteil/hx.pdf, id=547, 466.57901pt x 271.03758pt>
+<4_Abbildungen/2_Hauptteil/hx.pdf, id=549, 466.57901pt x 271.03758pt>
 File: 4_Abbildungen/2_Hauptteil/hx.pdf Graphic file (type pdf)
 <use 4_Abbildungen/2_Hauptteil/hx.pdf>
 Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/hx.pdf  used on input line 1
@@ -1669,7 +1669,7 @@ Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/hx.pdf  used on input line 1
 [18 <./4_Abbildungen/2_Hauptteil/hx.pdf>]
 
 [19]
-<4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/Referenz.pdf, id=578, 4
+<4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/Referenz.pdf, id=580, 4
 55.2441pt x 213.39565pt>
 File: 4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/Referenz.pdf Graph
 ic file (type pdf)
@@ -1691,7 +1691,7 @@ len des
 
 
 [22]
-<4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/pump.pdf, id=608, 455.2
+<4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/pump.pdf, id=610, 455.2
 441pt x 184.94295pt>
 File: 4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/pump.pdf Graphic f
 ile (type pdf)
@@ -1702,7 +1702,7 @@ Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen
 
 
 [23 <./4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/pump.pdf>]
-<4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/after.pdf, id=637, 455.
+<4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/after.pdf, id=639, 455.
 2441pt x 241.84845pt>
 File: 4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/after.pdf Graphic 
 file (type pdf)
@@ -1713,7 +1713,7 @@ Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen
 
 
 [24]
-<4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/dual.pdf, id=643, 455.2
+<4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/dual.pdf, id=645, 455.2
 441pt x 213.39565pt>
 File: 4_Abbildungen/2_Hauptteil/Kraftstoffsystem Abbildungen/dual.pdf Graphic f
 ile (type pdf)
@@ -1757,7 +1757,7 @@ Underfull \vbox (badness 8000) has occurred while \output is active []
 
 
 [33]
-<4_Abbildungen/2_Hauptteil/sankey.pdf, id=753, 455.2441pt x 284.52759pt>
+<4_Abbildungen/2_Hauptteil/sankey.pdf, id=755, 455.2441pt x 284.52759pt>
 File: 4_Abbildungen/2_Hauptteil/sankey.pdf Graphic file (type pdf)
 <use 4_Abbildungen/2_Hauptteil/sankey.pdf>
 Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/sankey.pdf  used on input li
@@ -1852,7 +1852,7 @@ chapter 6.
 
 
 [43]
-Overfull \hbox (32.3205pt too wide) in paragraph at lines 37--45
+Overfull \hbox (3.92514pt too wide) in paragraph at lines 37--45
  [][] 
  []
 
@@ -1886,110 +1886,115 @@ mer-Eintritts-
 
 
 [47]
-<4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpepowercontour.pdf, id=907, 416.74666p
-t x 295.0249pt>
+<4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpepowercontour.pdf, id=909, 414.74666p
+t x 246.43166pt>
 File: 4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpepowercontour.pdf Graphic file (
 type pdf)
 <use 4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpepowercontour.pdf>
 Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpepowercontour
 .pdf  used on input line 167.
-(pdftex.def)             Requested size: 432.48048pt x 306.1794pt.
+(pdftex.def)             Requested size: 432.48048pt x 256.98227pt.
 
-Underfull \hbox (badness 1917) in paragraph at lines 173--174
+
+[48 <./4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpepowercontour.pdf>]
+Underfull \hbox (badness 1917) in paragraph at lines 191--192
 []\T1/lmr/m/n/12 Der Ge-samt-leis-tungs-be-darf $\OML/lmm/m/it/12 P$ \T1/lmr/m/
 n/12 steigt mit zu-neh-men-der Wärmeübertrager-Eintritts-
  []
 
 
+Underfull \hbox (badness 10000) in paragraph at lines 195--196
+[]\T1/lmr/m/n/12 Der nied-rigs-te Leis-tungs-be-darf wird bei ho-her Brennkamme
+r- und ge-rin-ger
+ []
 
-[48 <./4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpepowercontour.pdf>]
-<4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpe_powersplit.pdf, id=928, 443.68091pt
+<4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpe_powersplit.pdf, id=942, 443.68091pt
  x 252.05154pt>
 File: 4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpe_powersplit.pdf Graphic file (t
 ype pdf)
 <use 4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpe_powersplit.pdf>
 Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpe_powersplit.
-pdf  used on input line 177.
+pdf  used on input line 199.
 (pdftex.def)             Requested size: 455.24408pt x 258.63141pt.
-<4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpeheatcontour.pdf, id=930, 416.74666pt
- x 297.42207pt>
+
+
+[49 <./4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpe_powersplit.pdf>]
+<4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpeheatcontour.pdf, id=967, 414.74666pt
+ x 248.82883pt>
 File: 4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpeheatcontour.pdf Graphic file (t
 ype pdf)
 <use 4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpeheatcontour.pdf>
 Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpeheatcontour.
-pdf  used on input line 187.
-(pdftex.def)             Requested size: 455.24408pt x 324.91429pt.
-
-
-[49 <./4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpe_powersplit.pdf>]
-<4_Abbildungen/2_Hauptteil/Ergebnisse/summary_power.pdf, id=955, 416.74666pt x 
+pdf  used on input line 209.
+(pdftex.def)             Requested size: 455.24408pt x 273.143pt.
+<4_Abbildungen/2_Hauptteil/Ergebnisse/summary_power.pdf, id=969, 416.74666pt x 
 253.4011pt>
 File: 4_Abbildungen/2_Hauptteil/Ergebnisse/summary_power.pdf Graphic file (type
  pdf)
 <use 4_Abbildungen/2_Hauptteil/Ergebnisse/summary_power.pdf>
 Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/Ergebnisse/summary_power.pdf
-  used on input line 204.
+  used on input line 226.
 (pdftex.def)             Requested size: 409.71689pt x 249.13948pt.
 
 
 [50 <./4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpeheatcontour.pdf>]
-<4_Abbildungen/2_Hauptteil/Ergebnisse/300summary_powersplit.pdf, id=974, 416.74
+<4_Abbildungen/2_Hauptteil/Ergebnisse/300summary_powersplit.pdf, id=994, 416.74
 666pt x 250.40764pt>
 File: 4_Abbildungen/2_Hauptteil/Ergebnisse/300summary_powersplit.pdf Graphic fi
 le (type pdf)
 <use 4_Abbildungen/2_Hauptteil/Ergebnisse/300summary_powersplit.pdf>
 Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/Ergebnisse/300summary_powers
-plit.pdf  used on input line 214.
+plit.pdf  used on input line 236.
 (pdftex.def)             Requested size: 386.96024pt x 232.52135pt.
 
-Underfull \hbox (badness 5036) in paragraph at lines 220--221
-[]\T1/lmr/m/n/12 Analog zum Kraft-stoff-system mit Hoch-druck-pum-pe hat die Wä
-rmeübertrager-
+Underfull \hbox (badness 5036) in paragraph at lines 242--243
+[]\T1/lmr/m/n/12 Analog zum Kraft-stoff-system mit Hoch-druck-pumpe hat die Wär
+meübertrager-
  []
 
 
 
 [51 <./4_Abbildungen/2_Hauptteil/Ergebnisse/summary_power.pdf> <./4_Abbildungen
 /2_Hauptteil/Ergebnisse/300summary_powersplit.pdf>]
-<4_Abbildungen/2_Hauptteil/Ergebnisse/tbkcomp.pdf, id=1009, 416.74666pt x 294.2
+<4_Abbildungen/2_Hauptteil/Ergebnisse/tbkcomp.pdf, id=1029, 416.74666pt x 294.2
 249pt>
 File: 4_Abbildungen/2_Hauptteil/Ergebnisse/tbkcomp.pdf Graphic file (type pdf)
 <use 4_Abbildungen/2_Hauptteil/Ergebnisse/tbkcomp.pdf>
 Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/Ergebnisse/tbkcomp.pdf  used
- on input line 224.
+ on input line 246.
 (pdftex.def)             Requested size: 409.71689pt x 289.27672pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 232--233
+Underfull \hbox (badness 10000) in paragraph at lines 254--255
 []\T1/lmr/m/n/12 Abbildung [][]6.7[][] gibt einen Über-blick der Leis-tungs-an-
 tei-le der Wasserstoff-
  []
 
 
-Underfull \hbox (badness 3460) in paragraph at lines 232--233
+Underfull \hbox (badness 3460) in paragraph at lines 254--255
 \T1/lmr/m/n/12 dar-ge-stellt. Die mitt-le-re Spal-te zeigt die Leis-tungs-an-te
-i-le in Ab-hän-gig-keit der
+i-le in Ab-häng-ig-keit der
  []
 
 
 
 [52 <./4_Abbildungen/2_Hauptteil/Ergebnisse/tbkcomp.pdf>]
-<4_Abbildungen/2_Hauptteil/Ergebnisse/stackplot_summary.pdf, id=1031, 402.48816
+<4_Abbildungen/2_Hauptteil/Ergebnisse/stackplot_summary.pdf, id=1051, 402.48816
 pt x 423.54883pt>
 File: 4_Abbildungen/2_Hauptteil/Ergebnisse/stackplot_summary.pdf Graphic file (
 type pdf)
 <use 4_Abbildungen/2_Hauptteil/Ergebnisse/stackplot_summary.pdf>
 Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/Ergebnisse/stackplot_summary
-.pdf  used on input line 238.
+.pdf  used on input line 260.
 (pdftex.def)             Requested size: 455.24408pt x 479.08286pt.
 
 
 [53 <./4_Abbildungen/2_Hauptteil/Ergebnisse/stackplot_summary.pdf>]
-<4_Abbildungen/2_Hauptteil/Ergebnisse/refcomp.pdf, id=1065, 542.13577pt x 266.7
+<4_Abbildungen/2_Hauptteil/Ergebnisse/refcomp.pdf, id=1085, 542.13577pt x 266.7
 8087pt>
 File: 4_Abbildungen/2_Hauptteil/Ergebnisse/refcomp.pdf Graphic file (type pdf)
 <use 4_Abbildungen/2_Hauptteil/Ergebnisse/refcomp.pdf>
 Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/Ergebnisse/refcomp.pdf  used
- on input line 262.
+ on input line 284.
 (pdftex.def)             Requested size: 455.24408pt x 224.02518pt.
 
 
@@ -2137,45 +2142,47 @@ Package rerunfilecheck Info: File `Abschlussarbeit.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 37925 strings out of 473523
- 818239 string characters out of 5714146
- 1316661 words of memory out of 5000000
- 60113 multiletter control sequences out of 15000+600000
+ 37947 strings out of 473523
+ 818521 string characters out of 5714146
+ 1316696 words of memory out of 5000000
+ 60114 multiletter control sequences out of 15000+600000
  622911 words of font info for 74 fonts, out of 8000000 for 9000
- 1185 hyphenation exceptions out of 8191
+ 1205 hyphenation exceptions out of 8191
  108i,14n,109p,10912b,1263s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/Julius/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm
-/cmmi12.pfb><C:/Users/Julius/AppData/Local/Programs/MiKTeX/fonts/type1/public/a
-msfonts/cm/cmmi8.pfb><C:/Users/Julius/AppData/Local/Programs/MiKTeX/fonts/type1
-/public/amsfonts/cm/cmmi9.pfb><C:/Users/Julius/AppData/Local/Programs/MiKTeX/fo
-nts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/Julius/AppData/Local/Programs/
-MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/Julius/AppData/Local/
-Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/Julius/AppDat
-a/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/Juliu
-s/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Use
-rs/Julius/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy9.pf
-b><C:/Users/Julius/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/la
-txfont/line10.pfb><C:/Users/Julius/AppData/Local/Programs/MiKTeX/fonts/type1/pu
-blic/lm/lmbx12.pfb><C:/Users/Julius/AppData/Local/Programs/MiKTeX/fonts/type1/p
-ublic/lm/lmcsc10.pfb><C:/Users/Julius/AppData/Local/Programs/MiKTeX/fonts/type1
-/public/lm/lmex10.pfb><C:/Users/Julius/AppData/Local/Programs/MiKTeX/fonts/type
-1/public/lm/lmmi12.pfb><C:/Users/Julius/AppData/Local/Programs/MiKTeX/fonts/typ
-e1/public/lm/lmmi6.pfb><C:/Users/Julius/AppData/Local/Programs/MiKTeX/fonts/typ
-e1/public/lm/lmmi8.pfb><C:/Users/Julius/AppData/Local/Programs/MiKTeX/fonts/typ
-e1/public/lm/lmr12.pfb><C:/Users/Julius/AppData/Local/Programs/MiKTeX/fonts/typ
-e1/public/lm/lmr6.pfb><C:/Users/Julius/AppData/Local/Programs/MiKTeX/fonts/type
-1/public/lm/lmr8.pfb><C:/Users/Julius/AppData/Local/Programs/MiKTeX/fonts/type1
-/public/lm/lmri12.pfb><C:/Users/Julius/AppData/Local/Programs/MiKTeX/fonts/type
-1/public/lm/lmro12.pfb><C:/Users/Julius/AppData/Local/Programs/MiKTeX/fonts/typ
-e1/public/lm/lmss12.pfb><C:/Users/Julius/AppData/Local/Programs/MiKTeX/fonts/ty
-pe1/public/lm/lmss17.pfb><C:/Users/Julius/AppData/Local/Programs/MiKTeX/fonts/t
-ype1/public/lm/lmssbx10.pfb><C:/Users/Julius/AppData/Local/Programs/MiKTeX/font
-s/type1/public/lm/lmsy10.pfb><C:/Users/Julius/AppData/Local/Programs/MiKTeX/fon
-ts/type1/public/lm/lmsy6.pfb><C:/Users/Julius/AppData/Local/Programs/MiKTeX/fon
-ts/type1/public/lm/lmsy8.pfb>
-Output written on Abschlussarbeit.pdf (75 pages, 11047264 bytes).
+/cmmi10.pfb><C:/Users/Julius/AppData/Local/Programs/MiKTeX/fonts/type1/public/a
+msfonts/cm/cmmi12.pfb><C:/Users/Julius/AppData/Local/Programs/MiKTeX/fonts/type
+1/public/amsfonts/cm/cmmi8.pfb><C:/Users/Julius/AppData/Local/Programs/MiKTeX/f
+onts/type1/public/amsfonts/cm/cmmi9.pfb><C:/Users/Julius/AppData/Local/Programs
+/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/Julius/AppData/Local
+/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/Julius/AppD
+ata/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/Jul
+ius/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/U
+sers/Julius/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.p
+fb><C:/Users/Julius/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/c
+m/cmr9.pfb><C:/Users/Julius/AppData/Local/Programs/MiKTeX/fonts/type1/public/am
+sfonts/cm/cmsy9.pfb><C:/Users/Julius/AppData/Local/Programs/MiKTeX/fonts/type1/
+public/amsfonts/latxfont/line10.pfb><C:/Users/Julius/AppData/Local/Programs/MiK
+TeX/fonts/type1/public/lm/lmbx12.pfb><C:/Users/Julius/AppData/Local/Programs/Mi
+KTeX/fonts/type1/public/lm/lmcsc10.pfb><C:/Users/Julius/AppData/Local/Programs/
+MiKTeX/fonts/type1/public/lm/lmex10.pfb><C:/Users/Julius/AppData/Local/Programs
+/MiKTeX/fonts/type1/public/lm/lmmi12.pfb><C:/Users/Julius/AppData/Local/Program
+s/MiKTeX/fonts/type1/public/lm/lmmi6.pfb><C:/Users/Julius/AppData/Local/Program
+s/MiKTeX/fonts/type1/public/lm/lmmi8.pfb><C:/Users/Julius/AppData/Local/Program
+s/MiKTeX/fonts/type1/public/lm/lmr12.pfb><C:/Users/Julius/AppData/Local/Program
+s/MiKTeX/fonts/type1/public/lm/lmr6.pfb><C:/Users/Julius/AppData/Local/Programs
+/MiKTeX/fonts/type1/public/lm/lmr8.pfb><C:/Users/Julius/AppData/Local/Programs/
+MiKTeX/fonts/type1/public/lm/lmri12.pfb><C:/Users/Julius/AppData/Local/Programs
+/MiKTeX/fonts/type1/public/lm/lmro12.pfb><C:/Users/Julius/AppData/Local/Program
+s/MiKTeX/fonts/type1/public/lm/lmss12.pfb><C:/Users/Julius/AppData/Local/Progra
+ms/MiKTeX/fonts/type1/public/lm/lmss17.pfb><C:/Users/Julius/AppData/Local/Progr
+ams/MiKTeX/fonts/type1/public/lm/lmssbx10.pfb><C:/Users/Julius/AppData/Local/Pr
+ograms/MiKTeX/fonts/type1/public/lm/lmsy10.pfb><C:/Users/Julius/AppData/Local/P
+rograms/MiKTeX/fonts/type1/public/lm/lmsy6.pfb><C:/Users/Julius/AppData/Local/P
+rograms/MiKTeX/fonts/type1/public/lm/lmsy8.pfb>
+Output written on Abschlussarbeit.pdf (75 pages, 11119205 bytes).
 PDF statistics:
- 1558 PDF objects out of 1728 (max. 8388607)
- 254 named destinations out of 1000 (max. 500000)
+ 1580 PDF objects out of 1728 (max. 8388607)
+ 255 named destinations out of 1000 (max. 500000)
  668 words of extra memory for PDF output out of 10000 (max. 10000000)
 
