@@ -89,11 +89,8 @@ for key, style, name, color in zip(data, stylelist, systemnames, colors):
     P_mfp1 = P_mfp[idx]
     P_r1= P_r[idx]
     t_wu1 = t_wu[idx]
-    if key == "pump":
-        plt.plot(t_bk1, P_mfp1/1e3, label=name+" HPFP", color=color, linestyle=stylelist[0])
-    else:
-        plt.plot(t_bk1, P_mfp1/1e3, label=name+" HPFC", color=color, linestyle=stylelist[0])
-    plt.plot(t_bk1, P_r1/1e3, label=name+" RV", color=color, linestyle=stylelist[1])
+    plt.plot(t_bk1, P_mfp1/1e3, label=name+" $P_\mathrm{HP}$", color=color, linestyle=stylelist[0])
+    plt.plot(t_bk1, P_r1/1e3, label=name+" $P_\mathrm{RV}$", color=color, linestyle=stylelist[1])
 plt.legend(loc="best")
 plt.xlabel("Brennkammer-Eintrittstemperatur $T_{\mathrm{BK}}$ [K]")
 plt.ylabel("Leistung $P_{i}$ [kW]")
@@ -162,11 +159,10 @@ for key, name in zip(data, systemnames):
         P_mfp1 = P_mfp[idx]
         t_bk1 = t_bk[idx]
         P_r1 = P_r[idx]
-        if name == "Pumpe":
-            ax[i].plot(t_wu1, P_mfp1/1e3, label="HPFP", color=colors[0], linestyle=stylelist[0])
-        else:
-            ax[i].plot(t_wu1, P_mfp1/1e3, label="HPFC", color=colors[0], linestyle=stylelist[0])
-        ax[i].plot(t_wu1, P_r1/1e3, label="RV", color=colors[1], linestyle=stylelist[0])
+
+        ax[i].plot(t_wu1, P_mfp1/1e3, label="$P_\mathrm{HP}$", color=colors[0], linestyle=stylelist[0])
+
+        ax[i].plot(t_wu1, P_r1/1e3, label="$P_\mathrm{RV}$", color=colors[1], linestyle=stylelist[0])
         
         plt.legend(loc="best")
         ax[i].set_title("$T_\mathrm{BK}="+str(tbk)+"$ K")
@@ -200,11 +196,10 @@ for tbk in [300, 400]:
         P_mfp1 = P_mfp[idx]
         t_bk1 = t_bk[idx]
         P_r1 = P_r[idx]
-        if name == "Pumpe":
-            plt.plot(t_wu1, P_mfp1/1e3, label=name+" HPFP", color=color, linestyle=stylelist[0])
-        else:
-            plt.plot(t_wu1, P_mfp1/1e3, label=name+" HPFC", color=color, linestyle=stylelist[0])
-        plt.plot(t_wu1, P_r1/1e3, label=name+" RV", color=color, linestyle=stylelist[1])
+        
+        plt.plot(t_wu1, P_mfp1/1e3, label=name+" $P_\mathrm{HP}$", color=color, linestyle=stylelist[0])
+
+        plt.plot(t_wu1, P_r1/1e3, label=name+" $P_\mathrm{RV}$", color=color, linestyle=stylelist[1])
         
     plt.legend(loc="best")
     plt.xlabel("Wärmeübertrager-Eintrittstemperatur $T_\mathrm{W}$ [K]")
@@ -248,11 +243,11 @@ for tbk, j in zip([300, 400], [0,1]):
         axs[j].set_title("$T_\mathrm{BK}=" + str(tbk)+ "$ K")
         plt.ylim([0,200])
 handles, labels = plt.gca().get_legend_handles_labels()
-axs[1].legend(handles, labels, loc="upper right")
+fig.legend(handles, labels, ncols=3, bbox_to_anchor=(0.85, 1.1))
 fig = mpl.pyplot.gcf()
 fig.set_size_inches(16/2.54, 7.5/2.54)
 #fig.subplots_adjust(wspace=0.1, hspace=0.1)
-axs[0].set_ylabel("Leistung $P_\mathrm{gsmt}$ [kW]")
+axs[0].set_ylabel("Leistung $P$ [kW]")
 fig.add_subplot(111, frameon=False)
 axs[0].set_xlim([100,250])
 axs[1].set_xlim([100,250])
@@ -809,7 +804,7 @@ p2 = Rectangle((0, 0), 1, 1, fc="cyan")
 p3 = Rectangle((0, 0), 1, 1, fc="darkred")
 p4 = Rectangle((0, 0), 1, 1, fc="orangered")
 
-plt.legend([p3, p4, p2, p1], ["$P_\mathrm{HPFC/P}$", "$P_\mathrm{RV}$", "$\dot{Q}_\mathrm{PHC}$", "$\dot{Q}_\mathrm{FOHE}$"], loc="lower left", framealpha=1)
+fig.legend([p3, p4, p2, p1], ["$P_\mathrm{HP}$", "$P_\mathrm{RV}$", "$\dot{Q}_\mathrm{PHC}$", "$\dot{Q}_\mathrm{FOHE}$"], bbox_to_anchor=(0.75, 0.96), framealpha=1, ncols=4)
 
 
 fig = mpl.pyplot.gcf()

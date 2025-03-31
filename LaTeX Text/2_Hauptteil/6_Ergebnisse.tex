@@ -2,126 +2,13 @@
 \chapter{Ergebnisse} \label{chap:ergebnis}
 %==============================================================================
 
-In diesem Kapitel werden mit der vorgeschlagenen Modellierung berechneten Ergebnisse diskutiert. Dabei steht insbesondere die Frage im Fokus, ob die Modellierung den Leistungs- und Wärmebedarf der Kraftstoffsysteme akkurat vorhersagen kann. Hierfür wird im Rahmen einer Sensitivitätsanalyse die Auswirkung von Unsicherheiten der in Kapitel \ref{chap:param} bestimmten Parametern auf das Modellverhalten untersucht. Danach wird die Methodik dieser Arbeit mit Daten aus der Literatur validiert. Anschließend wird im Rahmen einer Parameterstudie analysiert, wie sich die Eintrittstemperaturen des Kraftstoffs in den ersten Wärmeübertrager und die Brennkammer auf die Modellierungen der Wasserstoff-Kraftstoffsysteme auswirkt. Abschließend erfolgt ein Vergleich des Leistungs- und Wärmebedarfs der H$_2$-Kraftstoffsysteme untereinander und mit dem Kerosin-Kraftstoffsystem anhand eines ausgewählten Betriebspunkts.
-
-\section{Sensitivitätsanalyse}
-
-Im Folgenden wird eine Sensitivitätsanalyse durchgeführt und ausgewertet, um die für das Modellverhalten maßgeblichen Parameter zu identifizieren. Zunächst werden hierfür die Unsicherheiten der Parameter geschätzt. Anschließend werden die mit Unsicherheit behafteten Parameter in die Modellierungen der Kraftstoffsysteme eingesetzt, um die Abweichungen Leistungsbedarfe zu berechnen.
-
-\subsection{Bestimmung der Schrittweiten}
-
-Da die statistische Verteilung der Parameterwerte nicht bekannt ist, werden die Schrittweiten für die Variation der Parameter geschätzt. Die Schrittweiten werden so gewählt, dass die Abweichung der Pumpenleistung des H$_2$-Kraftstoffsystems mit Verdampfer stets ein positives Vorzeichen aufweist.
-
-Der Austrittsdruck der Niederdruckpumpe $p_\mathrm{LPFP}$ des Kerosin-Kraftstoffsystems ist stets höher als der Öldruck im Wärmeübertrager des Hauptölsystems und somit von diesem abhängig. Der Öldruck ist eine Funktion der Druckverlust des Ölsystems. Aus diesem Grund wird eine moderate Schrittweite von $-10\,\%$ gewählt.
-
-Da die Druckverluste von Wärmeübertragern und Leitungen ein Auslegungsziel darstellen, sind sie nicht direkt mit Unsicherheit behaftet. Jedoch können abweichende Anforderungen an das Gewicht dieser Komponenten eine Aufweichung der Auslegungsziele erfordern. Um diesen Effekt zu berücksichtigen werden der Leitungsdruckverlust $\Delta p_L$ und die Druckverluste $1-\pi_i$ der Wärmeübertrager mit einer Schrittweite von $+20\,\%$ variiert. 
-
-Die Druckverluste des Verdampfers $1-\pi_{\mathrm{V}, i}$ werden in der Modellierung des Kraftstoffsystems vernachlässigt. Da auf der Hochdruckseite zwar geringe, jedoch im Verhältnis zur Niederdruckseite höhere Druckverluste zu erwarten sind (Siehe Kapitel \ref{chap:param}), werden absolute Schrittweiten von $+0,01$ auf der Hochdruckseite und $+0,005$ auf der Niederdruckseite verwendet. 
-
-Die Unsicherheiten der Wirkungsgrade von Pumpen und Verdichtern $\eta_i$, der verfügbaren Abwärme $\dot{Q}_\mathrm{FOHE}$  und den Injektor-Druckverlusten $\Delta p_\mathrm{inj}$ werden als gering eingeschätzt. Aus diesem Grund wird für diese Parameter eine Schrittweite von $\pm 5\,\%$ ausgewählt.
-
-\subsection{Auswertung der Sensitivitätsanalyse}
-
-Auf Basis der zuvor bestimmten Schrittweiten wird im Folgenden die Sensitivität der Kraftstoffsysteme untersucht und ausgewertet. Zunächst werden die Ergebnisse der Modellierung des H$_2$-Kraftstoffsystems mit Verdampfer präsentiert. Daraufhin werden die Ergebnisse der Sensitivitätsanalysen der H$_2$-Kraftstoffsysteme miteinander verglichen. Abschließend werden die Ergebnisse der Sensitivitätsanalyse für das Kerosin-Kraftstoffsystem diskutiert.
-
-Die Ergebnisse der Sensitivitätsanalyse für das H$_2$-Kraftstoffsystem mit Verdampfer sind in Tabelle \ref{Tab:sensjeta} dargestellt.
-
-\begin{table}[ht]
-	\centering
-	\caption{Sensitivitätsanalyse des H$_2$-Kraftstoffsystems mit Verdampfer}
-	\begin{tabular} {|l|c|c|c|c|c|} \hline%
-		Parameter & Einheit & Schrittweite & Schrittweite [\%] & $ \Delta \sum P_i$ [\%] \\ \hline\hline%
-		$\Delta p_\mathrm{L}$ & 260 & \si{\kilo\Pa} & +52,0 & +5,42 \\ \hline 
-		$\pi_\mathrm{FOHE}$ & 0,95 & - & -0,01 & +2,01 \\ \hline 
-		$\pi_\mathrm{PHC}$ & 0,98 & - & -0,004 & +0,767 \\ \hline 
-		$\eta_\mathrm{HP}$ & 0,71 & - & -0,04 & +3,03 \\ \hline 
-		$\eta_\mathrm{RV}$ & 0,71 & - & -0,04 & +1,97 \\ \hline 
-		$\dot{Q}_\mathrm{FOHE}$ & 149 & \si{\kilo\W} & -7,45 & +0,0505 \\ \hline 
-		$\Delta p_\mathrm{inj}$ & 169 & \si{\kilo\Pa} & +8,45 & +0,0827 \\ \hline 
-		$\pi_\mathrm{V, HP}$ & 1,00 & - & -0,005 & +0,939 \\ \hline 
-		$\pi_\mathrm{V, LP}$ & 1,00 & - & -0,01 & +0,406 \\ \hline 
-	\end{tabular}	
-	\label{Tab:sensafter}%
-\end{table}
-\FloatBarrier 
-
-Mit einem Anstieg der Leistungen um  $+5,39\,\%$ hat die Erhöhung der Leitungs-Druckverluste bei Weitem die größte Auswirkung auf die Modellierung des H$_2$-Kraftstoffsystems mit Verdampfer. Die Reduktionen der Wirkungsgrade der Verdichter haben mit $+2,68\,\%$ (Hochdruckverdichter) beziehungsweise $+1,71\,\%$ (Rezirkulationsverdichter) nur eine moderate Auswirkung auf die Verdichterleistungen. 
-
-Die Erhöhungen der Druckverluste des Ölsystem-Wärmeübertragers und der Hochdruckseite des Verdampfers führen mit $1,98\,\%$ und $1,88\,\%$ ebenfalls zu moderaten anstiegen der Leistungen. Hingegen hat der Anstieg der Druckverluste des PHC-Wärmeübertragers und der Niederdruckseite des Verdampfers nur geringen Einfluss auf die Leistungen. 
-
-Ein Anstieg der Injektor-Druckverluste hat nur geringe Auswirkungen auf die Verdichter-Leistungen.
-
-
-Die Tabellen \ref{Tab:senspump} und \ref{Tab:sensdual} zeigen die Ergebnisse der Sensitivitätsanalysen für die H$_2$-Kraftstoffsysteme mit Hochdruckpumpe und Vormischung.
-
-\begin{table}[ht]
-	\centering
-	\caption{Sensitivitätsanalyse des H$_2$-Kraftstoffsystems mit Pumpe}
-	\begin{tabular} {|l|c|c|c|c|c|} \hline%
-		Parameter & Referenzwert & Einheit & Schrittweite & $ \Delta \sum P_i$ [\%] \\ \hline\hline%
-		$\Delta p_\mathrm{L}$ & 260 & \si{\kilo\Pa} & +52,0 & +8,19 \\ \hline 
-		$\pi_\mathrm{FOHE}$ & 0,95 & - & -0,01 & +3,00 \\ \hline 
-		$\pi_\mathrm{PHC}$ & 0,98 & - & -0,004 & +1,17 \\ \hline 
-		$\eta_\mathrm{HP}$ & 0,154 & - & -0,008 & +1,47 \\ \hline 
-		$\eta_\mathrm{RV}$ & 0,71 & - & -0,04 & +3,35 \\ \hline 
-		$\dot{Q}_\mathrm{FOHE}$ & 149 & \si{\kilo\W} & -7,45 & +0,0511 \\ \hline 
-		$\Delta p_\mathrm{inj}$ & 169 & \si{\kilo\Pa} & +8,45 & -0,054 \\ \hline   
-	\end{tabular}	
-	\label{Tab:senspump}%
-\end{table}
-\FloatBarrier 
-
-\begin{table}[ht]
-	\centering
-	\caption{Sensitivitätsanalyse des H$_2$-Kraftstoffsystems mit Vormischung}
-	\begin{tabular} {|l|c|c|c|c|c|} \hline%
-		Parameter & Einheit & Schrittweite & Schrittweite [\%] & $ \Delta \sum P_i$ [\%] \\ \hline\hline%
-		$\Delta p_\mathrm{L}$ & 260 & \si{\kilo\Pa} & +52,0 & +5,37 \\ \hline 
-		$\pi_\mathrm{FOHE}$ & 0,95 & - & -0,01 & +1,97 \\ \hline 
-		$\pi_\mathrm{PHC}$ & 0,98 & - & -0,004 & +0,765 \\ \hline 
-		$\eta_\mathrm{HP}$ & 0,71 & - & -0,04 & +3,04 \\ \hline 
-		$\eta_\mathrm{RV}$ & 0,71 & - & -0,04 & +1,92 \\ \hline 
-		$\dot{Q}_\mathrm{FOHE}$ & 149 & \si{\kilo\W} & -7,45 & +0,051 \\ \hline 
-		$\Delta p_\mathrm{inj}$ & 169 & \si{\kilo\Pa} & +8,45 & +0,084 \\ \hline  
-	\end{tabular}	
-	\label{Tab:sensdual}%
-\end{table}
-\FloatBarrier 
-
-Die H$_2$-Kraftstoffsysteme weisen nur geringfügige Unterschiede in ihren Sensitivitäten auf. Das H$_2$-Kraftstoffsystem mit Hochdruckpumpe zeigt mit $+8,19\,\%$ eine besonders hohe Sensitivität gegenüber Variationen der Leitungs-Druckverluste. Auch Änderungen der Druckverluste in den Wärmeübertragern haben einen stärkeren Einfluss auf dieses System. Die Ergebnisse des H$_2$-Kraftstoffsystems mit Vormischung weichen nur minimal von denen des H$_2$-Kraftstoffsystems mit Verdampfer ab.
-
-Die Ergebnisse der Sensitivitätsanalyse für das Kerosin-Kraftstoffsystem sind in Tabelle \ref{Tab:sensjeta} zusammengefasst.
-
-\begin{table}[ht]
-	\centering
-	\caption{Sensitivitätsanalyse des Kerosin-Kraftstoffsystems}
-	\begin{tabular} {|l|c|c|c|c|} \hline%
-		Parameter & Referenzwert & Einheit & Schrittweite & $ \Delta \sum P_i$ [\%] \\ \hline\hline%
-		$\Delta p_\mathrm{L}$ & 68 & \si{\kilo\Pa} & +13,6 & +1,23 \\ \hline 
-		$\pi_\mathrm{FOHE}$ & 0,95 & - & -0,01 & +0,845 \\ \hline 
-		$p_\mathrm{LP}$ & 930 & \si{\kilo\Pa} & -93,0 & +4,73 \\ \hline 
-		$\eta_\mathrm{HP}$ & 0,73 & - & -0,04 & +4,29 \\ \hline 
-		$\eta_\mathrm{LP}$ & 0,60 & - & -0,03 & +1,40 \\ \hline 
-		$\dot{Q}_\mathrm{FOHE}$ & 112 & \si{\kilo\W} & -5,85 & -1,28 \\ \hline 
-		$\Delta p_\mathrm{inj}$ & 300 & \si{\kilo\Pa} & +30,0 & +2,72 \\ \hline 
-	\end{tabular}	
-	\label{Tab:sensjeta}%
-\end{table}
-\FloatBarrier 
-
-Zwar führt der verringerte Austrittsdruck zu einer geringeren Leistung der Niederdruckpumpe, jedoch steigt hierdurch das Druckverhältnis und die Leistung der Hochdruckpumpe. Die Auswirkungen auf die Hochdruckpumpe überwiegen, was zu einem Anstieg des Leistungsbedarfs um $4,38\,\%$ führt – der größten Abweichung unter den Parametern. 
-
-Eine Verringerung des Wirkungsgrads der Hochdruckpumpe hat einen um $3,81\,\%$ höheren Leistungsbedarf zur Folge. Aufgrund des geringeren Leistungsbedarfs der Niederdruckpumpe hat die Variation ihres Wirkungsgrads mit $1,48\,\%$ eine geringere Auswirkung. 
-
-Eine Steigerung der Injektor-Druckverluste führt zu einem um $2,67\,\%$ höheren Leistungsbedarf der Pumpen. Im Vergleich haben die Variation der Leitungs- und Wärmeübertrager-Druckverluste einen geringen Einfluss auf den Leistungsbedarf. 
-
-Die kleinere Abwärme führt zu einem geringeren Massenstrom durch die Niederdruckpumpe und somit zu einer um $1,36\,\%$ verringerten Pumpenleistung.
+In diesem Kapitel werden die mit der vorgeschlagenen Modellierung berechneten Ergebnisse diskutiert. Dabei steht insbesondere die Frage im Fokus, ob die Modellierung den Leistungs- und Wärmebedarf der Kraftstoffsysteme akkurat vorhersagen kann. Hierfür wird die Methodik dieser Arbeit mit Daten aus der Literatur validiert. Danach wird im Rahmen einer Sensitivitätsanalyse die Auswirkung von Unsicherheiten der in Kapitel \ref{chap:param} bestimmten Parametern auf das Modellverhalten untersucht. Anschließend wird im Rahmen einer Parameterstudie analysiert, wie sich die Eintrittstemperaturen des Kraftstoffs in den ersten Wärmeübertrager und die Brennkammer auf die Modellierungen der Wasserstoff-Kraftstoffsysteme auswirkt. Abschließend erfolgt ein Vergleich des Leistungs- und Wärmebedarfs der Wasserstoff-Kraftstoffsysteme untereinander und mit dem Kerosin-Kraftstoffsystem anhand eines ausgewählten Betriebspunkts.
 
 \section{Validierung}
 
-Zur Validierung der Methodik dieser Arbeit wird das Wasserstoff-Kraftstoffsystem mit Pumpe angepasst und parametriert, um das von Brewer \cite{Brewer.1991} vorgeschlagene Kraftstoffsystem nachzuempfinden. 
+Zur Validierung der Methodik dieser Arbeit wird das Wasserstoff-Kraftstoffsystem mit Pumpe angepasst, um das von Brewer \cite{Brewer.1991} vorgeschlagene Kraftstoffsystem nachzuempfinden. 
 
-Dabei werden folgende Modifikationen an der Modellierung vorgenommen: Die Druckverluste im rezirkulierten Kraftstoffstrom werden vernachlässigt, da das Kraftstoffsystem nach Brewer keinen Rezirkulationsverdichter vorsieht. Der Kraftstoffmassenstrom wird nicht an die Brennkammer-Eintrittstemperatur angepasst und eine parallele Wasserstoffverbrennung ist nicht vorgesehen. Zudem bleibt der Wärmeeintrag des von Brewer vorgeschlagenen Rekuperators unberücksichtigt, da sich dieser Wärmeübertrager Stromabwärts der Entnahmestelle des rezirkulierten Kraftstoffs befindet - eine Konfiguration, die von der Modellierung dieser Arbeit abweicht. Um dennoch eine Vergleichbarkeit der Pumpenleistung zu gewährleisten, wird der Druckverlust dieses Wärmeübertragers zu den Druckverluste der Injektoren addiert. 
+Folgende Modifikationen werden an der Modellierung vorgenommen: Die Druckverluste im rezirkulierten Kraftstoffstrom werden vernachlässigt. Eine parallele Wasserstoffverbrennung ist nicht vorgesehen. Der Wärmeeintrag des von Brewer vorgeschlagenen Rekuperators wird nicht berücksichtigt, da sich dieser Wärmeübertrager Stromabwärts der Entnahmestelle des rezirkulierten Kraftstoffs befindet - eine Konfiguration, die von der Modellierung dieser Arbeit abweicht. Um dennoch eine Vergleichbarkeit der Pumpenleistung zu gewährleisten, wird der Druckverlust dieses Wärmeübertragers zu den Druckverluste der Injektoren addiert. 
 
 Ein weiterer Unterschied liegt in der Modellierung des Kraftstoffs: Während in dieser Arbeit Parawasserstoff verwendet wird, basieren Brewers Berechnungen auf Normalwasserstoff. Dies macht eine Anpassung der Modellparameter des Wasserstoff-Stoffmodels erforderlich. Tabelle \ref{Tab:brewer} zeigt die weiteren Änderungen der Parameter und Variablen gegenüber dem ursprünglichen Wasserstoff-Kraftstoffsystem mit Pumpe.
 
@@ -147,28 +34,129 @@ Tabelle \ref{Tab:validation} zeigt die von Brewer berechneten Werte und die mit 
 \begin{table}[ht]
     \centering
 	\caption{Validierung der Methodik}
-	\begin{tabular} {|l|c|c|c|c|} \hline%
-    \multicolumn{2}{|c|}{Variable} & Einheit & Brewer \cite{Brewer.1991} & Diese Arbeit \\ \hline\hline%
-    Pumpenleistung & $P_\mathrm{HP}$ & kW & 23,9 & 23,4 \\ \hline
-    Wärme & $\dot{Q}$ & kW & 542,7 & 539,8 \\ \hline
-    Rezirkulierter Massenstrom & $\dot{m}_\mathrm{R}$ & kg/s & 0,377 & 0,439 \\ \hline
-    Pumpen-Austrittstemperatur & $T_{2,\mathrm{HP}}$ & K & 50 & 33,1 \\ \hline
+	\begin{tabular} {|l|c|c|c|c|c|} \hline%
+    \multicolumn{2}{|c|}{Variable} & Einheit & Brewer \cite{Brewer.1991} & Diese Arbeit & Abweichung [\%] \\ \hline\hline%
+    Pumpenleistung & $P_\mathrm{HP}$ & kW & 23,9 & 23,5 & -1,67 \\ \hline
+    Wärme & $\dot{Q}$ & kW & 542,7 & 539,8 & -0,534 \\ \hline
+    Rezirkulierter Massenstrom & $\dot{m}_\mathrm{R}$ & kg/s & 0,377 & 0,439 & +16,4 \\ \hline
+    Pumpen-Austrittstemperatur & $T_{2,\mathrm{HP}}$ & K & 50 & 33,1 & -33,8 \\ \hline
     \end{tabular}	
     \label{Tab:validation}%
 \end{table}
 \FloatBarrier 
 
-Die Werte für die Pumpenleistung und den Wärmebedarf stimmen weitgehend mit den Berechnungen von Brewer überein. Allerdings berechnet Brewers einen um $14\,\%$ geringeren rezirkulierten Massenstrom, was auf die um \SI{16.9}{\K} höhere Pumpen-Austrittstemperatur mit seinem Modell zurückzuführen ist. Um den Ursprung dieser Abweichung zu identifizieren, wird die Energiebilanz verwendet. Die Energiebilanz um die Hochdruckpumpe des Brewer-Konzepts 
+Die Werte für die Pumpenleistung und den Wärmebedarf stimmen mit Abweichung $<2\,\%$ weitgehend mit den Berechnungen von Brewer überein. Der berechnete rezirkulierte Massenstrom ist jedoch um $16,4\,\%$ größer, als der von  Brewer ermittelte Wert. Dies ist auf eine um $33,8\,\%$ geringere berechnete Pumpen-Austrittstemperatur zurückzuführen. Die Ursache dieser deutlichen Abweichung ist unklar. Aufgrund der geringen Unterschiede der zugeführten Wärme und der Pumpenleistung und somit in der Energiebilanz des Kraftstoffsystems, erscheint ein erheblicher Unterschied in den verwendeten Stoffmodellen unwahrscheinlich. Aufgrund dieser Problematik ist eine belastbare Validierung der Methodik dieser Arbeit nicht möglich.
 
-\begin{equation}\label{Eq:brewer}
-	\Delta \dot{E}_\mathrm{HPFP}=\dot{m}_\mathrm{BK}(h(T_0,p_0)-h(T_\mathrm{HPFP}, p_\mathrm{HPFP}))+P_\mathrm{HPFP}
-\end{equation}
+\section{Sensitivitätsanalyse}
 
-weist ein Residuum von $\Delta \dot{E}_\mathrm{HPFP}=$ \SI{-79.9}{\kilo\W} auf. Ähnliche Energiebilanzen für die Wasserstoffmischung und die Wärmeübertrager ergeben Residuen von $\Delta \dot{E}_\mathrm{mix}=$ \SI{25.3}{\kilo\W} und $\Delta \dot{E}_\mathrm{W}=$ \SI{57.2}{\kilo\W}. Da das Residuum der Energiebilanz des gesamten Kraftstoffsystems mit $\Delta \dot{E}=$ \SI{2.3}{\kilo\W} gering ist, erscheint ein Fehlerursprung im verwendeten Stoffmodell als unwahrscheinlich. Die Abweichungen auf Komponenten-Ebene könnten durch einen nicht dokumentierten Wärmeübertrager zwischen flüssigem und verdampften Wasserstoff erklärt werden. Aufgrund dieser Problematik ist eine belastbare Validierung der Methodik dieser Arbeit nicht möglich.
+Im Folgenden wird eine Sensitivitätsanalyse durchgeführt und ausgewertet, um die für das Modellverhalten maßgeblichen Parameter zu identifizieren und die Auswirkungen der mit Unsicherheit behafteten Modellannahmen abzuschätzen. Zunächst werden hierfür die Unsicherheiten der Parameter geschätzt. Anschließend werden die mit Unsicherheit behafteten Parameter in die Modellierungen der Kraftstoffsysteme eingesetzt, um die Abweichungen der Leistungsbedarfe zu berechnen.
+
+\subsection{Bestimmung der Schrittweiten}
+
+Da die Parameterwerte keiner bekannten statistischen Verteilung folgen, sondern infolge ungenauer Annahmen abweichen können, werden die Schrittweiten der Parameter geschätzt. Für die Vorzeichen der jeweiligen Schrittweiten wird der pessimistische Fall angenommen. Die Änderung der Parameter resultiert also stets in einer erhöhten Pumpenleistung des Wasserstoff-Kraftstoffsystems mit Verdampfer.
+
+Der Austrittsdruck der Niederdruckpumpe $p_\mathrm{LPFP}$ des Kerosin-Kraftstoffsystems ist stets höher als der Öldruck im Wärmeübertrager des Hauptölsystems und somit von diesem abhängig. Der Öldruck ist eine Funktion der Druckverlust des Ölsystems. Für den Parameter wird eine moderate Schrittweite von $-10\,\%$ gewählt.
+
+Da die Druckverluste von Wärmeübertragern und Leitungen ein Auslegungsziel darstellen, sind sie nicht mit Unsicherheit behaftet. Jedoch können abweichende Anforderungen an das Gewicht dieser Komponenten eine Aufweichung der Auslegungsziele erfordern. Um diesen Effekt zu berücksichtigen werden der Leitungsdruckverlust $\Delta p_L$ und die Druckverluste $\pi_i$ der Wärmeübertrager mit einer Schrittweite von $+10\,\%$ variiert. Die Parameter werden hierfür in die Druckverluste $\Delta p_\mathrm{HP}$ (Wasserstoff-Kraftstoffsysteme) und $\Delta p_\mathrm{LP}$ (Kerosin-Kraftstoffsystem) zusammengefasst.
+
+Die Unsicherheiten der verfügbaren Abwärme $\dot{Q}_\mathrm{FOHE}$ und den Injektor-Druckverlusten $\Delta p_\mathrm{inj}$ werden als gering eingeschätzt. Aus diesem Grund wird für diese Parameter eine Schrittweite von $\pm 5\,\%$ ausgewählt. Ähnliches gilt für die Wirkungsgrade der Pumpen und Verdichter. Für die Wirkungsgrade der Verdichter und der Hochdruckpumpe des Kerosin-Kraftstoffsystems wird eine absolute Schrittweite von $-0,04$ verwendet. Die Niederdruckpumpe des Kerosin-Kraftstoffsystems wird mit einer Schrittweite von $-0,03$ beaufschlagt. Aufgrund des geringen Wirkungsgrads der Hochdruckpumpe des Wasserstoff-Kraftstoffsystems, wird für ihren Wirkungsgrad eine Schrittweite von $-0,008$ verwendet.
+
+\subsection{Auswertung der Sensitivitätsanalyse}
+
+Auf Basis der zuvor bestimmten Schrittweiten wird im Folgenden die Sensitivität der Kraftstoffsysteme untersucht und ausgewertet. Zunächst werden die Ergebnisse der Modellierung des Wasserstoff-Kraftstoffsystems mit Verdampfer präsentiert. Daraufhin werden die Ergebnisse der Sensitivitätsanalysen der Wasserstoff-Kraftstoffsysteme miteinander verglichen. Abschließend werden die Ergebnisse der Sensitivitätsanalyse für das Kerosin-Kraftstoffsystem diskutiert. 
+
+Die Ergebnisse der Sensitivitätsanalyse für das Wasserstoff-Kraftstoffsystem mit Verdampfer sind in Tabelle \ref{Tab:sensafter} dargestellt.
+
+\begin{table}[ht]
+	\centering
+	\caption{Sensitivitätsanalyse des H$_2$-Kraftstoffsystems mit Verdampfer}
+	\begin{tabular} {|l|c|c|c|c|c|} \hline%
+		Parameter & Referenzwert & Einheit & Schrittweite & $ \Delta \sum P_i$ [\%] \\ \hline\hline%
+		$\Delta p_\mathrm{HP}$ & 390 & \si{\kilo\Pa} & +39,0 & +4,11 \\ \hline 
+		$\eta_\mathrm{HP}$ & 0,71 & - & -0,04 & +3,03 \\ \hline 
+		$\eta_\mathrm{RV}$ & 0,71 & - & -0,04 & +1,97 \\ \hline 
+		$\dot{Q}_\mathrm{FOHE}$ & 149 & \si{\kilo\W} & -7,45 & +0,0505 \\ \hline 
+		$\Delta p_\mathrm{inj}$ & 169 & \si{\kilo\Pa} & +8,45 & +0,0827 \\ \hline 
+	\end{tabular}	
+	\label{Tab:sensafter}%
+\end{table}
+\FloatBarrier 
+
+Mit einem Anstieg der Leistungen um  $4,11\,\%$ hat die Erhöhung der Druckverluste im Hochdrucksystem die größte Auswirkung auf die Verdichterleistungen des Wasserstoff-Kraftstoffsystems mit Verdampfer. Die Reduktion der Wirkungsgrade der Verdichter hat mit $3,03\,\%$ (Hochdruckverdichter) beziehungsweise $1,97\,\%$ (Rezirkulationsverdichter) eine moderate Auswirkung auf deren Leistungen.  
+
+Die Auswirkungen der Variation der verfügbaren Abwärme und des Injektor-Druckverhältnisses auf die Verdichterleistungen sind vernachlässigbar gering.
+
+Die Tabellen \ref{Tab:senspump} und \ref{Tab:sensdual} zeigen die Ergebnisse der Sensitivitätsanalysen für die Wasserstoff-Kraftstoffsysteme mit Hochdruckpumpe und Vormischung.
+
+\begin{table}[ht]
+	\centering
+	\caption{Sensitivitätsanalyse des H$_2$-Kraftstoffsystems mit Pumpe}
+	\begin{tabular} {|l|c|c|c|c|c|} \hline%
+		Parameter & Referenzwert & Einheit & Schrittweite & $ \Delta \sum P_i$ [\%] \\ \hline\hline%
+		$\Delta p_\mathrm{HP}$ & 390 & \si{\kilo\Pa} & +39,0 & +6,19 \\ \hline 
+		$\eta_\mathrm{HP}$ & 0,154 & - & -0,008 & +1,47 \\ \hline 
+		$\eta_\mathrm{RV}$ & 0,71 & - & -0,04 & +3,35 \\ \hline 
+		$\dot{Q}_\mathrm{FOHE}$ & 149 & \si{\kilo\W} & -7,45 & +0,0511 \\ \hline 
+		$\Delta p_\mathrm{inj}$ & 169 & \si{\kilo\Pa} & +8,45 & -0,054 \\ \hline 
+	\end{tabular}	
+	\label{Tab:senspump}%
+\end{table}
+\FloatBarrier 
+
+\begin{table}[ht]
+	\centering
+	\caption{Sensitivitätsanalyse des H$_2$-Kraftstoffsystems mit Vormischung}
+	\begin{tabular} {|l|c|c|c|c|c|} \hline%
+		Parameter & Referenzwert & Einheit & Schrittweite & $ \Delta \sum P_i$ [\%] \\ \hline\hline%
+		$\Delta p_\mathrm{HP}$ & 390 & \si{\kilo\Pa} & +39,0 & +4,06 \\ \hline 
+		$\eta_\mathrm{HP}$ & 0,71 & - & -0,04 & +3,04 \\ \hline 
+		$\eta_\mathrm{RV}$ & 0,71 & - & -0,04 & +1,92 \\ \hline 
+		$\dot{Q}_\mathrm{FOHE}$ & 149 & \si{\kilo\W} & -7,45 & +0,051 \\ \hline 
+		$\Delta p_\mathrm{inj}$ & 169 & \si{\kilo\Pa} & +8,45 & +0,084 \\ \hline 
+	\end{tabular}	
+	\label{Tab:sensdual}%
+\end{table}
+\FloatBarrier 
+
+Die Wasserstoff-Kraftstoffsysteme weisen nur geringfügige Unterschiede in ihren Sensitivitäten auf. Das Wasserstoff-Kraftstoffsystem mit Hochdruckpumpe zeigt mit einer Steigerung der Gesamtleistung um $6,19\,\%$ eine besonders hohe Sensitivität gegenüber Erhöhungen der Druckverluste im Hochdrucksystem. Dies ist auf den hohen Anteil des Rezirkulationsverdichters an der Gesamtleistung zurückzuführen. Aus demselben Grund wirkt sich eine Änderung des Wirkungsgrads der Hochdruckpumpe prozentual geringer auf den gesamten Leistungsbedarf aus, als bei den Hochdruckverdichtern der anderen Wasserstoff-Kraftstoffsysteme. Die Sensitivitäten des Wasserstoff-Kraftstoffsystems mit Vormischung weichen kaum von denen des Wasserstoff-Kraftstoffsystems mit Verdampfer ab.
+
+Die Ergebnisse der Sensitivitätsanalyse für das Kerosin-Kraftstoffsystem sind in Tabelle \ref{Tab:sensjeta} zusammengefasst.
+
+\begin{table}[ht]
+	\centering
+	\caption{Sensitivitätsanalyse des Kerosin-Kraftstoffsystems}
+	\begin{tabular} {|l|c|c|c|c|} \hline%
+		Parameter & Referenzwert & Einheit & Schrittweite & $ \Delta \sum P_i$ [\%] \\ \hline\hline%
+		$\Delta p_\mathrm{LP}$ & 115 & \si{\kilo\Pa} & +11,5 & +1,05 \\ \hline 
+		$p_\mathrm{LP}$ & 930 & \si{\kilo\Pa} & -93,0 & +4,73 \\ \hline 
+		$\eta_\mathrm{HP}$ & 0,73 & - & -0,04 & +4,29 \\ \hline 
+		$\eta_\mathrm{LP}$ & 0,60 & - & -0,03 & +1,40 \\ \hline 
+		$\dot{Q}_\mathrm{FOHE}$ & 112 & \si{\kilo\W} & -5,85 & -1,28 \\ \hline 
+		$\Delta p_\mathrm{inj}$ & 300 & \si{\kilo\Pa} & +15,0 & +1,36 \\ \hline 
+	\end{tabular}	
+	\label{Tab:sensjeta}%
+\end{table}
+\FloatBarrier 
+
+Das Kerosin-Kraftstoffsystem reagiert mit einer Steigerung der Pumpenleistungen von $1,05\,\%$ weniger sensitiv gegenüber Änderungen der Wärmeübertrager- und Leitungs-Druckverluste als die Modellierungen der Wasserstoff-Kraftstoffsysteme.
+
+Zwar führt der verringerte Austrittsdruck zu einer geringeren Leistung der Niederdruckpumpe, jedoch steigt hierdurch das Druckverhältnis und die Leistung der Hochdruckpumpe. Die Auswirkungen auf die Hochdruckpumpe überwiegen, was zu einem Anstieg des Leistungsbedarfs um $4,73\,\%$ führt – der größten Abweichung unter den Parametern. 
+
+Eine Verringerung des Wirkungsgrads der Hochdruckpumpe hat einen um $4,29\,\%$ höheren Leistungsbedarf zur Folge. Aufgrund des geringeren Leistungsbedarfs der Niederdruckpumpe hat die Variation ihres Wirkungsgrads mit $1,40\,\%$ eine geringere Auswirkung. 
+
+Eine Steigerung der Injektor-Druckverluste führt zu einem um $1,36\,\%$ höheren Leistungsbedarf der Pumpen. 
+
+Die verringerte Abwärme führt zu einem geringeren Massenstrom durch die Niederdruckpumpe und somit zu um $1,36\,\%$ verringerten Pumpenleistungen.
+
+Für die Wasserstoff-Kraftstoffsysteme wurden die Druckverluste im Hochdrucksystem sowie die Wirkungsgrade der Verdichter als sensitive Parameter identifiziert. Aufgrund der ähnlichen Tendenzen ist eine Vergleichbarkeit der Ergebnisse der Wasserstoff-Kraftstoffsysteme untereinander trotz Abweichungen der Gesamtleistungen von bis zu $+6,19\,\%$ gewährleistet. Hingegen reagiert das Kerosin-Kraftstoffsystem besonders stark auf Änderungen des Austrittsdrucks der Niederdruckpumpe und des Wirkungsgrads der Hochdruckpumpe. Vergleiche zwischen den Wasserstoff-Kraftstoffsystemen und dem Kerosin-Kraftstoffsystem sind daher eingeschränkt möglich.
 
 \section{Parameterstudie}
 
-Um die Wechselwirkung zwischen Wärmeübertrager- und Brennkammer-Eintrittstemperatur auf die Betriebsmittelbedarfe der Wasserstoff-Kraftstoffsysteme zu untersuchen wird eine zweidimensionale Parameterstudie durchgeführt. Die Parameter und Konfiguration der Wasserstoff-Kraftstoffsysteme werden über den untersuchten Bereich als konstant angenommen. Da sich die Wasserstoff-Kraftstoffsysteme untereinander in ihrem Verhalten weitgehend ähneln, werden die Ergebnisse zunächst für die Architektur mit Hochdruckpumpe gezeigt. Anschließend werden die Unterschiede zwischen den Architekturen im Detail betrachtet.
+Um die Wechselwirkung zwischen Wärmeübertrager- und Brennkammer-Eintrittstemperatur auf die Wärme- und Leistungsbedarfe der Wasserstoff-Kraftstoffsysteme zu untersuchen wird eine zweidimensionale Parameterstudie durchgeführt. Dabei werden die Parameter und Konfiguration der Wasserstoff-Kraftstoffsysteme über den untersuchten Bereich als konstant angenommen. 
+
+Eine Betrachtung der Wärmeübertrager-Eintrittstemperatur ist technisch wertvoll, da hohe Wärmeübertrager-Eintrittstemperaturen den Leistungsbedarf des Rezirkulationsverdichters steigern und somit den Gesamtwirkungsgrad des Triebwerks negativ beeinflussen können. Allerdings können je nach Auslegung der Wärmeübertrager hohe Eintrittstemperaturen erforderlich sein, um Vereisung zu verhindern. Da die Auswirkungen der Wärmeübertrager-Eintrittstemperatur auf den Leistungsbedarf mit der Brennkammer-Eintrittstemperatur gekoppelt sind, ist es sinnvoll, beide Parameter gemeinsam zu untersuchen. 
+
+Da sich die Wasserstoff-Kraftstoffsysteme untereinander in ihrem Verhalten weitgehend ähneln, werden die Ergebnisse zunächst für die Architektur mit Hochdruckpumpe gezeigt. Anschließend werden die Unterschiede zwischen den Architekturen im Detail betrachtet.
 
 \subsection{Architektur mit Hochdruckpumpe}
 
@@ -177,27 +165,27 @@ Abbildung \ref{fig:pumppower} zeigt den mechanischen Leistungsbedarf des Wassers
 \begin{figure}[ht]
 \centering
 \includegraphics[width=0.9\linewidth]{4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpepowercontour.pdf}
-  \caption{Leistungsbedarf Wasserstoff-Kraftstoffsystem mit Pumpe [kW]}
+  \caption{Leistungsbedarf Wasserstoff-Kraftstoffsystem mit Pumpe}
   \label{fig:pumppower}
 \end{figure}
 \FloatBarrier
 
-Der Gesamtleistungsbedarf steigt mit zunehmender Wärmeübertrager-Eintrittstemperatur, da die geringe Differenz zur Brennkammer-Eintrittstemperatur einen größeren Rezirkulations-Massenstrom erfordert, was die Leistung des Rezirkulationsverdichters erhöht. Zwar führen höhere Brennkammer-Eintrittstemperaturen zu einer Zunahme der spezifischen Arbeit des Rezirkulationsverdichters, jedoch wird dieser Effekt durch den aufgrund der erhöhten Temperaturdifferenz reduzierten rezirkulierten Massenstrom mehr als ausgeglichen. Die Leistung der Hochdruckpumpe ist hingegen unabhängig von den Eintrittstemperaturen (Abbildung \ref{fig:pumpsplit}). 
+Der Gesamtleistungsbedarf $P$ steigt mit zunehmender Wärmeübertrager-Eintrittstemperatur, da eine geringe Differenz zur Brennkammer-Eintrittstemperatur einen größeren rezirkulierten Massenstrom erfordert, was die Leistung des Rezirkulationsverdichters erhöht. Zwar führen höhere Brennkammer-Eintrittstemperaturen zu einer Zunahme der spezifischen Arbeit des Rezirkulationsverdichters, jedoch wird dieser Effekt durch den reduzierten rezirkulierten Massenstrom mehr als ausgeglichen. Die Leistung der Hochdruckpumpe $P_\mathrm{HP}$ ist hingegen unabhängig von den Eintrittstemperaturen (Abbildung \ref{fig:pumpsplit}). 
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=0.9\linewidth]{4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpe_powersplit.pdf}
-  \caption{Leistungsaufteilung Architektur mit Pumpe}
+  \caption{Leistungsaufteilung Wasserstoff-Kraftstoffsystem mit Pumpe}
   \label{fig:pumpsplit}
 \end{figure}
 \FloatBarrier
 
-Der Wärmebedarf ist insbesondere mit der Brennkammer-Eintrittstemperatur korreliert. Da die Leistung des Rezirkulationsverdichters mit steigender Wärmeübertrager-Eintrittstemperatur beziehungsweise geringer Differenz der Eintrittstemperaturen zunimmt, liegt in diesem Fall ein verringerter Wärmebedarf vor. Dieses Verhalten ist in Abbildung \ref{fig:pumpheat} dargestellt.
+Der Wärmebedarf $\dot{Q}=\dot{Q}_\mathrm{FOHE}+\dot{Q}_\mathrm{PHC}$ ist insbesondere mit der Brennkammer-Eintrittstemperatur korreliert. Da die Leistung des Rezirkulationsverdichters $P_\mathrm{RV}$ mit steigender Wärmeübertrager-Eintrittstemperatur beziehungsweise geringer Differenz der Eintrittstemperaturen zunimmt, liegt in diesem Fall ein verringerter Wärmebedarf vor. Dieses Verhalten ist in Abbildung \ref{fig:pumpheat} dargestellt.
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=0.9\linewidth]{4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpeheatcontour.pdf}
-  \caption{Wärmebedarf Wasserstoff-Kraftstoffsystem mit Pumpe [kW]}
+\includegraphics[width=0.8\linewidth]{4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpeheatcontour.pdf}
+  \caption{Wärmebedarf Wasserstoff-Kraftstoffsystem mit Pumpe}
   \label{fig:pumpheat}
 \end{figure}
 \FloatBarrier
@@ -205,39 +193,41 @@ Der Wärmebedarf ist insbesondere mit der Brennkammer-Eintrittstemperatur korrel
 
 \subsection{Vergleich der Wasserstoff-Kraftstoffsysteme}
 
-Im Folgenden werden die Ergebnisse der Parameterstudie für die verschiedenen Wasserstoff-Kraftstoffsysteme miteinander verglichen. Abbildung \ref{fig:comp_power} zeigt den Leistungsbedarf der Kraftstoffsysteme in Abhängigkeit der Wärmeübertrager-Eintrittstemperatur für zwei verschiedene Brennkammer-Eintrittstemperaturen.
+Im Folgenden werden die Ergebnisse der Parameterstudie der verschiedenen Wasserstoff-Kraftstoffsysteme miteinander verglichen. Abbildung \ref{fig:comp_power} zeigt den Leistungsbedarf der Kraftstoffsysteme in Abhängigkeit der Wärmeübertrager-Eintrittstemperatur für zwei verschiedene Brennkammer-Eintrittstemperaturen.
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=0.9\linewidth]{4_Abbildungen/2_Hauptteil/Ergebnisse/summary_power.pdf}
-  \caption{Leistungsbedarf Wasserstoff-Kraftstoffsysteme}
+\includegraphics[width=0.8\linewidth]{4_Abbildungen/2_Hauptteil/Ergebnisse/summary_power.pdf}
+  \caption{Gesamtleistungsbedarf Wasserstoff-Kraftstoffsysteme}
   \label{fig:comp_power}
 \end{figure}
 \FloatBarrier
 
-Aufgrund der höheren spezifischen Arbeit der Verdichtung im gasförmigen Zustand weisen beide Verdichterarchitekturen im Vergleich zur Pumpenarchitektur einen erhöhten Leistungsbedarf auf. Da die Verdichter des Kraftstoffsystems mit Vormischung bei identischer spezifischer Arbeit einen größeren Massenstrom  fördern als die Verdichter der Architektur mit Verdampfer, hat das Kraftstoffsystem mit Vormischung einen höheren Leistungsbedarf. Dieser Effekt wird bei höheren Brennkammer-Eintrittstemperaturen abgeschwächt, da die Verdampfung in diesem Fall einen geringeren Massenstrom erfordert. Abbildung \ref{fig:comp_split} zeigt den Einfluss der Wärmeübertrager-Eintrittstemperatur auf die Komponenten-Leistungen.
+Aufgrund der höheren spezifischen Arbeit der Verdichtung im gasförmigen Zustand weisen beide Kraftstoffsysteme mit Hochdruckverdichter im Vergleich zum Kraftstoffsystem mit Hochdruckpumpe einen erhöhten Leistungsbedarf auf. Da die Verdichter des Kraftstoffsystems mit Vormischung bei identischer spezifischer Arbeit einen größeren Massenstrom  fördern als die Verdichter der Architektur mit Verdampfer, hat das Kraftstoffsystem mit Vormischung einen höheren Leistungsbedarf. Dieser Effekt wird bei höheren Brennkammer-Eintrittstemperaturen abgeschwächt, da die Verdampfung in diesem Fall einen geringeren Massenstrom erfordert. Abbildung \ref{fig:comp_split} zeigt den Einfluss der Wärmeübertrager-Eintrittstemperatur auf die Komponenten-Leistungen.
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=0.9\linewidth]{4_Abbildungen/2_Hauptteil/Ergebnisse/300summary_powersplit.pdf}
-  \caption{Leistungsaufteilung Vergleich [$T_\mathrm{BK}=$ \SI{300}{\K}]}
+  \caption{Leistungsaufteilung Vergleich Wärmeübertrager-Eintrittstemperatur}
   \label{fig:comp_split}
 \end{figure}
 \FloatBarrier
 
-Analog zur Architektur mit Pumpe hat die Wärmeübertrager-Eintrittstemperatur bei den Verdichterarchitekturen keinen Einfluss auf die Leistung des Hochdruckverdichters. Da die Verdichterarchitekturen im Vergleich zur Pumpenarchitektur einen geringeren Rezirkulationsmassenstrom aufweisen, fällt auch die Leistung des Rezirkulationsverdichters geringer aus. Abbildung \ref{fig:tbk_split} zeigt den Einfluss der Brennkammer-Eintrittstemperatur auf die Komponenten-Leistungen.
+Analog zum Kraftstoffsystem mit Hochdruckpumpe hat die Wärmeübertrager-Eintrittstemperatur bei den Kraftstoffsystemen mit Hochdruckverdichter keinen Einfluss auf die Leistung des Hochdruckverdichters. Da die Kraftstoffsysteme mit Hochdruckverdichter im Vergleich zum Kraftstoffsystem mit Hochdruckpumpe einen geringeren rezirkulierten Massenstrom benötigen, fällt auch die Leistung des Rezirkulationsverdichters geringer aus. Abbildung \ref{fig:tbk_split} zeigt den Einfluss der Brennkammer-Eintrittstemperatur auf die Komponenten-Leistungen.
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=0.7\linewidth]{4_Abbildungen/2_Hauptteil/Ergebnisse/tbkcomp.pdf}
-  \caption{Leistungsaufteilung Vergleich [$T_\mathrm{W}=$ \SI{160}{\K}]}
+\includegraphics[width=0.9\linewidth]{4_Abbildungen/2_Hauptteil/Ergebnisse/tbkcomp.pdf}
+  \caption{Leistungsaufteilung Vergleich Brennkammer-Eintrittstemperatur}
   \label{fig:tbk_split}
 \end{figure}
 \FloatBarrier
 
-Der Trend sinkender Leistung des Rezirkulationsverdichters bei höherer Differenz der Eintrittstemperaturen setzt sich auch bei den Verdichterarchitekturen fort. Im Gegensatz zu den anderen Architekturen führen steigende Brennkammer-Eintrittstemperaturen bei der Architektur mit Vormischung jedoch zu einer geringfügigen Reduzierung der Leistung des Hochdruckverdichters. Dies ist auf den geringeren erforderlichen Massenstrom für die Verdampfung zurückzuführen. 
+Der Trend sinkender Leistung des Rezirkulationsverdichters bei höherer Differenz der Eintrittstemperaturen setzt sich auch bei den Kraftstoffsystemen mit Hochdruckverdichter fort. Im Gegensatz zu den anderen Kraftstoffsystemen führen steigende Brennkammer-Eintrittstemperaturen bei dem Kraftstoffsystem mit Vormischung jedoch zu einer geringfügigen Reduzierung der Leistung des Hochdruckverdichters. Dies ist auf den geringeren erforderlichen Massenstrom für die Verdampfung zurückzuführen. 
 
-Abbildung \ref{fig:stackplot} gibt einen Überblick der Leistungsanteile der Wasserstoff-Kraftstoffsysteme. In der linken Spalte sind die Leistungsanteile in Abhängigkeit der Brennkammereintritts-Temperatur bei konstanter Wärmeübertrager-Eintrittstemperatur dargestellt. Die mittlere Spalte zeigt die Leistungsanteile in Abhängigkeit der Brennkammer-Eintrittstemperatur, aber mit konstanter Temperaturdifferenz. Die rechte Spalte zeigt die Leistungsanteile in Abhängigkeit der Wärmeübertrager-Temperatur bei konstanter Brennkammereintritts-Eintrittstemperatur.
+Abbildung \ref{fig:stackplot} gibt einen Überblick der Leistungsanteile der Wasserstoff-Kraftstoffsysteme. In der linken Spalte sind die Leistungsanteile in Abhängigkeit der Brennkammereintritts-Temperatur bei konstanter Wärmeübertrager-Eintrittstemperatur dargestellt. Die mittlere Spalte zeigt die Leistungsanteile in Abhängigkeit der Brennkammer-Eintrittstemperatur, jedoch mit konstanter Temperaturdifferenz. Die rechte Spalte zeigt die Leistungsanteile in Abhängigkeit der Wärmeübertrager-Temperatur bei konstanter Brennkammereintritts-Eintrittstemperatur. Diese Abbildung verdeutlicht den Einfluss der Differenz der Eintrittstemperaturen. 
+
+Bei einer konstanten Temperaturdifferenz von $T_{BK}-T_W=$ \SI{40}{\K} (mittlere Spalte) liegen die Leistung des Rezirkulationsverdichters $P_{RV}$ und die Wärme der parallelen Wasserstoffverbrennung $\dot{Q}_{PHC}$ über die untersuchten Brennkammer-Eintrittstemperaturen betragsmäßig in einem ähnlichen Bereich. Im Gegensatz dazu nimmt bei konstanter Brennkammer-Eintrittstemperatur der Leistungsanteil des Rezirkulationsverdichters mit steigender Wärmeübertrager-Eintrittstemperatur zu (rechte Spalte).
 
 \begin{figure}[ht]
 \centering
@@ -247,21 +237,33 @@ Abbildung \ref{fig:stackplot} gibt einen Überblick der Leistungsanteile der Was
 \end{figure}
 \FloatBarrier
 
-Diese Abbildung verdeutlicht den Einfluss der Differenz der Eintrittstemperaturen. Bei einer konstanten Temperaturdifferenz von $T_{BK}-T_W=$ \SI{40}{\K} (mittlere Spalte) liegen die Leistung des Rezirkulationsverdichters $P_{RV}$ und die Wärme der parallelen Wasserstoffverbrennung $\dot{Q}_{PHC}$ über die untersuchten Brennkammer-Eintrittstemperaturen betragsmäßig in einem ähnlichen Bereich. Im Gegensatz dazu nimmt bei konstanter Brennkammer-Eintrittstemperatur der Leistungsanteil des Rezirkulationsverdichters mit steigender Wärmeübertrager-Eintrittstemperatur zu (rechte Spalte).
-
-Eine direkte Empfehlung spezifischer Eintrittstemperaturen lässt sich aus diesen Daten nicht ableiten. Grundsätzlich gilt, dass eine möglichst niedrige hinnehmbare Wärmeübertrager-Eintrittstemperatur den Kraftstoffverbrauch reduziert. Für die Brennkammer-Eintrittstemperatur lässt sich hingegen keine eindeutige Aussage treffen, sodass sie in Abhängigkeit von der Wärmeübertrager-Eintrittstemperatur gewählt werden sollte.
+Eine direkte Empfehlung spezifischer Eintrittstemperaturen lässt sich aus diesen Daten nicht ableiten. Grundsätzlich gilt, dass entsprechend der technischen Möglichkeiten die Wahl einer möglichst niedrigen Wärmeübertrager-Eintrittstemperatur den Leistungsbedarf reduziert. Für die Brennkammer-Eintrittstemperatur lässt sich hingegen keine eindeutige Aussage treffen. Stattdessen sollte sie in Abhängigkeit von der Wärmeübertrager-Eintrittstemperatur gewählt werden.
 
 \section{Vergleich Kerosin- und Wasserstoff-Kraftstoffsysteme}
 
-Im Folgenden werden die Wasserstoff-Kraftstoffsysteme mit dem Kerosin-Kraftstoffsystem verglichen. Abbildung \ref{fig:refcomp} zeigt den Betriebsmittelbedarf der verschiedenen Kraftstoffsysteme. Für die Wasserstoff-Kraftstoffsysteme gilt eine Brennkammer-Eintrittstemperatur von $T_\mathrm{BK}=$ \SI{300}{\K} und eine Wärmeübertrager-Eintrittstemperatur von $T_\mathrm{W}=$ \SI{160}{\K}.
+Im Folgenden werden die Wasserstoff-Kraftstoffsysteme mit dem Kerosin-Kraftstoffsystem verglichen, um den abweichenden Bedarfe der betrachteten Systeme im Reiseflug zu verdeutlichen. 
+
+Da die verfügbare Abwärme den Wärmebedarf des Kerosin-Kraftstoffsystems übersteigt, wird neben der in Kapitel \ref{chap:methodik} beschriebenen Berechnung, eine weitere Berechnung des tatsächliche Wärmebedarfs zum Erreichen der maximal zulässigen Brennkammer-Eintrittstemperatur durchgeführt. Hierfür wird der rezirkulierte Massenstrom $\dot{m}_\mathrm{R}$
+
+\begin{equation}
+	 \dot{m}_\mathrm{R}=\dot{m}_\mathrm{HP}-\dot{m}_\mathrm{BK} 
+\end{equation}
+ 
+so festgelegt, dass kein Kraftstoff in die Kraftstofftanks zurückgeführt wird. Die im Hauptölsystem-Wärmeübertrager zugeführte Wärme $\dot{Q}_\mathrm{FOHE}$ wird als abhängige Variable modelliert und so angepasst, dass die maximal zulässige Brennkammer-Eintrittstemperatur $T_\mathrm{BK}$ gewahrt bleibt.
+
+Abbildung \ref{fig:refcomp} zeigt den Wärme- und Leistungsbedarf der verschiedenen Kraftstoffsysteme. Für die Wasserstoff-Kraftstoffsysteme ist zudem der Wasserstoffbedarf der parallelen Wasserstoffverbrennung dargestellt. Für die Wasserstoff-Kraftstoffsysteme gilt eine Brennkammer-Eintrittstemperatur von $T_\mathrm{BK}=$ \SI{300}{\K} und eine Wärmeübertrager-Eintrittstemperatur von $T_\mathrm{W}=$ \SI{160}{\K}. Das Kerosin-Kraftstoffsystem erwärmt den Kraftstoff auf eine Brennkammer-Eintrittstemperatur von $T_\mathrm{BK}=$ \SI{399}{\K}.
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=1\linewidth]{4_Abbildungen/2_Hauptteil/Ergebnisse/refcomp.pdf}
-  \caption{Betriebsmittelbedarf der Kraftstoffsysteme}
+  \caption{Bedarfe der Kraftstoffsysteme}
   \label{fig:refcomp}
 \end{figure}
 \FloatBarrier
 
-Der Betriebsmittelbedarf der Wasserstoff-Kraftstoffsysteme übersteigt den Bedarf des Kerosin-Kraftstoffsystems um einen Faktor von drei. Im Vergleich zum Kerosin-Kraftstoffsystem erfordert das Wasserstoff-Kraftstoffsystem mit Pumpe 22,7-Mal mehr Leistungsentnahme von der Hochdruckwelle und hat einen Wärmefehlbetrag von \SI{278}{\kilo\W}, der durch die parallele Wasserstoffverbrennung gedeckt wird. Bei dem Kraftstoffsystem mit Verdampfer wird sogar das 27,1-Fache an Leistungsentnahme benötigt bei einem Wärmefehlbetrag von \SI{268}{\kilo\W}. Bei dem Kraftstoffsystem mit Vormischung wird das 30,2-Fache an Leistungsentnahme benötigt bei einem Wärmefehlbetrag von nur noch \SI{261}{\kilo\W}. 
+Die Summe der Wärme- und Leistungsbedarfe der Wasserstoff-Kraftstoffsysteme übersteigen die des Kerosin-Kraftstoffsystems um einen Faktor von drei. Im Vergleich zum Kerosin-Kraftstoffsystem erfordert das Wasserstoff-Kraftstoffsystem mit Pumpe 23-Mal mehr Leistungsentnahme von der Hochdruckwelle und hat einen Wärmefehlbetrag von \SI{278}{\kilo\W}, der durch die parallele Wasserstoffverbrennung bereitgestellt wird. Bei dem Kraftstoffsystem mit Verdampfer wird sogar das 27-Fache an Leistungsentnahme benötigt bei einem Wärmefehlbetrag von \SI{268}{\kilo\W}. Bei dem Kraftstoffsystem mit Vormischung wird das 30-Fache an Leistungsentnahme benötigt bei einem Wärmefehlbetrag von nur noch \SI{261}{\kilo\W}. Die Bereitstellung der zusätzlichen Wärme durch die parallele Wasserstoffverbrennung verursacht einen zusätzlichen Wasserstoffbedarf von $\dot{m}_\mathrm{PHC}=2,2$ bis \SI{2.4}{\g\per\s}. Dies entspricht $2\,\%$ des Brennkammer-Massenstroms $\dot{m}_\mathrm{BK}$.
+
+Von den \SI{117}{\kilo\W}, die dem Kerosin-Kraftstoffsystem an Abwärme zur Verfügung stehen, werden \SI{90}{\kilo\W} für die Erwärmung des Kraftstoffs benötigt. Um die überschüssigen \SI{27}{\kilo\W} durch Rückführung in die Kraftstofftanks zu kühlen, benötigt die Niederdruckpumpe zusätzliche Leistung in einer Höhe von \SI{0,14}{\kilo\W}. Dies entspricht $6\,\%$ der gesamten Pumpenleistungen des Kerosin-Kraftstoffsystems.
+
+Die Abweichung der Leistungsbedarfe zwischen dem Kerosin- und den Wasserstoff-Kraftstoffsysteme übersteigt die Größenordnung der zuvor ermittelten Sensitivitäten um ein Vielfaches. Daher wird die Auswirkung fehlerbehafteter Annahmen auf das Vergleichsergebnis als unkritisch bewertet. 
 

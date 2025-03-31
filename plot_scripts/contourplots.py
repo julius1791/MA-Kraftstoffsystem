@@ -118,6 +118,11 @@ for arch, plot, name in zip(subfolders, [0,1,2], systemnames):
     fig.savefig(os.path.join(save_dir, name+'powercontour.pdf'), dpi=600, bbox_inches="tight")
     plt.show()
 
+
+
+
+
+
 ###############################################################################
 ######################### Wärmebedarf Contour plot ############################
 ###############################################################################
@@ -279,6 +284,75 @@ for arch, name in zip(subfolders, systemnames):
     plt.show()
     
     
+###############################################################################
+##################### Wasserstoffbedarf Contour plot ##########################
+###############################################################################
+
+
+norm = mpl.colors.Normalize(0, 6)
+for arch, name in zip(subfolders, systemnames):
+    
+    t_wu_u = np.unique(t_wu)
+    t_bk_u = np.unique(t_bk)
+    Q3 = np.zeros([len(t_wu_u), len(t_bk_u)])
+    qm_phc3 = np.zeros([len(t_wu_u), len(t_bk_u)])
+    i=0
+    
+    for t_bki in t_bk_u:
+        data_i = data[arch]
+        P_mfp = np.array(data_i["P_mfp"])
+        P_fp = P_mfp
+        Q = np.array(data_i["Q"])
+    
+        t_wu = np.array(data_i["t_wu"])
+        t_bk = np.array(data_i["t_bk"])
+        qm_r = np.array(data_i["qm_r"])
+        Q = np.array(data_i["Q"])
+        qm_phc = np.array(data_i["qm_phc"])
+        
+        j=0
+        idx = t_bk == t_bki
+        t_wu2 = t_wu[idx]
+        Q2 = Q[idx]
+        qm_phc2 = qm_phc[idx]
+        for t_wui in t_wu_u:
+            idx2 = t_wu2 == t_wui
+            try:
+                Q3[j, i] = np.extract(True, Q2[idx2])
+                qm_phc3[j, i] = qm_phc2[idx2][0]
+            except:
+                qm_phc3[j, i] = np.nan
+                Q3[j, i] = np.nan
+            j+=1
+        i+=1
+    lev = [*np.linspace(0, 6, 600)]
+    cs = plt.contourf(t_bk_u, t_wu_u, qm_phc3*1e3, levels = lev, cmap="Reds", norm=norm)
+
+    levs = [*np.linspace(0, 6, 7)]
+
+    
+    cs = plt.contour(t_bk_u, t_wu_u, qm_phc3*1e3, levels = levs, colors='black')
+    plt.clabel(cs, fontsize=10)
+
+    # cb = plt.colorbar(cm.ScalarMappable(norm=norm, cmap="Reds"), orientation="horizontal", location="bottom", ax=ax, pad=0.1)
+    # cb.set_label("$Q_{gsmt}$ [kW]", rotation=0, labelpad=-50, loc="left")
+    # for sp in ax[0:1]:
+    #     sp.tick_params(labelbottom=False)
+    # clevs = [120, 200, 300, 400, 500, 600, 700]
+    plt.ylabel("Wärmeübertrager-Eintrittstemperatur $T_\mathrm{W}$ [K]", fontsize=12)
+    plt.xlabel("Brennkammer-Eintrittstemperatur $T_\mathrm{BK}$ [K]")
+    plt.title("Wasserstoffbedarf $\dot{m}_\mathrm{PHC}$ [g/s]")
+    
+    fig = mpl.pyplot.gcf()
+    fig.set_size_inches(16/2.54, 10.5/2.54)
+    plt.xlim(tbk_lims)
+    # cb.set_ticks(clevs)
+    # cb.set_ticklabels(clevs)
+    plt.ticklabel_format(style="plain")
+    fig.savefig(os.path.join(save_dir, name+'heatcontour.pdf'), dpi=600, bbox_inches="tight")
+    plt.show()
+    
+
     
 ###############################################################################
 ################# Leistungsbedarf Pumpe Contour plot ##########################

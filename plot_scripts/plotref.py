@@ -131,9 +131,9 @@ for i in range(len(label_list)):
     for j in range(len(data_list)):
         dps.append(data_list[j][i])
 
-    ax[1].bar(xvals, dps, bottom=bottom, label=label_list[i], fc=colors[i], hatch=hatches[i], width = 0.5)
+    ax[1].bar(xvals, dps, bottom=bottom, label=label_list[i], fc=colors[i], hatch=hatches[i], width = 0.5, alpha=0.99)
     bottom += dps
-ax2.bar(np.arange(0, len(data_list), 1)+np.full(len(data_list), 0.25), qm_phc_list, label="$\dot{m}_\mathrm{PHC}$", fc = "green", width = 0.1)
+ax2.bar(np.arange(0, len(data_list), 1)+np.full(len(data_list), 0.25), qm_phc_list, label="$\dot{m}_\mathrm{PHC}$", fc = "green", width = 0.1, alpha=0.99)
 ax[1].set_ylabel("Leistung [kW]")
 ax2.set_ylabel("PHC Wasserstoffbedarf $\dot{m}_\mathrm{PHC}$ [g/s]")
 ax[1].set_ylim([0, 500])
@@ -143,7 +143,7 @@ bottom = 0
 ax[0].bar(0, 0, bottom=0, label="$\dot{m}_\mathrm{PHC}$", fc = "green", width = 0)
 for i in range(len(label_list)):
     dps = data_list[0][i]
-    ax[0].bar(systemnames[0], dps, bottom=bottom, label=label_list[i], fc=colors[i], hatch=hatches[i], width=0.4)
+    ax[0].bar(systemnames[0], dps, bottom=bottom, label=label_list[i], fc=colors[i], hatch=hatches[i], width=0.4, alpha=0.99)
     bottom += dps
 
 ax[0].set_ylabel("Leistung [kW]")
