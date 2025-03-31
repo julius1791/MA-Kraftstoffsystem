@@ -164,17 +164,18 @@ for key, name in zip(data, systemnames):
 
         ax[i].plot(t_wu1, P_r1/1e3, label="$P_\mathrm{RV}$", color=colors[1], linestyle=stylelist[0])
         
-        plt.legend(loc="best")
+        
         ax[i].set_title("$T_\mathrm{BK}="+str(tbk)+"$ K")
         
         ax[i].set_xlim(twu_lims)
         ax[i].set_ylim([0,200])
-        
+    
     fig.supxlabel("Wärmeübertrager-Eintrittstemperatur $T_\mathrm{W}$ [K]", y=0.1, fontsize=12)
     ax[0].set_ylabel("Leistung $P_{i}$ [kW]")
     fig = mpl.pyplot.gcf()
     fig.set_size_inches(16/2.54, 8.5/2.54)
     plt.tight_layout()
+    ax[1].legend(bbox_to_anchor=(0.3, 1.35), ncols=3)
     fig.savefig(os.path.join(save_dir, name+'_powersplit.pdf'), dpi=600, bbox_inches="tight")
     plt.show()
 
