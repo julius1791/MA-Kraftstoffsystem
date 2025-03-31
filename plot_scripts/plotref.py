@@ -140,6 +140,7 @@ ax[1].set_ylim([0, 500])
 ax[1].set_xticks(np.arange(0, len(data_list), 1), systemnames)
 
 bottom = 0
+ax[0].bar(0, 0, bottom=0, label=" ", fc = "none", width = 0)
 ax[0].bar(0, 0, bottom=0, label="$\dot{m}_\mathrm{PHC}$", fc = "green", width = 0)
 for i in range(len(label_list)):
     dps = data_list[0][i]
@@ -149,9 +150,9 @@ for i in range(len(label_list)):
 ax[0].set_ylabel("Leistung [kW]")
 ax[0].set_ylim([0, 3.6])
 handles, labels = ax[0].get_legend_handles_labels()
-order = [1, 2, 3, 0, 4, 5, 6]
-ax[0].legend([handles[idx] for idx in order],[labels[idx] for idx in order], bbox_to_anchor=[0.5, 1.55], loc="upper center", ncols=2, columnspacing=0.5, fontsize=12)
-ax[0].set_position([0, 0.05, 0.1, 0.6])
+order = [2, 3, 4, 0, 5, 6, 7, 1]
+ax[0].legend([handles[idx] for idx in order],[labels[idx] for idx in order], bbox_to_anchor=[0.5, 1.7], loc="upper center", ncols=2, columnspacing=0.5, fontsize=12)
+ax[0].set_position([0, 0.05, 0.1, 0.55])
 ax[1].set_position([0.3, 0.05, 0.65, 0.9])
 
 
