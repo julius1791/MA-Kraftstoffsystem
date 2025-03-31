@@ -43,16 +43,10 @@ plt.ylabel("Temperatur $T$")
 plt.tick_params(
     axis='x',          # changes apply to the x-axis
     which='both',      # both major and minor ticks are affected
-    bottom=False,      # ticks along the bottom edge are off
+    bottom=True,      # ticks along the bottom edge are off
     top=False,         # ticks along the top edge are off
     labelbottom=False) # labels along the bottom edge are off
-plt.tick_params(
-    axis='y',          # changes apply to the x-axis
-    which='both',      # both major and minor ticks are affected
-    bottom=False,      # ticks along the bottom edge are off
-    top=False,         # ticks along the top edge are off
-    labelbottom=False) # labels along the bottom edge are off
-plt.yticks([])
+ax.yaxis.set_ticklabels([])
 
 
 ax.annotate('', xy=(0, 70), xytext=(H2-H1, 70), xycoords='data', textcoords='data',
