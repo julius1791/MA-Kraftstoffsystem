@@ -64,7 +64,7 @@
 \contentsline {subsection}{\numberline {6.2.1}Bestimmung der Schrittweiten}{45}{subsection.6.2.1}%
 \contentsline {subsection}{\numberline {6.2.2}Auswertung der Sensitivitätsanalyse}{45}{subsection.6.2.2}%
 \contentsline {section}{\numberline {6.3}Parameterstudie}{47}{section.6.3}%
-\contentsline {subsection}{\numberline {6.3.1}Architektur mit Hochdruckpumpe}{48}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.3.1}Kraftstoffsystem mit Hochdruckpumpe}{48}{subsection.6.3.1}%
 \contentsline {subsection}{\numberline {6.3.2}Vergleich der Wasserstoff-Kraftstoffsysteme}{50}{subsection.6.3.2}%
 \contentsline {section}{\numberline {6.4}Vergleich Kerosin- und Wasserstoff-Kraftstoffsysteme}{54}{section.6.4}%
 \contentsline {chapter}{\numberline {7}Zusammenfassung und Ausblick}{57}{chapter.7}%

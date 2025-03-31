@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.3) (preloaded format=pdflatex 2025.3.22)  31 MAR 2025 21:43
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.3) (preloaded format=pdflatex 2025.3.22)  31 MAR 2025 22:04
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1798,14 +1798,14 @@ ie Brennkammer-
 
 
 Underfull \hbox (badness 2671) in paragraph at lines 254--255
-\T1/lmr/m/n/12 Eintrittsbedingungen der Kraftstoff-systeme, er-läu-tert. Zu-näc
-hst wird der Brenn-
+\T1/lmr/m/n/12 Eintrittsbedingungen der Kraft-stoff-systeme, er-läu-tert. Zu-nä
+chst wird der Brenn-
  []
 
 
 Underfull \hbox (badness 4954) in paragraph at lines 254--255
-\T1/lmr/m/n/12 kam-mer-druck der Kraftstoff-systeme fest-ge-legt. An-schlie-ÿen
-d wird die zu-läs-si-ge
+\T1/lmr/m/n/12 kam-mer-druck der Kraft-stoff-systeme fest-ge-legt. An-schlie-ÿe
+nd wird die zu-läs-si-ge
  []
 
 
@@ -1878,15 +1878,9 @@ nis-se der Sen-si-ti-vi-täts-ana-ly-sen für die
 
 
 [46]
-Underfull \hbox (badness 10000) in paragraph at lines 155--156
+Underfull \hbox (badness 2088) in paragraph at lines 155--156
 \T1/lmr/m/n/12 Um die Wech-sel-wir-kung zwi-schen Wärmeübertrager- und Brennkam
-mer-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 155--156
-\T1/lmr/m/n/12 Eintrittstemperatur auf die Wärme- und Leis-tungs-be-dar-fe der 
-Wasserstoff-
+mer-Eintritts-
  []
 
 
@@ -1901,22 +1895,22 @@ Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpepowercontour
 .pdf  used on input line 167.
 (pdftex.def)             Requested size: 432.48048pt x 306.1794pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 173--174
+Underfull \hbox (badness 1917) in paragraph at lines 173--174
 []\T1/lmr/m/n/12 Der Ge-samt-leis-tungs-be-darf $\OML/lmm/m/it/12 P$ \T1/lmr/m/
-n/12 steigt mit zu-neh-men-der Wärmeübertrager-
+n/12 steigt mit zu-neh-men-der Wärmeübertrager-Eintritts-
  []
 
 
 
 [48 <./4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpepowercontour.pdf>]
 <4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpe_powersplit.pdf, id=928, 443.68091pt
- x 219.10898pt>
+ x 252.05154pt>
 File: 4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpe_powersplit.pdf Graphic file (t
 ype pdf)
 <use 4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpe_powersplit.pdf>
 Package pdftex.def Info: 4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpe_powersplit.
 pdf  used on input line 177.
-(pdftex.def)             Requested size: 455.24408pt x 224.82886pt.
+(pdftex.def)             Requested size: 455.24408pt x 258.63141pt.
 <4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpeheatcontour.pdf, id=930, 416.74666pt
  x 297.42207pt>
 File: 4_Abbildungen/2_Hauptteil/Ergebnisse/Pumpeheatcontour.pdf Graphic file (t
@@ -1949,8 +1943,8 @@ plit.pdf  used on input line 214.
 (pdftex.def)             Requested size: 386.96024pt x 232.52135pt.
 
 Underfull \hbox (badness 5036) in paragraph at lines 220--221
-[]\T1/lmr/m/n/12 Analog zum Kraftstoff-system mit Hoch-druck-pum-pe hat die Wär
-meübertrager-
+[]\T1/lmr/m/n/12 Analog zum Kraft-stoff-system mit Hoch-druck-pum-pe hat die Wä
+rmeübertrager-
  []
 
 
@@ -2143,12 +2137,12 @@ Package rerunfilecheck Info: File `Abschlussarbeit.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 37930 strings out of 473523
- 818315 string characters out of 5714146
- 1316663 words of memory out of 5000000
+ 37925 strings out of 473523
+ 818239 string characters out of 5714146
+ 1316661 words of memory out of 5000000
  60113 multiletter control sequences out of 15000+600000
  622911 words of font info for 74 fonts, out of 8000000 for 9000
- 1190 hyphenation exceptions out of 8191
+ 1185 hyphenation exceptions out of 8191
  108i,14n,109p,10912b,1263s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/Julius/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm
 /cmmi12.pfb><C:/Users/Julius/AppData/Local/Programs/MiKTeX/fonts/type1/public/a
@@ -2179,7 +2173,7 @@ ype1/public/lm/lmssbx10.pfb><C:/Users/Julius/AppData/Local/Programs/MiKTeX/font
 s/type1/public/lm/lmsy10.pfb><C:/Users/Julius/AppData/Local/Programs/MiKTeX/fon
 ts/type1/public/lm/lmsy6.pfb><C:/Users/Julius/AppData/Local/Programs/MiKTeX/fon
 ts/type1/public/lm/lmsy8.pfb>
-Output written on Abschlussarbeit.pdf (75 pages, 11047248 bytes).
+Output written on Abschlussarbeit.pdf (75 pages, 11047264 bytes).
 PDF statistics:
  1558 PDF objects out of 1728 (max. 8388607)
  254 named destinations out of 1000 (max. 500000)
