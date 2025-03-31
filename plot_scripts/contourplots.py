@@ -351,6 +351,8 @@ for arch, name in zip(subfolders, systemnames):
             j+=1
         i+=1
     lev = [*np.linspace(0, 6, 600)]
+    fig, ax = plt.subplots()
+    ax.set_aspect(1)
     cs = plt.contourf(t_bk_u, t_wu_u, qm_phc3*1e3, levels = lev, cmap="Reds", norm=norm, zorder = 0)
 
     levs = [*np.linspace(0, 6, 7)]
