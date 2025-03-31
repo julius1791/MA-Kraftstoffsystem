@@ -122,11 +122,11 @@ def reference(params, t_cbt, p_cbt, filename="", v=v0, tolerance=tolerance):
         # primary heat exchanger
         ff_main.heat_exchanger(Q_fohe, tpr_fohe)
         
-        # calculation of hp fuel pump
-        P_hpfp, _ = ff_main.pump_hydraulic(p_hpfp, eta_hpfp)
-        
         # apply pipe pressure loss
         ff_main.heat_exchanger(0, (jetaflow.calc_pt(ff_main.t, ff_main.p, ff_main.v)-dp_l)/jetaflow.calc_pt(ff_main.t, ff_main.p, ff_main.v))
+        
+        # calculation of hp fuel pump
+        P_hpfp, _ = ff_main.pump_hydraulic(p_hpfp, eta_hpfp)
         
         # split off combustion chamber flow
         ff_cb = ff_main.split_flows(qm_cb)
@@ -248,11 +248,11 @@ def reference2(params, t_cbt, p_cbt, filename="", v=v0, tolerance=tolerance):
         # primary heat exchanger
         ff_main.heat_exchanger(Q_fohe, tpr_fohe)
         
-        # calculation of hp fuel pump
-        P_hpfp, _ = ff_main.pump_hydraulic(p_hpfp, eta_hpfp)
-        
         # apply pressure loss
         ff_main.heat_exchanger(0, (jetaflow.calc_pt(ff_main.t, ff_main.p, ff_main.v)-dp_l)/jetaflow.calc_pt(ff_main.t, ff_main.p, ff_main.v))
+        
+        # calculation of hp fuel pump
+        P_hpfp, _ = ff_main.pump_hydraulic(p_hpfp, eta_hpfp)
         
         # split off combustion chamber flow
         ff_cb = ff_main.split_flows(qm_cb)
@@ -382,7 +382,7 @@ def h2pump(params, t_cbt, t_hxt, p_cbt, pcc=True, Brewer = False, filename="", v
             
             # apply pressure loss
             ff_main.heat_exchanger(0, (h2flow.calc_pt(ff_main.t, ff_main.p, ff_main.v)-dp_l)/h2flow.calc_pt(ff_main.t, ff_main.p, ff_main.v))
-
+            
             # split off combustion chamber h2 flow
             ff_cb = ff_main.split_flows(qm_cb)
             
@@ -441,7 +441,6 @@ def h2pump(params, t_cbt, t_hxt, p_cbt, pcc=True, Brewer = False, filename="", v
                 
                 
         stop = time.time()
-        
         if len(filename) > 1:
             if qm_r < 0 or qm_phc < 0:
                 print(qm_r, qm_cb, qm_phc)
@@ -786,10 +785,10 @@ if __name__ == "__main__":
     }
     
     folder = "single_results"
-    # print("reference")
-    # reference(ref_params, 399.15, p_bk, filename= os.path.join(folder, "ref.csv"))
+    print("reference")
+    reference(ref_params, 399, p_bk, filename= os.path.join(folder, "ref.csv"))
     print("reference2")
-    reference2(ref_params, 399.15, p_bk, filename=os.path.join(folder, "ref2.csv"))
+    reference2(ref_params, 399, p_bk, filename=os.path.join(folder, "ref2.csv"))
     
     # print("\nh2dual")
     # h2dual(dual_params, t_bk, t_wu, p_bk, pcc=True, filename=os.path.join(folder, "dual.csv"))
