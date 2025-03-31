@@ -1,7 +1,6 @@
-$\Delta p_\mathrm{L}$ & 68,0 & \si{\kilo\Pa} & +13,6 & +1,23 \\ \hline 
-$\pi_\mathrm{FOHE}$ & 0,95 & - & -0,010 & +0,845 \\ \hline 
+$\Delta p_\mathrm{LP}$ & 114,5 & \si{\kilo\Pa} & +11,5 & +1,05 \\ \hline 
 $p_\mathrm{LP}$ & 930,0 & \si{\kilo\Pa} & -93,0 & +4,73 \\ \hline 
 $\eta_\mathrm{HP}$ & 0,73 & - & -0,040 & +4,29 \\ \hline 
 $\eta_\mathrm{LP}$ & 0,6 & - & -0,030 & +1,40 \\ \hline 
 $\dot{Q}_\mathrm{FOHE}$ & 112,0 & \si{\kilo\W} & -5,85 & -1,28 \\ \hline 
-$\Delta p_\mathrm{inj}$ & 300,0 & \si{\kilo\Pa} & +30,0 & +2,72 \\ \hline 
+$\Delta p_\mathrm{inj}$ & 300,0 & \si{\kilo\Pa} & +15,0 & +1,36 \\ \hline 

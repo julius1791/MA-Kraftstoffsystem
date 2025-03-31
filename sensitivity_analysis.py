@@ -9,7 +9,7 @@ import numpy as np
 from pathlib import Path
 import math
 
-func = "dual"
+func = "reference"
 
 # results folder (!CHANGE IN fuelsystem2!!!)
 results_dir = "sensitivity"
@@ -21,7 +21,7 @@ fac = 1.1
 t_bk = 300
 t_wu = 160
 p_bk = 1.33e6
-t_bk_jeta = 399.15
+t_bk_jeta = 399
 
 qm_cb = 0.11
 qm_cbs = qm_cb
@@ -39,7 +39,7 @@ tpr_phc = 0.98
 tpr_phcs = tpr_phc-0.004
 dT = 20
 dp_l = 260e3
-dp_ls = dp_l*1.2
+dp_ls = dp_l+39e3
 dp_inj = 169e3
 dp_injs = dp_inj*1.05
 tpr_vhps = 0.995
@@ -84,10 +84,10 @@ def fixfloat(string):
 
 if func == "reference":
     folder = folders[3]
-    par_hr_list = ["$\dot{Q}_\mathrm{FOHE}$", "$\pi_\mathrm{FOHE}$", "$p_\mathrm{LP}$", "$\eta_\mathrm{LP}$", "$\eta_\mathrm{HP}$", "$\Delta p_\mathrm{L}$", "$\Delta p_\mathrm{inj}$"]
-    par_name_list = ["Q_fohe", "tpr_fohe", "p_lpfp", "eta_lpfp", "eta_hpfp", "dp_l", "dp_inj"]
-    par_unit_list = ["\si{\kilo\W}", "-", "\si{\kilo\Pa}", "-", "-", "\si{\kilo\Pa}", "\si{\kilo\Pa}"]
-    par_value_list = [112e3-117e3*0.05, tpr_fohes, 930e3*0.9, 0.6-0.03, 0.73-0.04, 68e3*1.2, 300e3*1.1]
+    par_hr_list = ["$\Delta p_\mathrm{LP}$", "$p_\mathrm{LP}$", "$\eta_\mathrm{HP}$", "$\eta_\mathrm{LP}$", "$\dot{Q}_\mathrm{FOHE}$", "$\Delta p_\mathrm{inj}$"]
+    par_name_list = ["dp_l", "p_lpfp", "eta_hpfp", "eta_lpfp", "Q_fohe", "dp_inj"]
+    par_unit_list = ["\si{\kilo\Pa}", "\si{\kilo\Pa}", "-", "-", "\si{\kilo\W}", "\si{\kilo\Pa}"]
+    par_value_list = [68e3+11.5e3, 930e3*0.9, 0.69, 0.57, 112e3-117e3*0.05, 300e3*1.05]
     params = {
         "p0": 180e3,"t0": 270, "Q_fohe": 112e3,"tpr_fohe": 0.95, "Q_idg": 5e3,
         "eta_lpfp": 0.6, "eta_hpfp": 0.73, "p_lpfp": 930e3, "qm_hpfp": 1.11,
@@ -95,10 +95,10 @@ if func == "reference":
     }
 if func == "pump":
     folder = folders[0]
-    par_hr_list = ["$\dot{Q}_\mathrm{FOHE}$", "$\pi_\mathrm{FOHE}$", "$\pi_\mathrm{PHC}$", "$\eta_\mathrm{RV}$", "$\eta_\mathrm{HP}$", "$\dot{m}_\mathrm{BK}$", "$\Delta p_\mathrm{L}$", "$\Delta p_\mathrm{inj}$"]
-    par_name_list = ["Q_fohe", "tpr_fohe", "tpr_phc", "eta_r", "eta_hpfp", "qm_cb0", "dp_l", "dp_inj"]
-    par_unit_list = ["\si{\kilo\W}", "-", "-", "-", "-", "\si{\kg\per\s}", "\si{\kilo\Pa}", "\si{\kilo\Pa}"]
-    par_value_list = [Q_fohes, tpr_fohes, tpr_phcs, eta_vs, eta_ps, qm_cbs, dp_ls, dp_injs]
+    par_hr_list = ["$\Delta p_\mathrm{HP}$", "$\eta_\mathrm{HP}$", "$\eta_\mathrm{RV}$", "$\dot{Q}_\mathrm{FOHE}$", "$\Delta p_\mathrm{inj}$"]
+    par_name_list = ["dp_l", "eta_hpfp", "eta_r", "Q_fohe", "dp_inj"]
+    par_unit_list = ["\si{\kilo\Pa}", "-", "-", "\si{\kilo\W}", "\si{\kilo\Pa}"]
+    par_value_list = [dp_ls, eta_ps, eta_vs, Q_fohes, dp_injs]
     params = {
         "p0": p0,"t0": t0, "Q_fohe": Q_fohe,"tpr_fohe": tpr_fohe, 
         "tpr_phc": tpr_phc, "dT": dT,"eta_r": eta_v, "eta_hpfp": eta_p, 
@@ -106,10 +106,10 @@ if func == "pump":
     }
 elif func == "after":
     folder = folders[1]
-    par_hr_list = ["$\dot{Q}_\mathrm{FOHE}$", "$\pi_\mathrm{FOHE}$", "$\pi_\mathrm{PHC}$", "$\eta_\mathrm{RV}$", "$\eta_\mathrm{HP}$", "$\dot{m}_\mathrm{BK,0}$", "$\Delta p_\mathrm{L}$", "$\Delta p_\mathrm{inj}$", "$\pi_\mathrm{V, HP}$", "$\pi_\mathrm{V, LP}$"]
-    par_name_list = ["Q_fohe", "tpr_fohe", "tpr_phc", "eta_r", "eta_hpfp", "qm_cb0", "dp_l", "dp_inj", "tpr_vhp", "tpr_vlp"]
-    par_unit_list = ["\si{\kilo\W}", "-", "-", "-", "-", "\si{\kg\per\s}", "\si{\kilo\Pa}", "\si{\kilo\Pa}", "-", "-"]
-    par_value_list = [Q_fohes, tpr_fohes, tpr_phcs, eta_vs, eta_vs, qm_cbs, dp_ls, dp_injs, tpr_vhps, tpr_vlps]
+    par_hr_list = ["$\Delta p_\mathrm{HP}$", "$\eta_\mathrm{HP}$", "$\eta_\mathrm{RV}$", "$\dot{Q}_\mathrm{FOHE}$", "$\Delta p_\mathrm{inj}$"]
+    par_name_list = ["dp_l", "eta_hpfp", "eta_r", "Q_fohe", "dp_inj"]
+    par_unit_list = ["\si{\kilo\Pa}", "-", "-", "\si{\kilo\W}", "\si{\kilo\Pa}"]
+    par_value_list = [dp_ls, eta_vs, eta_vs, Q_fohes, dp_injs]
     params = {
         "p0": p0,"t0": t0, "Q_fohe": Q_fohe,"tpr_fohe": tpr_fohe, 
         "tpr_phc": tpr_phc, "dT": dT,"eta_r": eta_v, "eta_hpfp": eta_v, 
@@ -118,10 +118,10 @@ elif func == "after":
     }
 elif func == "dual":
     folder = folders[2]
-    par_hr_list = ["$\dot{Q}_\mathrm{FOHE}$", "$\pi_\mathrm{FOHE}$", "$\pi_\mathrm{PHC}$", "$\eta_\mathrm{RV}$", "$\eta_\mathrm{HP}$", "$\dot{m}_\mathrm{BK,0}$", "$\Delta p_\mathrm{L}$", "$\Delta p_\mathrm{inj}$"]
-    par_name_list = ["Q_fohe", "tpr_fohe", "tpr_phc", "eta_r", "eta_hpfp", "qm_cb0", "dp_l", "dp_inj"]
-    par_unit_list = ["\si{\kilo\W}", "-", "-", "-", "-", "\si{\kg\per\s}", "\si{\kilo\Pa}", "\si{\kilo\Pa}"]
-    par_value_list = [Q_fohes, tpr_fohes, tpr_phcs, eta_vs, eta_vs, qm_cbs, dp_ls, dp_injs]
+    par_hr_list = ["$\Delta p_\mathrm{HP}$", "$\eta_\mathrm{HP}$", "$\eta_\mathrm{RV}$", "$\dot{Q}_\mathrm{FOHE}$", "$\Delta p_\mathrm{inj}$"]
+    par_name_list = ["dp_l", "eta_hpfp", "eta_r", "Q_fohe", "dp_inj"]
+    par_unit_list = ["\si{\kilo\Pa}", "-", "-", "\si{\kilo\W}", "\si{\kilo\Pa}"]
+    par_value_list = [dp_ls, eta_vs, eta_vs, Q_fohes, dp_injs]
     params = {
         "p0": p0,"t0": t0, "Q_fohe": Q_fohe,"tpr_fohe": tpr_fohe, 
         "tpr_phc": tpr_phc, "dT": dT,"eta_r": eta_v, "eta_hpfp": eta_v, 
@@ -160,7 +160,7 @@ param_comb_list.append(params)
 path_list.append(defname)
 
 
-if False:
+if True:
     if func == "reference":
         Parallel(n_jobs=i+1)(delayed(fuelsystem.reference)(pc, t_bk_jeta, p_bk, filename=path) for pc, path in zip(param_comb_list, path_list))
     if func == "pump":
@@ -253,12 +253,12 @@ content = {"Parameters": par_dict, "Absolute Differences": absolute_difference.t
 
 
 # change order
-if func == "after": 
-    indexes = [5, 6, 1, 2, 4, 3, 0, 7, 8, 9]
-elif func == "reference":
-    indexes = [5, 1, 2, 4, 3, 0, 6]
-else:
-    indexes = [5, 6, 1, 2, 4, 3, 0, 7]
+# if func == "after": 
+#     indexes = [5, 6, 1, 2, 4, 3, 0, 7, 8, 9]
+# elif func == "reference":
+#     indexes = [5, 1, 2, 4, 3, 0, 6]
+# else:
+#     indexes = [5, 6, 1, 2, 4, 3, 0, 7]
     
 
     
@@ -266,7 +266,7 @@ else:
 
 txtfn = os.path.join(results_dir, folder + ".txt")
 with open(txtfn, "w") as f:
-    for i in indexes:
+    for i in range(len(par_name_list)):
         if par_name_list[i] == "qm_cb0":
             continue
         sz_string = str(sigfig(step_size[i], 3)) if step_size[i] < 0 else "+" + str(sigfig(step_size[i], 3))
@@ -282,6 +282,12 @@ with open(txtfn, "w") as f:
             par_ref_value = str(sigfig(par_ref_value/1e3,3))
         else:
             par_ref_value = str(sigfig(par_ref_value,3))
+        if par_hr_list[i] == "$\Delta p_\mathrm{LP}$":
+            par_ref_value = str(114.5)
+        elif par_hr_list[i] == "$\Delta p_\mathrm{HP}$":
+            par_ref_value = str(390)
+            
+                
         
         f.write((par_hr_list[i] + " & " + par_ref_value + " & " + par_unit_list[i] + " & " + sz_string + " & " + dP_string + " \\\ \hline \n").replace(".", ",").replace("+inf", "-"))
         
