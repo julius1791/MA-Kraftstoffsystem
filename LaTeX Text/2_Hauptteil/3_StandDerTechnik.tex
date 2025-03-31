@@ -2,16 +2,16 @@
 \chapter{Stand der Technik}\label{chap:standdertechnik}
 %==============================================================================
 
-Mehrere Autoren haben bereits Kraftstoffsystemen für Fluggasturbinen modelliert. Im Folgenden werden ausgewählte Modellierungsansätze aus der Literatur erläutert. Für die Modellierung von Kraftstoff- und Wärmemanagementsystemen werden in der Regel physikbasierte Ansätze verwendet.
+Mehrere Autoren haben bereits Kraftstoffsysteme für Fluggasturbinen modelliert. Im Folgenden werden ausgewählte Modellierungsansätze aus der Literatur erläutert. Für die Modellierung von Kraftstoff- und Wärmemanagementsystemen werden insbesondere physikbasierte Ansätze verwendet.
 
-Mawid et al. \cite{Mawid.1998} haben eine Simulationssoftware für thermo-hydraulische Systeme angepasst, um  Kraftstoffsysteme von kerosinbetriebenen Fluggasturbinen zu simulieren. Der Schwerpunkt der Arbeit liegt auf der akkuraten Modellierung des Verhaltens der Hochdruckpumpe.
+Mawid et al. \cite{Mawid.1998} haben eine Simulationssoftware für thermo-hydraulische Systeme angepasst, um  Kerosin-Kraftstoffsysteme zu simulieren. Der Schwerpunkt der Arbeit liegt auf der akkuraten Modellierung des Verhaltens der Hochdruckpumpe.
 
-Bodie et al. \cite{Bodie.2010} haben die Wärmemanagementsysteme eines Flugzeugs, einschließlich des Kraftstoffsystems, mit einem zusammengesetzte Elemente-Ansatz (engl.: lumped element model) in MATLAB Simulink modelliert. Die Autoren empfehlen in der frühen Entwicklungsphase den Einsatz von Ersatzmodellen mit verringerter Genauigkeit und geringem Rechenaufwand, um die Festlegung der Modelltopologie zu beschleunigen.
+Bodie et al. \cite{Bodie.2010} haben die Wärmemanagementsysteme eines Flugzeugs, einschließlich des Kraftstoffsystems, durch ein Netzwerkmodell (engl.: lumped element model) in MATLAB Simulink modelliert. Die Autoren empfehlen in der frühen Entwicklungsphase den Einsatz von Ersatzmodellen mit verringerter Genauigkeit und geringem Rechenaufwand, um die Festlegung der Modelltopologie zu beschleunigen.
 
 German \cite{German.2012} hat mit einem physikbasierten Ansatz die Auswirkungen der Kraftstoffrückführung auf die Temperaturen des Kraftstoff in den Kraftstofftanks modelliert. Die Modellierung kann aufgrund ihres geringen Detailgrads schon früh in der Entwicklungsphase genutzt werden, um die Anforderungen an das Wärmemanagementsystem abzuschätzen.
 
 Sun et al. \cite{Sun.2019} haben die Modellierungen des Kraftstoffsystems und des Ölsystems eines kerosinbetriebenen Turbofantriebwerks in MATLAB Simulink gekoppelt. Die gekoppelte Modellierung der Systeme ermöglicht eine akkurate Abbildung des Systemverhaltens auch unter untypischen Betriebsbedingungen.
 
-Sciatti et al. \cite{Sciatti.2022} haben das Kraftstoffsystem einer kerosinbetriebenen Fluggasturbine mit einem physikbasierten Ansatz in MATLAB Simulink modelliert. Im Mittelpunkt der Arbeit steht die Interaktion zwischen der Hochdruckpumpe und der Kraftstoffregeleinheit. Das Wärmemanagementsystem wird hingegen nicht betrachtet. 
+Sciatti et al. \cite{Sciatti.2022} haben ein Kerosin-Kraftstoffsystem mit einem physikbasierten Ansatz in MATLAB Simulink modelliert. Im Mittelpunkt der Arbeit steht die Interaktion zwischen der Hochdruckpumpe und der Kraftstoffregeleinheit. Das Wärmemanagementsystem wird hingegen nicht betrachtet. 
 
 Bisherige Arbeiten in diesem Gebiet konzentrierten sich vor allem auf die dynamischen Interaktionen des Kraftstoffsystems mit anderen Systemen. Diese Arbeit hingegen betrachtet ausschließlich das Kraftstoffsystem selbst und blendet transientes Systemverhalten aus. Der Fokus liegt auf der Ermittlung der Leistungs- und Wärmebedarfe von Kraftstoffsystemen in erster Größenordnung, sodass diese bei der Leistungsrechnung fortschrittlicher Fluggasturbinen berücksichtigt werden können. So soll insbesondere eine Vergleichbarkeit zwischen wasserstoff- und kerosinbetriebenen Fluggasturbinen ermöglicht werden. Hierfür wird die Energiebilanz der Modelle der einzelnen Komponenten in einem analytischen, physikbasierten Ansatz gelöst. 

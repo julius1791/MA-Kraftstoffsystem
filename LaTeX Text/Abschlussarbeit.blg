@@ -30,45 +30,45 @@ Reallocating 'singl_function' (item size: 4) to 100 items.
 Database file #1: Literatur.bib
 Warning--there's a number but no series in BacicMarkoCoullJohn.2024
 Warning--there's a number but no series in PalmerChloeJWhurrJohnR.2024
-You've used 55 entries,
+You've used 50 entries,
             4728 wiz_defined-function locations,
-            1302 strings with 19169 characters,
-and the built_in function-call counts, 47593 in all, are:
-= -- 4855
-> -- 1414
-< -- 1289
-+ -- 1566
-- -- 485
-* -- 3910
-:= -- 8070
-add.period$ -- 102
-call.type$ -- 55
-change.case$ -- 321
-chr.to.int$ -- 54
-cite$ -- 57
-duplicate$ -- 1175
-empty$ -- 3240
-format.name$ -- 837
-if$ -- 9312
-int.to.chr$ -- 2
+            1275 strings with 18280 characters,
+and the built_in function-call counts, 45187 in all, are:
+= -- 4633
+> -- 1338
+< -- 1251
++ -- 1510
+- -- 461
+* -- 3739
+:= -- 7631
+add.period$ -- 94
+call.type$ -- 50
+change.case$ -- 298
+chr.to.int$ -- 50
+cite$ -- 52
+duplicate$ -- 1091
+empty$ -- 3059
+format.name$ -- 792
+if$ -- 8829
+int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 261
-newline$ -- 383
-num.names$ -- 220
-pop$ -- 460
+missing$ -- 233
+newline$ -- 355
+num.names$ -- 200
+pop$ -- 418
 preamble$ -- 1
-purify$ -- 431
+purify$ -- 398
 quote$ -- 0
-skip$ -- 2077
+skip$ -- 1957
 stack$ -- 0
-substring$ -- 4535
-swap$ -- 302
-text.length$ -- 224
+substring$ -- 4444
+swap$ -- 286
+text.length$ -- 216
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 660
+type$ -- 595
 warning$ -- 2
-while$ -- 399
+while$ -- 376
 width$ -- 0
-write$ -- 893
+write$ -- 826
 (There were 2 warnings)

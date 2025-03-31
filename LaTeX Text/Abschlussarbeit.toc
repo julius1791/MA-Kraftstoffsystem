@@ -24,49 +24,49 @@
 \contentsline {subsection}{\numberline {4.3.1}Pumpen und Verdichter}{17}{subsection.4.3.1}%
 \contentsline {subsection}{\numberline {4.3.2}Wärmeübertrager}{18}{subsection.4.3.2}%
 \contentsline {subsection}{\numberline {4.3.3}Kraftstoffmischung}{19}{subsection.4.3.3}%
-\contentsline {subsection}{\numberline {4.3.4}Parallele Wasserstoffverbrennung}{19}{subsection.4.3.4}%
+\contentsline {subsection}{\numberline {4.3.4}Parallele Wasserstoffverbrennung}{20}{subsection.4.3.4}%
 \contentsline {section}{\numberline {4.4}Kerosin-Kraftstoffsystem}{20}{section.4.4}%
 \contentsline {subsection}{\numberline {4.4.1}Systemarchitektur}{20}{subsection.4.4.1}%
 \contentsline {subsection}{\numberline {4.4.2}Variablen und Parameter}{22}{subsection.4.4.2}%
-\contentsline {section}{\numberline {4.5}Wasserstoff-Kraftstoffsystemarchitekturen}{22}{section.4.5}%
+\contentsline {section}{\numberline {4.5}Wasserstoff-Kraftstoffsysteme}{22}{section.4.5}%
 \contentsline {subsection}{\numberline {4.5.1}Systemarchitektur mit Hochdruckpumpe}{23}{subsection.4.5.1}%
 \contentsline {subsection}{\numberline {4.5.2}Systemarchitektur mit Verdampfer}{24}{subsection.4.5.2}%
 \contentsline {subsection}{\numberline {4.5.3}Systemarchitektur mit Vormischung}{25}{subsection.4.5.3}%
 \contentsline {subsection}{\numberline {4.5.4}Variablen und Parameter}{26}{subsection.4.5.4}%
-\contentsline {section}{\numberline {4.6}Lösungsalgorithmus}{26}{section.4.6}%
-\contentsline {chapter}{\numberline {5}Randbedingungen}{29}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Triebwerkszyklus}{29}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Eintrittsbedingungen}{30}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Abwärmequellen}{31}{section.5.3}%
-\contentsline {subsection}{\numberline {5.3.1}Wellenlager}{31}{subsection.5.3.1}%
-\contentsline {subsection}{\numberline {5.3.2}Fan-Getriebe}{31}{subsection.5.3.2}%
-\contentsline {subsection}{\numberline {5.3.3}Hilfsgeräteträger}{32}{subsection.5.3.3}%
-\contentsline {subsection}{\numberline {5.3.4}Abwärme}{32}{subsection.5.3.4}%
-\contentsline {section}{\numberline {5.4}Pumpen und Verdichter}{33}{section.5.4}%
-\contentsline {subsection}{\numberline {5.4.1}Kreiselpumpen}{33}{subsection.5.4.1}%
-\contentsline {subsection}{\numberline {5.4.2}Zahnradpumpen}{33}{subsection.5.4.2}%
-\contentsline {subsection}{\numberline {5.4.3}Wasserstoff-Verdichter}{34}{subsection.5.4.3}%
-\contentsline {section}{\numberline {5.5}Wärmeübertrager Druckverluste}{34}{section.5.5}%
-\contentsline {subsection}{\numberline {5.5.1}Kerosin-Kraftstoffsystem}{34}{subsection.5.5.1}%
-\contentsline {subsection}{\numberline {5.5.2}Wasserstoff-Kraftstoffsysteme}{35}{subsection.5.5.2}%
-\contentsline {section}{\numberline {5.6}Leitungs- und Injektor-Druckverluste}{36}{section.5.6}%
-\contentsline {subsection}{\numberline {5.6.1}Kerosin-Kraftstoffsystem}{36}{subsection.5.6.1}%
-\contentsline {subsection}{\numberline {5.6.2}Wasserstoff-Kraftstoffsysteme}{36}{subsection.5.6.2}%
-\contentsline {section}{\numberline {5.7}Parallele Wasserstoffverbrennung}{36}{section.5.7}%
-\contentsline {section}{\numberline {5.8}Zusammenfassung}{37}{section.5.8}%
-\contentsline {section}{\numberline {5.9}Brennkammereintrittsbedingungen}{38}{section.5.9}%
-\contentsline {subsection}{\numberline {5.9.1}Brennkammerdruck}{38}{subsection.5.9.1}%
-\contentsline {subsection}{\numberline {5.9.2}Brennkammer-Eintrittstemperatur Kerosin-Kraftstoffsystem}{38}{subsection.5.9.2}%
-\contentsline {subsection}{\numberline {5.9.3}Eintrittstemperaturen Wasserstoff-Kraftstoffsysteme}{39}{subsection.5.9.3}%
-\contentsline {chapter}{\numberline {6}Ergebnisse}{41}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Validierung}{41}{section.6.1}%
-\contentsline {section}{\numberline {6.2}Sensitivitätsanalyse}{42}{section.6.2}%
-\contentsline {subsection}{\numberline {6.2.1}Bestimmung der Schrittweiten}{43}{subsection.6.2.1}%
-\contentsline {subsection}{\numberline {6.2.2}Auswertung der Sensitivitätsanalyse}{43}{subsection.6.2.2}%
-\contentsline {section}{\numberline {6.3}Parameterstudie}{45}{section.6.3}%
-\contentsline {subsection}{\numberline {6.3.1}Architektur mit Hochdruckpumpe}{46}{subsection.6.3.1}%
-\contentsline {subsection}{\numberline {6.3.2}Vergleich der Wasserstoff-Kraftstoffsysteme}{48}{subsection.6.3.2}%
-\contentsline {section}{\numberline {6.4}Vergleich Kerosin- und Wasserstoff-Kraftstoffsysteme}{52}{section.6.4}%
-\contentsline {chapter}{\numberline {7}Zusammenfassung und Ausblick}{55}{chapter.7}%
-\contentsline {chapter}{Literatur}{62}{chapter*.43}%
+\contentsline {section}{\numberline {4.6}Lösungsalgorithmus}{27}{section.4.6}%
+\contentsline {chapter}{\numberline {5}Randbedingungen}{31}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Triebwerkszyklus}{31}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Eintrittsbedingungen}{32}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Abwärmequellen}{33}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}Wellenlager}{33}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.3.2}Fan-Getriebe}{33}{subsection.5.3.2}%
+\contentsline {subsection}{\numberline {5.3.3}Hilfsgeräteträger}{34}{subsection.5.3.3}%
+\contentsline {subsection}{\numberline {5.3.4}Abwärme}{34}{subsection.5.3.4}%
+\contentsline {section}{\numberline {5.4}Pumpen und Verdichter}{35}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}Kreiselpumpen}{35}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}Zahnradpumpen}{35}{subsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.4.3}Wasserstoff-Verdichter}{36}{subsection.5.4.3}%
+\contentsline {section}{\numberline {5.5}Wärmeübertrager Druckverluste}{36}{section.5.5}%
+\contentsline {subsection}{\numberline {5.5.1}Kerosin-Kraftstoffsystem}{36}{subsection.5.5.1}%
+\contentsline {subsection}{\numberline {5.5.2}Wasserstoff-Kraftstoffsysteme}{37}{subsection.5.5.2}%
+\contentsline {section}{\numberline {5.6}Leitungs- und Injektor-Druckverluste}{38}{section.5.6}%
+\contentsline {subsection}{\numberline {5.6.1}Kerosin-Kraftstoffsystem}{38}{subsection.5.6.1}%
+\contentsline {subsection}{\numberline {5.6.2}Wasserstoff-Kraftstoffsysteme}{38}{subsection.5.6.2}%
+\contentsline {section}{\numberline {5.7}Parallele Wasserstoffverbrennung}{38}{section.5.7}%
+\contentsline {section}{\numberline {5.8}Zusammenfassung}{39}{section.5.8}%
+\contentsline {section}{\numberline {5.9}Brennkammereintritts-Bedingungen}{40}{section.5.9}%
+\contentsline {subsection}{\numberline {5.9.1}Brennkammerdruck}{40}{subsection.5.9.1}%
+\contentsline {subsection}{\numberline {5.9.2}Brennkammer-Eintrittstemperatur Kerosin-Kraftstoffsystem}{40}{subsection.5.9.2}%
+\contentsline {subsection}{\numberline {5.9.3}Eintrittstemperaturen Wasserstoff-Kraftstoffsysteme}{41}{subsection.5.9.3}%
+\contentsline {chapter}{\numberline {6}Ergebnisse}{43}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Validierung}{43}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Sensitivitätsanalyse}{44}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}Bestimmung der Schrittweiten}{45}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.2}Auswertung der Sensitivitätsanalyse}{45}{subsection.6.2.2}%
+\contentsline {section}{\numberline {6.3}Parameterstudie}{47}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}Architektur mit Hochdruckpumpe}{48}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.3.2}Vergleich der Wasserstoff-Kraftstoffsysteme}{50}{subsection.6.3.2}%
+\contentsline {section}{\numberline {6.4}Vergleich Kerosin- und Wasserstoff-Kraftstoffsysteme}{54}{section.6.4}%
+\contentsline {chapter}{\numberline {7}Zusammenfassung und Ausblick}{57}{chapter.7}%
+\contentsline {chapter}{Literatur}{63}{chapter*.43}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

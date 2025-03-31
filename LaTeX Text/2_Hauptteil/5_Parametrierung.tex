@@ -3,11 +3,11 @@
 \label{chap:param}
 %==============================================================================
 
-In diesem Kapitel werden die Randbedingungen der in Kapitel \ref{chap:methodik} definierten physikalischen Modelle der Kraftstoffsysteme festgelegt. Ziel ist es, das Verhalten von für die Triebwerke von Schmalrumpfverkehrsflugzeugen dimensionierten Kraftstoffsystemen im Reiseflug möglichst realitätsnah abzubilden. Zunächst werden die relevanten Betriebspunkte der verwendeten Triebwerkszyklen beschrieben. Hierauf werden die relevanten Parameter bestimmt und deren Herkunft erläutert. Abschließend werden die unabhängigen Variablen der Kraftstoffsysteme parametriert und für die Wasserstoff-Kraftstoffsysteme Wertebereiche für die Parameterstudie festgelegt.
+In diesem Kapitel werden die Randbedingungen der in Kapitel \ref{chap:methodik} definierten physikalischen Modelle der Kraftstoffsysteme festgelegt. Ziel ist es, das Verhalten der Kraftstoffsystemen im Reiseflug möglichst realitätsnah abzubilden. Anhand der Parameter werden die Kraftstoffsysteme für die Triebwerke eines Schmalrumpfflugzeugs dimensioniert. Zunächst werden die relevanten Betriebspunkte der verwendeten Triebwerkszyklen beschrieben. Hierauf werden die relevanten Parameter bestimmt und deren Herkunft erläutert. Abschließend werden die unabhängigen Variablen der Kraftstoffsysteme parametriert und für die Wasserstoff-Kraftstoffsysteme Wertebereiche für die Parameterstudie festgelegt.
 
 \section{Triebwerkszyklus}
 
-Die Dimensionierung der Komponenten und die Bestimmung der Randbedingungen der Kraftstoffsysteme erfolgt auf Grundlage von Triebwerkszyklen für moderne wasserstoff-/kerosinbetriebene Getriebefantriebwerke (engl.: Geared Turbo Fan, GTF) für Schmalrumpfflugzeuge, in Anlehnung an das Pratt \& Whitney PW1133G Triebwerk. Die Betriebspunkte der Triebwerkszyklen wurden am IST mit GasTurb \cite{GasTurbGmbH.2021}, einer Software für die Gasturbinen-Leistungsrechnung, berechnet. Der Betriebspunkt für den Reiseflug wurde für die beiden Zyklen bei einer Flughöhe von \SI{10700}{\m}, einer Machzahl von 0,78, unter Annahme der Internationalen Standardatmosphäre (ISA) und einem Schub von \SI{22}{\kilo\N} gerechnet. Die berechneten Werte sind in Tabelle \ref{Tab:cruise} zusammengefasst.
+Die Dimensionierung der Komponenten und die Bestimmung der Randbedingungen der Kraftstoffsysteme erfolgt auf Grundlage von Triebwerkszyklen für moderne wasserstoff-/kerosinbetriebene Getriebefantriebwerke (engl.: Geared Turbo Fan, GTF) für Schmalrumpfflugzeuge, in Anlehnung an das Pratt \& Whitney PW1133G Triebwerk. Die Betriebspunkte der Triebwerkszyklen wurden am IST mit GasTurb \cite{GasTurbGmbH.2021}, einer Software für die Gasturbinen-Leistungsrechnung, berechnet. Der Betriebspunkt für den Reiseflug wurde für die beiden Zyklen bei einer Flughöhe von \SI{10700}{\m}, einer Machzahl von 0,78, unter Annahme der Internationalen Standardatmosphäre (ISA) und einem Schub von \SI{22}{\kilo\N} gerechnet. Die für den Reiseflug berechneten Werte sind in Tabelle \ref{Tab:cruise} zusammengefasst.
 
 \begin{table}[ht]
     \centering
@@ -16,7 +16,7 @@ Die Dimensionierung der Komponenten und die Bestimmung der Randbedingungen der K
     \multicolumn{2}{|c|}{Parameter} & Einheit & H\textsubscript{2} & Kerosin \\ \hline\hline%
     Schub & $F$ & kN & \multicolumn{2}{c|}{22} \\ \hline
     Flughöhe & $H$ & m & \multicolumn{2}{c|}{10.700} \\ \hline
-    Machzahl & $Ma$ & - & \multicolumn{2}{c|}{0,78} \\ \hline
+    Machzahl & $M$ & - & \multicolumn{2}{c|}{0,78} \\ \hline
     Umgebungstemperatur & $\Delta T_{\mathrm{ISA}}$ & K & \multicolumn{2}{c|}{0} \\ \hline\hline
     Kraftstoffmassenstrom & $\dot{m}_\mathrm{BK}$& kg/s & 0,110 & 0,313 \\ \hline
     Hochdruckwellendrehzahl & $N_2$ & 1/min & \multicolumn{2}{c|}{19.000} \\ \hline
@@ -40,7 +40,7 @@ Für die Dimensionierung der Hochdruckpumpe des Kerosin-Kraftstoffsystems ist ne
     \multicolumn{2}{|c|}{Parameter} & Einheit & Kerosin \\ \hline\hline%
     Schub & $F$ & kN & 147 \\ \hline
     Flughöhe & $H$ & m & 0 \\ \hline
-    Machzahl & $Ma$ & - & 0 \\ \hline
+    Machzahl & $M$ & - & 0 \\ \hline
     Umgebungstemperatur & $\Delta T_\mathrm{ISA}$ & K & 0 \\ \hline\hline
     Kraftstoffmassenstrom & $\dot{m}_\mathrm{BK}$& kg/s & 1,05  \\ \hline
     Hochdruckwellendrehzahl & $N_2$ & U/min & 21.000 \\ \hline
@@ -53,7 +53,7 @@ Für die Dimensionierung der Hochdruckpumpe des Kerosin-Kraftstoffsystems ist ne
 
 Die Kraftstoff-Eintrittstemperatur in Kerosin-Kraftstoffsystemen wird maßgeblich von der Umgebungstemperatur, der verbleibenden Kraftstoffmenge, der Flugdauer sowie der durch Rezirkulation in die Kraftstofftanks rückgeführten Wärme beeinflusst \cite{German.2012}. In dieser Arbeit wird für das Kerosin-Kraftstoffsystem eine Kraftstoff-Eintrittstemperatur von $T_\mathrm{e}=$ \SI{270}{\K} angenommen, was in einer Flughöhe von $H= $ \SI{10700}{\m} einer um \SI{51.3}{\K} höheren Temperatur im Vergleich zur Umgebungstemperatur entspricht. 
 
-Gemäß der Musterzulassung des Pratt \& Whitney PW1133G Triebwerks darf der Eintrittsdruck $p_\mathrm{e}$ einen Überdruck von \SI{689}{\kilo\Pa} relativ zur Umgebung nicht überschreiten und einen Überdruck von \SI{34.5}{\kilo\Pa} relativ zum Dampfdruck des Kraftstoffs nicht unterschreiten \cite{EASA.2018}. Bei einer Kraftstoffeintrittstemperatur von $T_\mathrm{e}=$ \SI{270}{\K} und einer Flughöhe von \SI{10700}{\m} entspricht dies einem Druckbereich von \SI{35.0}{\kilo\Pa} kPa bis \SI{713}{\kilo\Pa}. Durch den Förderdruck der verwendeten Boosterpumpe von ca. \SI{250}{\kilo\Pa} \cite{EatonFuelSystemsDivision.2013} ist dem Kraftstoffeintrittsdruck eine engere Obergrenze gesetzt. Abzüglich Rohrreibungsverlusten in den Kraftstoffleitungen zwischen Kraftstofftank und Triebwerk erscheint ein Eintrittsdruck von $p_\mathrm{e}=$ \SI{180}{\kilo\Pa} realistisch.
+Gemäß der Musterzulassung des Pratt \& Whitney PW1133G Triebwerks darf der Eintrittsdruck $p_\mathrm{e}$ einen Überdruck von \SI{689}{\kilo\Pa} relativ zur Umgebung nicht überschreiten und einen Überdruck von \SI{34.5}{\kilo\Pa} zum Dampfdruck des Kraftstoffs nicht unterschreiten \cite{EASA.2018}. Bei einer Kraftstoffeintrittstemperatur von $T_\mathrm{e}=$ \SI{270}{\K} und einer Flughöhe von \SI{10700}{\m} entspricht dies einem Druckbereich von \SI{35.0}{\kilo\Pa} bis \SI{713}{\kilo\Pa}. Durch den Förderdruck der verwendeten Boosterpumpe von ca. \SI{250}{\kilo\Pa} \cite{EatonFuelSystemsDivision.2013} ist dem Kraftstoffeintrittsdruck eine engere Obergrenze gesetzt. Abzüglich Rohrreibungsverlusten in den Kraftstoffleitungen zwischen Kraftstofftank und Triebwerk wird ein Eintrittsdruck von $p_\mathrm{e}=$ \SI{180}{\kilo\Pa} angenommen.
 
 Das von Brewer \cite{Brewer.1991} vorgeschlagene Kraftstoffsystem, an dem sich die Wasserstoff-Kraftstoffsysteme dieser Arbeit orientieren, verwendet einen Flüssigwasserstofftank mit einem absoluten Druck von \SI{152}{\kilo\Pa} sowie eine im Tank integrierte Niederdruckpumpe, die den flüssigen Wasserstoff auf \SI{462}{\kilo\Pa} fördert. Die Autoren des CRYOPLANE-Berichts \cite{Scholz.2003} treffen ähnliche Annahmen. Unter Berücksichtigung von Druckverlusten erreicht der Wasserstoff das Triebwerk mit einem Eintrittsdruck von $p_\mathrm{e}=$ \SI{345}{\kilo\Pa} \cite{Brewer.1991}. Die von Brewer ermittelte Wasserstoff-Eintrittstemperatur $T_\mathrm{e}=$ \SI{25.2}{\K} entspricht dem Siedepunkt von Parawasserstoff. In dieser Arbeit wird für den Eintritt eine rein flüssige Wasserstoffphase angenommen.
 
@@ -75,7 +75,7 @@ Das Fan-Getriebe eines GTF stellt eine weitere Quelle mechanischer Verluste dar.
 
 Die Kraftstoffpumpen, Ölpumpen, Hydraulikpumpen und der Stromgenerator gehören zu den Hilfsgeräteträger-Komponenten, die erhebliche Abwärme erzeugen. Zusätzlich entstehen durch die Getriebestufen des Hilfsgeräteträgers mechanische Verluste. Jafari et al. \cite{Jafari.2020} haben die Verlustleistung des Hilfsgeräteträgers eines CFM56-5 Triebwerks untersucht und eine Proportionalität zwischen Triebwerksschub und Verlustleistung festgestellt. 
 
-Unter der Annahme dieses Verhaltens beträgt die Verlustleistung des Hilfsgeräteträgers für den betrachteten Triebwerkszyklus \SI{10}{\kilo\W}. Dabei entfällt ein Anteil von \SI{5}{\kilo\W} auf den Stromgenerator. Mögliche erhöhte mechanische Verluste aufgrund des höheren Leistungsbedarfs des Wasserstoff-Kraftstoffsystems werden aufgrund ihrer geringen Größenordnung als vernachlässigbar betrachtet. 
+Unter Annahme dieses Verhaltens beträgt die Verlustleistung des Hilfsgeräteträgers für den betrachteten Triebwerkszyklus \SI{10}{\kilo\W}. Dabei entfällt ein Anteil von \SI{5}{\kilo\W} auf den Stromgenerator. Mögliche erhöhte mechanische Verluste aufgrund des höheren Leistungsbedarfs des Wasserstoff-Kraftstoffsystems werden aufgrund ihrer geringen Größenordnung vernachlässigt. 
 
 
 \subsection{Abwärme}
@@ -91,7 +91,7 @@ In Summe wird dem Kerosin-Kraftstoffsystem im Hauptwärmeübertrager eine Wärme
 \FloatBarrier 
 
 
-Brewer \cite{Brewer.1991} hat für das Klimasystem eines Schmalrumpfflugzeugs eine Abwärme pro Triebwerk von \SI{32}{\kilo\W} berechnet. Dieser Wert wird für die Modellierung übernommen. Durch das Klimasystem steht den Wasserstoff-Kraftstoffsystemen eine höhere Abwärme von insgesamt $\dot{Q}_{\mathrm{FOHE}}=$ \SI{149}{\kilo\W} zur Verfügung.
+Brewer \cite{Brewer.1991} hat für das Kabinen-Klimasystem (ECS) eines Schmalrumpfflugzeugs eine Abwärme pro Triebwerk von \SI{32}{\kilo\W} berechnet. Dieser Wert wird für die Modellierung übernommen. Durch das Kabinen-Klimasystem steht den Wasserstoff-Kraftstoffsystemen eine höhere Abwärme von insgesamt $\dot{Q}_{\mathrm{FOHE}}=$ \SI{149}{\kilo\W} zur Verfügung.
 
 \section{Pumpen und Verdichter}
 
@@ -107,7 +107,7 @@ Kreiselpumpen kommen im Kerosin-Kraftstoffsystem als Niederdruckpumpe und im Was
 %\end{figure}
 %\FloatBarrier 
 
-Die Niederdruckpumpen von Kerosin-Kraftstoffsystemen erreichen im Reiseflug aufgrund der niedrigeren Drehzahlen und insbesondere Volumenströmen im Vergleich zum optimalen Betriebspunkt nur vergleichsweise niedrige Wirkungsgrade zwischen $53$ und $66\,\%$ \cite{Zhou.2023}. Für die Niederdruckpumpe des Kerosin-Kraftstoffsystems wird ein isentroper Wirkungsgrad von $\eta_{\mathrm{LP}}=0,60$ angenommen. Die Niederdruckpumpe des CFM56-5B erzeugt im Auslegungspunkt eine Druckerhöhung von $\Delta p_{\mathrm{MTO}}=$ \SI{965}{\kilo\Pa}. Gemäß den Ähnlichkeitsbeziehungen für Pumpen \cite{Gulich.2013} beträgt der Austrittsdruck $p_{LP}$ 
+Die Niederdruckpumpen von Kerosin-Kraftstoffsystemen erreichen im Reiseflug aufgrund der niedrigeren Drehzahlen und Volumenströmen im Vergleich zum optimalen Betriebspunkt nur vergleichsweise niedrige Wirkungsgrade zwischen $53$ und $66\,\%$ \cite{Zhou.2023}. Für die Niederdruckpumpe des Kerosin-Kraftstoffsystems wird ein isentroper Wirkungsgrad von $\eta_{\mathrm{LP}}=0,60$ angenommen. Die Niederdruckpumpe des CFM56-5B erzeugt im Auslegungspunkt eine Druckerhöhung von $\Delta p_{\mathrm{MTO}}=$ \SI{965}{\kilo\Pa}. Gemäß den Ähnlichkeitsbeziehungen für Pumpen \cite{Gulich.2013} beträgt der Austrittsdruck $p_{LP}$ 
 
 \begin{equation}\label{Eq:lpfp}
 	p_{\mathrm{LP}}=p_e+\Delta p_{\mathrm{MTO}}\left(\frac{N_2}{N_{2,\mathrm{MTO}}}\right)^2
@@ -119,15 +119,15 @@ Da Wasserstoff-Kraftstoffsysteme keine nennenswerten Kraftstoffmassenströme in 
 
 \subsection{Zahnradpumpen}
 
-Xu et al. \cite{Xu.2024} haben den Wirkungsgrad einer Zahnrad-Hochdruckpumpe bei unterschiedlichen Drehzahlen untersucht. Hohe Drehzahlen ermöglichen hohe Wirkungsgrade von bis zu $0,78$. Die Hochdruckpumpe des CFM56-5B arbeitet mit einer Nenndrehzahl von $6250$ 1/min \cite{EatonFuelSystemsDivision.2008}. Da die Hochdruckpumpe mit einem konstanten Übersetzungsverhältnis an die Hochdruckwelle angeschlossen ist, beträgt die Drehzahl im Reiseflug (mit $N_2/N_{2,\mathrm{MTO}}=0,88$) $5500$ 1/min. Interpolation der Daten von Xu et al. \cite{Xu.2024} ergibt somit einen Hochdruckpumpenwirkungsgrad von $\eta_{\mathrm{HP}}=0,73$.
+Xu et al. \cite{Xu.2024} haben den Wirkungsgrad einer Zahnrad-Hochdruckpumpe bei unterschiedlichen Drehzahlen untersucht. Hohe Drehzahlen ermöglichen hohe Wirkungsgrade von bis zu $0,78$. Die Hochdruckpumpe des CFM56-5B arbeitet mit einer Nenndrehzahl von $6250$ 1/min \cite{EatonFuelSystemsDivision.2008}. Da die Hochdruckpumpe mit einem konstanten Übersetzungsverhältnis an die Hochdruckwelle angeschlossen ist, beträgt die Drehzahl im Reiseflug (mit $N_2/N_{2,\mathrm{MTO}}=0,88$) $5500$ 1/min. Interpolation der Daten von Xu et al. \cite{Xu.2024} ergibt somit einen Wirkungsgrad der Hochdruckpumpe von $\eta_{\mathrm{HP}}=0,73$.
 
 Für die Hochdruckpumpe wird zudem der geförderte Massenstrom festgelegt. Unter MTO-Bedingungen fördert die Hochdruckpumpe den Kraftstoffverbrauch von \SI{1.05}{\kg\per\s} zuzüglich Kontingenz. Bei einem angenommenen Überschuss von $20\,\%$, beträgt der geförderte Massenstrom bei MTO-Schub \SI{1.27}{\kg\per\s}. Unter Annahme einer identischen volumetrischen Effizienz in beiden Lastpunkten beträgt der geförderte Massenstrom im Reiseflug aufgrund der niedrigeren Drehzahl somit $\dot{m}_\mathrm{HP}=$ \SI{1.11}{\kg\per\s}.
 
 \subsection{Wasserstoff-Verdichter}
 
-Aufgrund der geringen Volumenströme bei hohen Druckverhältnissen in Wasserkraftstoffsystemen könnte der Einsatz von Radialverdichtern sinnvoll sein. Der im Reiseflug gegenüber MTO-Bedingungen stark verringerte Volumenstrom bei nur geringfügig verringerter Drehzahl würde bei konstantem Übersetzungsverhältnis eine erhebliche Pumpgefahr bedeuten. Um einen stabilen Betrieb mit hohem Wirkungsgrad zu gewährleisten ist daher eine variable Übersetzung zwischen Verdichter und der Hochdruckwelle des Verdichters notwendig. 
+Der im Reiseflug gegenüber MTO-Bedingungen stark verringerte Volumenstrom bei nur geringfügig verringerter Drehzahl würde bei konstantem Übersetzungsverhältnis eine erhebliche Pumpgefahr bedeuten. Um einen stabilen Betrieb mit hohem Wirkungsgrad zu gewährleisten ist daher eine variable Übersetzung zwischen Verdichter und der Hochdruckwelle des Verdichters notwendig. 
 
-In dieser Arbeit wird für Wasserstoff-Verdichter eine mehrstufige Radialverdichter-Bauweise mit variabler Übersetzung angenommen. Bei einem angenommenen Teillast-Wirkungsgrad des Verdichters von $0,75$ und einem mechanischen Wirkungsgrad der variablen Übersetzung von $0,95$ beträgt der Gesamtwirkungsgrad $\eta_{\mathrm{HP}}=\eta_\mathrm{RV}=0,71$.
+Bei einem angenommenen Teillast-Wirkungsgrad des Verdichters von $0,75$ und einem mechanischen Wirkungsgrad der variablen Übersetzung von $0,95$ beträgt der Gesamtwirkungsgrad $\eta_{\mathrm{HP}}=\eta_\mathrm{RV}=0,71$.
 
 \section{Wärmeübertrager Druckverluste}
 
@@ -135,11 +135,11 @@ Bei der Auslegung von Wärmeübertragern wird ein Kompromiss zwischen Bauvolumen
 
 \subsection{Kerosin-Kraftstoffsystem}
 
-Zu den kraftstoffseitigen Druckverlusten in Wärmeübertragern von Kerosin-Kraftstoffsystemen liegen in der Literatur keine zuverlässigen Angaben vor, daher wird der Wert geschätzt. Einerseits sind bei Kerosin-Wärmeübertragern aufgrund der höheren Viskosität von Kerosin im Vergleich zu gasförmigem Wasserstoff sowie der geringeren Temperaturdifferenz der Fluidströme höhere Druckverluste zu erwarten. Andererseits überträgt der FOHE-Wärmeübertrager des Kerosin-Kraftstoffsystems aufgrund des höheren Massenstroms eine geringere spezifische Wärme als die der Wasserstoff-Kraftstoffsysteme. Zudem ermöglicht die deutlich höhere Dichte von Kerosin gegenüber gasförmigem Wasserstoff bei konstantem Flächen-zu-Massenstrom-Verhältnis niedrigere Strömungsgeschwindigkeiten, was zu geringeren Druckverluste führt. Unter diesen Abwägungen wird für den FOHE-Wärmeübertrager des Kerosin-Kraftstoffsystems ein Druckverhältnis von $0,95$ angenommen.
+Zu den kraftstoffseitigen Druckverlusten in Wärmeübertragern von Kerosin-Kraftstoffsystemen liegen in der Literatur keine zuverlässigen Angaben vor, daher wird der Wert geschätzt. Einerseits sind bei Kerosin-Wärmeübertragern aufgrund der höheren Viskosität von Kerosin im Vergleich zu gasförmigem Wasserstoff sowie der geringeren Temperaturdifferenz der Fluidströme höhere Druckverluste zu erwarten. Andererseits überträgt der FOHE-Wärmeübertrager des Kerosin-Kraftstoffsystems aufgrund des höheren Massenstroms eine geringere spezifische Wärme als die der Wasserstoff-Kraftstoffsysteme. Zudem ermöglicht die deutlich höhere Dichte von Kerosin gegenüber gasförmigem Wasserstoff bei konstantem Flächen-zu-Massenstrom-Verhältnis niedrigere Strömungsgeschwindigkeiten, was geringere Druckverluste ermöglichen kann. Unter diesen Abwägungen wird für den FOHE-Wärmeübertrager des Kerosin-Kraftstoffsystems ein Druckverhältnis von $0,95$ angenommen.
 
 \subsection{Wasserstoff-Kraftstoffsysteme}
 
-Sciatti et al. \cite{Sciatti.2025} haben einen Wärmeübertrager zwischen Wasserstoff und Stickstoff untersucht und ausgelegt. Im Vergleich zum PHC-Wärmeübertrager der Wasserstoff-Kraftstoffsysteme dieser Arbeit sind die Temperaturdifferenz der Fluidströme geringer und die übertragene spezifische Wärme höher. Das von Sciatti et al. ermittelte Druckverhältnis über den Wärmeübertrager von $0,988$ stellt daher eine konservative Abschätzung der Druckverluste des PHC-Wärmeübertragers dar. Jedoch hat der ausgelegte Wärmeübertrager eine für den Wasserstoff-Massenstrom korrigierte Masse von \SI{110.5}{\kg} und ist damit inakzeptabel schwer. Für den PHC-Wärmeübertrager der Wasserstoff-Kraftstoffsysteme wird ein Druckverhältnis von $0,98$ angenommen.
+Sciatti et al. \cite{Sciatti.2025} haben einen Wärmeübertrager zwischen Wasserstoff und Stickstoff untersucht und ausgelegt. Im Vergleich zum PHC-Wärmeübertrager der Wasserstoff-Kraftstoffsysteme dieser Arbeit sind die Temperaturdifferenz der Fluidströme geringer und die übertragene spezifische Wärme höher. Das von Sciatti et al. ermittelte Druckverhältnis über den Wärmeübertrager von $0,988$ stellt daher eine konservative Abschätzung der Druckverluste des PHC-Wärmeübertragers dar. Jedoch hat der ausgelegte Wärmeübertrager eine für den Wasserstoff-Massenstrom korrigierte Masse von \SI{111}{\kg} und ist damit inakzeptabel schwer. Für den PHC-Wärmeübertrager der Wasserstoff-Kraftstoffsysteme wird ein Druckverhältnis von $0,98$ angenommen.
 
 Brewer \cite{Brewer.1991} hat für einen Wasserstoff Wärmeübertrager mit dem Kabinen-Klimasystem Druckverluste von \SI{2.14}{\kilo\Pa} berechnet. Die vernachlässigbar geringen Druckerverluste resultieren aus der geringen übertragenen Wärme bei moderater Temperaturdifferenz.
 
@@ -172,7 +172,7 @@ Brewer \cite{Brewer.1991} hat für ein Wasserstoff-Kraftstoffsystem Injektor-Dru
 
 \section{Parallele Wasserstoffverbrennung}
 
-Die parallele Wasserstoffverbrennung wird als magere Verbrennung mit einem Brennstoff-Luft-Verhältnis von 0,01 modelliert. Für die Verbrennung wird ein unterer Heizwert von Wasserstoff von $H_{u, \mathrm{H}_2}= $ \SI{120}{\mega\J\per\kg} angenommen. Die spezifischen isobaren Wärmekapazitäten von Luft und dem Abgas der Abgase werden mit dem CEARUN Web-Tool \cite{Leader.} bestimmt. Für die Fan-Zapflufttemperatur wurde ein Wert von \SI{273}{\K} berechnet (Siehe Tabelle \ref{Tab:cruise}). Für die Annäherungstemperatur des PHC-Wärmeübertragers wird ein Wert von $\Delta T= $ \SI{30}{\K} angenommen. %Dieser Wert stellt einen Kompromiss zwischen der Masse des PHC-Wärmeübertragers und dem Gesamtwirkungsgrad dar.
+Die parallele Wasserstoffverbrennung wird als magere Verbrennung mit einem Brennstoff-Luft-Verhältnis von 0,01 modelliert. Für die Verbrennung wird ein unterer Heizwert von Wasserstoff von $H_{u, \mathrm{H}_2}= $ \SI{120}{\mega\J\per\kg} angenommen. Die spezifischen isobaren Wärmekapazitäten von Luft und dem Abgas werden mit dem CEARUN Web-Tool \cite{Leader.} bestimmt. Für die Fan-Zapflufttemperatur wurde ein Wert von \SI{273}{\K} berechnet (Siehe Tabelle \ref{Tab:cruise}). Für die Annäherungstemperatur des PHC-Wärmeübertragers wird ein Wert von $\Delta T= $ \SI{30}{\K} angenommen. %Dieser Wert stellt einen Kompromiss zwischen der Masse des PHC-Wärmeübertragers und dem Gesamtwirkungsgrad dar.
 
 \section{Zusammenfassung}
 
@@ -249,23 +249,23 @@ Die Parameter der Wasserstoff-Kraftstoffsysteme sind in Tabellen \ref{Tab:h2_par
 \end{table}
 \FloatBarrier 
 
-\section{Brennkammereintrittsbedingungen}
+\section{Brennkammereintritts-Bedingungen}
 
-Im Folgenden werden die abhängigen Variablen, also die Brennkammer-Eintrittsbedingungen der Kraftstoffsysteme, erläutert. Zunächst wird der Brennkammerdruck der Kraftstoffsysteme festgelegt. Anschließend wird die zulässige Brennkammer-Eintrittstemperatur für das Kerosin-Kraftstoffsystem bestimmt. Zuletzt werden denkbare Wertebereiche für die Betrachtung der Brennkammer- und Wärmeübertrager-Eintrittstemperaturen der Wasserstoff-Kraftstoffsysteme in einer Parameterstudie bestimmt.
+Im Folgenden werden die unabhängigen Variablen, also die Brennkammer-Eintrittsbedingungen der Kraftstoffsysteme, erläutert. Zunächst wird der Brennkammerdruck der Kraftstoffsysteme festgelegt. Anschließend wird die zulässige Brennkammer-Eintrittstemperatur für das Kerosin-Kraftstoffsystem bestimmt. Zuletzt werden denkbare Wertebereiche für die Betrachtung der Brennkammer- und Wärmeübertrager-Eintrittstemperaturen der Wasserstoff-Kraftstoffsysteme in einer Parameterstudie bestimmt.
 
 \subsection{Brennkammerdruck}
 
-Der Brennkammerdruck beträgt sowohl für das Kerosin- als auch die Wasserstoff-Kraftstoffsysteme $p_\mathrm{BK}=$ \SI{1330}{\kilo\Pa} (siehe Tabelle \ref{Tab:cruise}).
+Der Brennkammerdruck beträgt sowohl für das Kerosin- als auch die Wasserstoff-Kraftstoffsysteme $p_\mathrm{BK}=p_3=$ \SI{1330}{\kilo\Pa} (siehe Tabelle \ref{Tab:cruise}).
 
 \subsection{Brennkammer-Eintrittstemperatur Kerosin-Kraftstoffsystem}
 
 Um im Kerosin-Kraftstoffsystem geringere Brennkammer-Eintrittstemperatur zu erreichen, muss eine größere Menge an Kraftstoff in die Kraftstofftanks rückgeführt werden. Um den rückgeführten Kraftstoff zu ersetzen fördert die Niederdruckpumpe einen höheren Kraftstoffmassenstrom, was ihren Leistungsbedarf steigert. Aus diesem Grund wird eine möglichst hohe Brennkammer-Eintrittstemperatur angestrebt. 
 
-Der Brennkammer-Eintrittstemperatur ist jedoch durch die maximal zulässige Öltemperatur eine technische Obergrenze gesetzt. Der Kraftstoff kann nur bis zu der maximalen Öltemperatur abzüglich der Annäherungstemperatur des Wärmeübertragers erhitzt werden. Bei dem PW1133G Triebwerk beträgt die maximale Öltemperatur im Reiseflug \SI{419.15}{\K} \cite{EASA.2018}. Bei einer angenommenen Annäherungstemperatur zuzüglich Kontingenz von \SI{20}{\K} beträgt die maximal zulässige Brennkammer-Eintrittstemperatur somit $T_\mathrm{BK}=$ \SI{399.15}{\K}.
+Der Brennkammer-Eintrittstemperatur ist jedoch durch die maximal zulässige Öltemperatur eine technische Obergrenze gesetzt. Der Kraftstoff kann nur bis zu der maximalen Öltemperatur abzüglich der Annäherungstemperatur des Wärmeübertragers erhitzt werden. Bei dem PW1133G Triebwerk beträgt die maximale Öltemperatur im Reiseflug \SI{419}{\K} \cite{EASA.2018}. Bei einer angenommenen Annäherungstemperatur zuzüglich Kontingenz von \SI{20}{\K} beträgt die maximal zulässige Brennkammer-Eintrittstemperatur somit $T_\mathrm{BK}=$ \SI{399}{\K}.
 
 \subsection{Eintrittstemperaturen Wasserstoff-Kraftstoffsysteme}
 
-Das EnableH2 Projekt \cite{Patrao.2023} sowie Brewer \cite{Brewer.1991} gehen von Brennkammer-Eintrittstemperaturen von über \SI{650}{\K} aus. Diese hohen Temperaturen erreichen die Autoren insbesondere durch den Einsatz von Wärmerückgewinnung aus dem Abgas des Kerntriebwerks. Die Autoren des CRYOPLANE Berichts \cite{Scholz.2003} und der Joint Cryogenic Engine Study \cite{SIMON.1994} halten Wasserstofftemperaturen von \SI{150}{\K} für ausreichend. Tacconi et al. \cite{Tacconi.2023} haben für ihre Betrachtung eines Wasserstoff-Kraftstoffsystems eine minimale akzeptable Temperatur von \SI{273.15}{\K} angenommen, um Probleme infolge von Vereisung in der Brennkammer zu vermeiden. Aufgrund der breiten Palette an Vorschlägen für Brennkammer-Eintrittstemperaturen für Wasserstoff-Kraftstoffsysteme wird diese Variable in der Parameterstudie in einem Wertebereich zwischen $150$ und \SI{500}{\K} untersucht. Für den Vergleich mit dem Kerosin-Kraftstoffsystem wird ein Wert von \SI{300}{\K} verwendet.
+Das EnableH2 Projekt \cite{Patrao.2023} sowie Brewer \cite{Brewer.1991} gehen von Brennkammer-Eintrittstemperaturen von über \SI{650}{\K} aus. Diese hohen Temperaturen erreichen die Autoren insbesondere durch den Einsatz von Wärmerückgewinnung aus dem Abgas des Kerntriebwerks. Die Autoren des CRYOPLANE Berichts \cite{Scholz.2003} und der Joint Cryogenic Engine Study \cite{SIMON.1994} halten Wasserstofftemperaturen von \SI{150}{\K} für ausreichend. Tacconi et al. \cite{Tacconi.2023} haben für ihre Betrachtung eines Wasserstoff-Kraftstoffsystems eine minimale akzeptable Temperatur von \SI{273}{\K} angenommen, um Probleme infolge von Vereisung in der Brennkammer zu vermeiden. Aufgrund der breiten Palette an Vorschlägen für Brennkammer-Eintrittstemperaturen für Wasserstoff-Kraftstoffsysteme wird diese Variable in der Parameterstudie in einem Wertebereich zwischen $150$ und \SI{500}{\K} untersucht. Für den Vergleich mit dem Kerosin-Kraftstoffsystem wird ein Wert von \SI{300}{\K} verwendet.
 
 Ähnliches gilt für die Wärmeübertrager-Eintrittstemperatur. Um Vereisungen in den Öl- und Luftwärmeübertragern zu vermeiden, wird eine minimale Eintrittstemperatur gewahrt. Wärmeübertrager-Eintrittstemperaturen oberhalb des Gefrierpunkts von Wasser sind jedoch nicht sinnvoll, da dort keine Vereisungsgefahr mehr besteht und eine weitere Erhöhung der Temperatur lediglich den rezirkulierten Massenstrom erhöhen würde. Der Wärmeübertrager-Eintrittstemperatur ist jedoch durch die Brennkammer-Eintrittstemperatur eine weitere Obergrenze gesetzt. Damit exzessive rezirkulierte Massenströme vermieden werden, wird stets eine Wärmeübertrager-Eintrittstemperatur gewählt, die mindestens \SI{20}{\K} unter der Brennkammer-Eintrittstemperatur liegt. Die Wärmeübertrager-Eintrittstemperatur wird im Rahmen der Parameterstudie in einem Wertebereich zwischen $100$ und \SI{280}{\K} untersucht. Für den Vergleich mit dem Kerosin-Kraftstoffsystem wird ein Wert von \SI{160}{\K} verwendet.
 
