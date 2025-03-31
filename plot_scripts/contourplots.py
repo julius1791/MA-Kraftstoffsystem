@@ -381,7 +381,7 @@ for arch, name in zip(subfolders, systemnames):
     # cb.set_ticks(clevs)
     # cb.set_ticklabels(clevs)
     plt.ticklabel_format(style="plain")
-    fig.savefig(os.path.join(save_dir, name+'heatcontour.pdf'), dpi=600, bbox_inches="tight")
+    fig.savefig(os.path.join(save_dir, name+'phccontour.pdf'), dpi=600, bbox_inches="tight")
     plt.show()
     
 
