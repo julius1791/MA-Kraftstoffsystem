@@ -48,6 +48,13 @@ P_fp = P_mfp
 t_wu = np.array(data_i["t_wu"])
 t_bk = np.array(data_i["t_bk"])
 
+
+# Define circle positions and corresponding letters
+circle_positions = [(300, 160), (180, 160), (495, 105), (300, 275)]
+letters = ['A', 'B', 'C', 'D']
+
+
+
 ###############################################################################
 ################# Leistungsbedarf Pumpe Contour plot ##########################
 ###############################################################################
@@ -91,7 +98,9 @@ for arch, plot, name in zip(subfolders, [0,1,2], systemnames):
             j+=1
         i+=1
     lev = [*np.linspace(28, 300, 400)]
-    cs = plt.contourf(t_bk_u, t_wu_u, P_mfp3/1e3, levels = lev, cmap="Reds", norm=norm)
+    fig, ax = plt.subplots()
+    ax.set_aspect(1)
+    ax.contourf(t_bk_u, t_wu_u, P_mfp3/1e3, levels = lev, cmap="Reds", norm=norm, zorder=0)
     if plot == 2:
         levs = [32, 40, 50, 60, 80, 120, 170, 250]
     elif plot == 1:
@@ -99,19 +108,28 @@ for arch, plot, name in zip(subfolders, [0,1,2], systemnames):
     else:
         levs = [50, 60, 70, 80, 100, 120, 170, 250]
     
-    cs = plt.contour(t_bk_u, t_wu_u, P_mfp3/1e3, levels = levs, colors='black')
+    cs = ax.contour(t_bk_u, t_wu_u, P_mfp3/1e3, levels = levs, colors='black', zorder=5)
     plt.clabel(cs, fontsize=10)
 
     #cb = plt.colorbar(cm.ScalarMappable(norm=norm, cmap="Reds"), orientation="horizontal", location="bottom", ax=ax, pad=0.08)
     #cb.set_label("$P_{mech}$ [kW]", rotation=0, labelpad=-50, loc="left")
     #clevs = [30, 40, 50, 60, 80, 100, 120, 160, 200, 250]
-    plt.ylabel("Wärmeübertrager-Eintrittstemperatur $T_\mathrm{W}$ [K]", fontsize=12)
+    plt.ylabel("Wärmeübertrager-Eintrittstemperatur $T_\mathrm{W}$ [K]", fontsize=10)
     plt.xlabel("Brennkammer-Eintrittstemperatur $T_\mathrm{BK}$ [K]")
     plt.title("Leistungsbedarf $P$ [kW]")
+    
+    
+    
     
     fig = mpl.pyplot.gcf()
     fig.set_size_inches(16/2.54, 10.5/2.54)
     plt.xlim(tbk_lims)
+    
+    # Plot circles with letters
+    for (cx, cy), letter in zip(circle_positions, letters):
+        circle = plt.Circle((cx, cy), 6, fc='white', ec='black', lw=0.5, zorder=10)
+        ax.add_patch(circle)
+        ax.text(cx, cy, letter, ha='center', va='center', fontsize=10, fontweight='bold', zorder=15)
     #cb.set_ticks(clevs)
     #cb.set_ticklabels(clevs)
     plt.ticklabel_format(style="plain")
@@ -257,12 +275,14 @@ for arch, name in zip(subfolders, systemnames):
             j+=1
         i+=1
     lev = [*np.linspace(150, 900, 600)]
-    cs = plt.contourf(t_bk_u, t_wu_u, Q3/1e3, levels = lev, cmap="Reds", norm=norm)
+    fig, ax = plt.subplots()
+    ax.set_aspect(1)
+    ax.contourf(t_bk_u, t_wu_u, Q3/1e3, levels = lev, cmap="Reds", norm=norm, zorder=0)
 
     levs = [149, 200, 300, 400, 500, 600, 700, 800]
 
     
-    cs = plt.contour(t_bk_u, t_wu_u, Q3/1e3, levels = levs, colors='black')
+    cs = ax.contour(t_bk_u, t_wu_u, Q3/1e3, levels = levs, colors='black', zorder=5)
     plt.clabel(cs, fontsize=10)
 
     # cb = plt.colorbar(cm.ScalarMappable(norm=norm, cmap="Reds"), orientation="horizontal", location="bottom", ax=ax, pad=0.1)
@@ -270,13 +290,18 @@ for arch, name in zip(subfolders, systemnames):
     # for sp in ax[0:1]:
     #     sp.tick_params(labelbottom=False)
     # clevs = [120, 200, 300, 400, 500, 600, 700]
-    plt.ylabel("Wärmeübertrager-Eintrittstemperatur $T_\mathrm{W}$ [K]", fontsize=12)
+    plt.ylabel("Wärmeübertrager-Eintrittstemperatur $T_\mathrm{W}$ [K]", fontsize=10)
     plt.xlabel("Brennkammer-Eintrittstemperatur $T_\mathrm{BK}$ [K]")
     plt.title("Wärmebedarf $\dot{Q}$ [kW]")
     
     fig = mpl.pyplot.gcf()
     fig.set_size_inches(16/2.54, 10.5/2.54)
     plt.xlim(tbk_lims)
+    # Plot circles with letters
+    for (cx, cy), letter in zip(circle_positions, letters):
+        circle = plt.Circle((cx, cy), 6, fc='white', ec='black', lw=0.5, zorder=10)
+        ax.add_patch(circle)
+        ax.text(cx, cy, letter, ha='center', va='center', fontsize=10, fontweight='bold', zorder=15)
     # cb.set_ticks(clevs)
     # cb.set_ticklabels(clevs)
     plt.ticklabel_format(style="plain")
@@ -326,12 +351,12 @@ for arch, name in zip(subfolders, systemnames):
             j+=1
         i+=1
     lev = [*np.linspace(0, 6, 600)]
-    cs = plt.contourf(t_bk_u, t_wu_u, qm_phc3*1e3, levels = lev, cmap="Reds", norm=norm)
+    cs = plt.contourf(t_bk_u, t_wu_u, qm_phc3*1e3, levels = lev, cmap="Reds", norm=norm, zorder = 0)
 
     levs = [*np.linspace(0, 6, 7)]
 
     
-    cs = plt.contour(t_bk_u, t_wu_u, qm_phc3*1e3, levels = levs, colors='black')
+    cs = plt.contour(t_bk_u, t_wu_u, qm_phc3*1e3, levels = levs, colors='black', zorder = 5)
     plt.clabel(cs, fontsize=10)
 
     # cb = plt.colorbar(cm.ScalarMappable(norm=norm, cmap="Reds"), orientation="horizontal", location="bottom", ax=ax, pad=0.1)
@@ -339,13 +364,18 @@ for arch, name in zip(subfolders, systemnames):
     # for sp in ax[0:1]:
     #     sp.tick_params(labelbottom=False)
     # clevs = [120, 200, 300, 400, 500, 600, 700]
-    plt.ylabel("Wärmeübertrager-Eintrittstemperatur $T_\mathrm{W}$ [K]", fontsize=12)
+    plt.ylabel("Wärmeübertrager-Eintrittstemperatur $T_\mathrm{W}$ [K]", fontsize=10)
     plt.xlabel("Brennkammer-Eintrittstemperatur $T_\mathrm{BK}$ [K]")
     plt.title("Wasserstoffbedarf $\dot{m}_\mathrm{PHC}$ [g/s]")
     
     fig = mpl.pyplot.gcf()
     fig.set_size_inches(16/2.54, 10.5/2.54)
     plt.xlim(tbk_lims)
+    # Plot circles with letters
+    for (cx, cy), letter in zip(circle_positions, letters):
+        circle = plt.Circle((cx, cy), 6, fc='white', ec='black', lw=0.5, zorder=10)
+        ax.add_patch(circle)
+        ax.text(cx, cy, letter, ha='center', va='center', fontsize=10, fontweight='bold', zorder=15)
     # cb.set_ticks(clevs)
     # cb.set_ticklabels(clevs)
     plt.ticklabel_format(style="plain")
