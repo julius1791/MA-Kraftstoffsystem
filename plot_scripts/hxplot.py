@@ -59,9 +59,9 @@ ax.annotate('', xy=(H3-H1, 70), xytext=(H3-H1+100, 70), xycoords='data', textcoo
             arrowprops={'arrowstyle': '|-|'})
 ax.annotate('$\dot{Q}_{\mathrm{PHC}}$', xy=(H3-H1+50, 40), ha='center', va='center')
 
-#ax.arrow(H2-H1, t2, 0, 400-t2, length_includes_head=True, width=2, head_width=10, head_length=20, linestyle="--", fill=True, ec="none", fc="black")
-#ax.arrow(H2-H1, 400, 0, t2-400, length_includes_head=True, width=2, head_width=10, head_length=20, linestyle="--", fill=True, ec="none", fc="black")
-#ax.annotate("$\Delta T_{min}$", xytext=[H2-H1+10, 380], xy=[H2-H1, t2])
+ax.arrow(H3-H1, t3, 0, 40, length_includes_head=True, width=0.5, head_width=4, head_length=10, linestyle="--", fill=True, ec="none", fc="black")
+ax.arrow(H3-H1, t3+40, 0, -40, length_includes_head=True, width=0.5, head_width=4, head_length=10, linestyle="--", fill=True, ec="none", fc="black")
+ax.annotate("$\Delta T_\mathrm{min}$", xytext=[H3-H1-45, 345], xy=[H2-H1, t2])
 
 ax.legend(handles, labels, ncols=4, loc="lower center", bbox_to_anchor=(0.5, 1.02), columnspacing=0.2)
 #plt.tight_layout()
